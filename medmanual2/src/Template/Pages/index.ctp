@@ -5,7 +5,6 @@
     <tr>
         <th>Id</th>
         <th>Title</th>
-        <th>Created</th>
         <th>Action</th>
     </tr>
 
@@ -16,9 +15,6 @@
         <td><?= $page->id ?></td>
         <td>
             <?= $this->Html->link($page->title, ['action' => 'view', $page->id]) ?>
-        </td>
-        <td>
-            <?= $page->created->format(DATE_RFC850) ?>
         </td>
         <td>
             <?= $this->Form->postLink(
