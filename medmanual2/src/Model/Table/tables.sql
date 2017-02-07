@@ -1,0 +1,22 @@
+CREATE TABLE users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50),
+    password VARCHAR(255),
+    role VARCHAR(20),
+    created DATETIME DEFAULT NULL,
+    modified DATETIME DEFAULT NULL
+);
+
+CREATE TABLE pages (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(50),
+    body LONGTEXT,
+    user_id INT,
+    version_date DATETIME DEFAULT NULL
+);
+
+CREATE TABLE tags (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    tag VARCHAR(50),
+    article_id INT UNSIGNED
+);
