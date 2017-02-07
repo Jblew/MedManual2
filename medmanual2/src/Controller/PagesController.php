@@ -43,7 +43,7 @@ class PagesController extends AppController {
     public function add() {
         $page = $this->Pages->newEntity();
         if ($this->request->is('post')) {
-            $page = $this->Articles->patchEntity($page, $this->request->data);
+            $page = $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been saved.'));
                 return $this->redirect(['action' => 'index']);
