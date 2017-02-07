@@ -11,7 +11,7 @@ class PagesTable extends Table
         //$this->addBehavior('version_date');
     }
     
-    public function validationDefault(Validator $validator)
+    /*public function validationDefault(Validator $validator)
     {
         $validator
             ->notEmpty('title')
@@ -20,5 +20,5 @@ class PagesTable extends Table
             ->requirePresence('body');
 
         return $validator;
-    }
+    }*/
 }
