@@ -19,7 +19,7 @@
         <td>
             <?= $this->Form->postLink(
                 'Delete',
-                ['action' => 'delete', $article->id],
+                ['action' => 'delete', $page->id],
                 ['confirm' => 'Are you sure?'])
             ?>
             <?= $this->Html->link('Edit', ['action' => 'edit', $page->id]) ?>
