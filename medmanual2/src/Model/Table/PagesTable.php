@@ -6,6 +6,10 @@ use Cake\ORM\Table;
 
 class PagesTable extends Table
 {
+    public $virtualFields = array(
+        'path' => 'get_path(Pages.id)'
+    );
+    
     public function initialize(array $config)
     {
         //$this->addBehavior('version_date');
