@@ -37,6 +37,7 @@ class PagesController extends AppController {
 
     public function view($id = null) {
         $page = $this->Pages->get($id);
+        $page['path'] = array_filter(explode("$$$", $page['path'])); 
         $this->set(compact('page'));
     }
 

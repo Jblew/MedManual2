@@ -7,8 +7,10 @@ use Cake\ORM\Table;
 class PagesTable extends Table
 {
     public $virtualFields = array(
-        'path' => 'get_path(Pages.id)'
+        'path' => 'get_path(Page.id)'
     );
+    
+    public $hasOne = array('User', 'Parent' => array('className' => 'Page'));
     
     public function initialize(array $config)
     {
