@@ -8,3 +8,4 @@
     echo $this->Form->button(__('Save Page'));
     echo $this->Form->end();
 ?>
+<p><?php print_r($page->path) ?></p>
