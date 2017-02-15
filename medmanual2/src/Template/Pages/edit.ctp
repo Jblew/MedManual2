@@ -1,6 +1,6 @@
 <h1><?= (isset($addMode)? "Add" : "Edit") ?> Page</h1>
 <?php
-echo $this->Form->create($page);
+echo $this->Form->create($page, ['id' => 'edit-form']);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
 echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
@@ -101,3 +101,9 @@ echo $this->Form->hidden('body');
 echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();
 ?>
+<script type="text/javascript">
+$('#edit-form').submit(function() {
+    $('#body').value($("#md-editor").html());
+    return true;
+});
+</script>
