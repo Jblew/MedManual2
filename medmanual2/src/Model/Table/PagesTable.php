@@ -43,7 +43,7 @@ class PagesTable extends Table {
 
     public function buildTree() {
         $pages = $this->find('all', ['order' => ['Pages.id' => 'ASC']])->toArray();
-        print_r($pages);
+        //print_r($pages);
         $conn = ConnectionManager::get('default');
 
         $stmt = $conn->execute("SELECT * FROM pages_parents;");
@@ -65,10 +65,10 @@ class PagesTable extends Table {
             $childrenOfPages[$parentId][] = $pageId;
         }
 
-        var_dump($childrenOfPages);
+        //var_dump($childrenOfPages);
         
         $tree = $pages[0];
-        $tree['children'] = $this->_populateNode($pages[0], $pages, $childrenOfPages);
+        $tree['children'] = $this->_populateNode($pages[0]->id, $pages, $childrenOfPages);
         
         return $tree;
     }
