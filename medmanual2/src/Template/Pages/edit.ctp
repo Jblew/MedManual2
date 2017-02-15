@@ -1,7 +1,6 @@
-<h1><?= (isset($addMode) ? "Add" : "Edit") ?> Page</h1>
 <?php
 echo $this->Form->create($page, ['id' => 'edit-form']);
-echo $this->Form->input('title');
+echo $this->Form->input('title', ['style' => 'font-size: 3em;']);
 //echo "<input id=\"parent-autocomplete\" />";
 echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 ?>
@@ -88,32 +87,64 @@ if (!isset($addMode)) {
         return (substr($haystack, 0, $length) === $needle);
     }
 
+    $i = 0;
     $lines = explode("\n", $page->body);
     foreach ($lines as $line) {
-        $line = trim($line);
-        if ($line == '') {
-            echo("<div><br /></div>");
-        } else if (startsWith($line, "###### ")) {
-            echo("<div><h6>".$line."</h6></div>");
-        } else if (startsWith($line, "##### ")) {
-            echo("<div><h5>".$line."</h5></div>");
-        } else if (startsWith($line, "#### ")) {
-            echo("<div><h4>".$line."</h4></div>");
-        } else if (startsWith($line, "### ")) {
-            echo("<div><h3>".$line."</h3></div>");
-        } else if (startsWith($line, "## ")) {
-            echo("<div><h2>".$line."</h2></div>");
-        } else if (startsWith($line, "# ")) {
-            echo("<div><h1>".$line."</h1></div>");
-        } else {
-            echo("<div>" . $line . "</div>");
+        if($i > 0) {
+            $line = trim($line);
+            if ($line == '') {
+                echo("<div><br /></div>");
+            } else if (startsWith($line, "###### ")) {
+                echo("<div><h6>".$line."</h6></div>");
+            } else if (startsWith($line, "##### ")) {
+                echo("<div><h5>".$line."</h5></div>");
+            } else if (startsWith($line, "#### ")) {
+                echo("<div><h4>".$line."</h4></div>");
+            } else if (startsWith($line, "### ")) {
+                echo("<div><h3>".$line."</h3></div>");
+            } else if (startsWith($line, "## ")) {
+                echo("<div><h2>".$line."</h2></div>");
+            } else if (startsWith($line, "# ")) {
+                echo("<div><h1>".$line."</h1></div>");
+            } else {
+                echo("<div>" . $line . "</div>");
+            }
         }
+        $i++;
     }
     ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#md-editor").on('blur keyup paste input', function() {
+            $("#md-editor div").each(function(i, _div) {
+                var div = $(_div);
+                
+                if(div.html().match(/^###### /)) {
+                    div.html("<h6>"+div.html()+"</h6>");
+                }
+                else if(div.html().match(/^##### /)) {
+                    div.html("<h5>"+div.html()+"</h5>");
+                }
+                else if(div.html().match(/^#### /)) {
+                    div.html("<h4>"+div.html()+"</h4>");
+                }
+                else if(div.html().match(/^### /)) {
+                    div.html("<h3>"+div.html()+"</h3>");
+                }
+                else if(div.html().match(/^## /)) {
+                    div.html("<h2>"+div.html()+"</h2>");
+                }
+                else if(div.html().match(/^# /)) {
+                    div.html("<h1>"+div.html()+"</h1>");
+                }
+            });
+        });
+    });
+</script>
 
 <?php
-echo $this->Form->hidden('body', ['id' => 'edit-form-body']);
+echo $this->Form->hidden('body', ['id' => 'edit-form-body', value=>'']);
 ?>
 <h2>Children</h2>
 <ul>

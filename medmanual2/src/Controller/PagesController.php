@@ -55,6 +55,7 @@ class PagesController extends AppController {
         $page = $this->Pages->newEntity();
         if ($this->request->is('post')) {
             $page = $this->Pages->patchEntity($page, $this->request->data);
+            $page = $this->_preparePageData($page);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been saved.'));
                 return $this->redirect(['action' => 'edit', $page->id]);
@@ -83,7 +84,8 @@ class PagesController extends AppController {
 
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
-            $page->body = str_replace("[newline]", "\n", $page->body);
+            $page = $this->_preparePageData($page);
+            
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been updated.'));
                 return $this->redirect(['action' => 'edit', $page->id]);
@@ -92,6 +94,11 @@ class PagesController extends AppController {
         }
 
         $this->set('page', $page);
+    }
+    
+    private function _preparePageData($page) {
+        $page->body = str_replace("[newline]", "\n", $page->body);
+        return $page;
     }
 
     public function delete($id) {
