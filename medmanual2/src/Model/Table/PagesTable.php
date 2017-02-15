@@ -17,7 +17,7 @@ class PagesTable extends Table {
         $this->belongsTo('Parents', [
             'joinTable' => 'pages_parents',
             'className' => 'Pages',
-            'foreignKey' => 'page_id',
+            'foreignKey' => 'id',
             'targetForeignKey' => 'parent_id'
     ]);
     }
