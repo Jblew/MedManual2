@@ -27,7 +27,7 @@ class PagesTable extends Table {
         $paths = array();
 
         $conn = ConnectionManager::get('default');
-        $stmt = $conn->execute("SET @@GLOBAL.max_sp_recursion_depth = 255;SET @@session.max_sp_recursion_depth = 255; DROP TEMPORARY TABLE IF EXISTS paths;CREATE TEMPORARY TABLE paths (path VARCHAR(255));CALL get_paths_procedure(6, '');SELECT * FROM paths;", [$id]);
+        $stmt = $conn->execute("DROP TEMPORARY TABLE IF EXISTS paths;CREATE TEMPORARY TABLE paths (path VARCHAR(255));CALL get_paths_procedure(6, '');SELECT * FROM paths;", [$id]);
 
         $rows = $stmt->fetchAll('assoc');
 
