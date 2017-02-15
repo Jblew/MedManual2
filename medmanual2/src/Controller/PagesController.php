@@ -68,7 +68,7 @@ class PagesController extends AppController {
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
-                'contain' => ['Parents']
+                'contain' => ['Parents', 'Children']
             ]);
             foreach($page->parents as $i => $parent) {
                 $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);

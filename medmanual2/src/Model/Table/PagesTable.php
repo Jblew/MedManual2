@@ -21,6 +21,13 @@ class PagesTable extends Table {
             'targetForeignKey' => 'parent_id',
             'bindingKey' => 'id'
         ]);
+        $this->hasMany('Children', [
+            'joinTable' => 'pages_parents',
+            'className' => 'Pages',
+            'foreignKey' => 'parent_id',
+            'targetForeignKey' => 'page_id',
+            'bindingKey' => 'id'
+        ]);
     }
 
     public function getPaths($id) {

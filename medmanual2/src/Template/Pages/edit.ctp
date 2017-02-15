@@ -6,9 +6,6 @@ echo $this->Form->create($page);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
 echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
-echo $this->Form->input('body', ['rows' => '3']);
-echo $this->Form->button(__('Save Page'));
-echo $this->Form->end();
 ?>
 <script type="text/javascript">
     var parentsArr = [];
@@ -85,3 +82,13 @@ echo $this->Form->end();
         
     });
 </script>
+
+
+<?php
+echo $this->Form->input('body', ['rows' => '10']);
+?>
+<pre><?php print_r($page); ?></pre>
+<?php
+echo $this->Form->button(__('Save Page'));
+echo $this->Form->end();
+?>
