@@ -139,7 +139,7 @@ if (!isset($addMode)) {
                     div.html("<h1>"+div.html().trim()+"</h1>");
                 }
                 
-                $("h1, h2, h3, h4, h5, h6").each(function(i, _elem) {
+                $("h1, h2, h3, h4, h5, h6", div).each(function(i, _elem) {
                     var elem = $(_elem);
                     if(elem.html().trim() == '') elem.remove();
                 });
