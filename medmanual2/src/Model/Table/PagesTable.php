@@ -43,6 +43,7 @@ class PagesTable extends Table {
 
     public function buildTree() {
         $pages = $this->find('all', ['order' => ['Pages.id' => 'ASC']]);
+        print_r($pages);
         $conn = ConnectionManager::get('default');
 
         $stmt = $conn->execute("SELECT * FROM pages_parents;");
