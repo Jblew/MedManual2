@@ -40,10 +40,12 @@ class PagesController extends AppController {
         if ($id > 0) {
             $page = $this->Pages->get($id);
         } else {
-            $page = $this->Pages->find('first', [
+            $page = $this->Pages->find('all', [
                 'conditions' => ['Pages.title' => base64_decode($base64)]
-                ]);
+                ])->first();
         }
+        if($page === null) throw new NotFoundException();
+        
         $page['path'] = array_filter(explode("$$$", $page['path'])); 
             $this->set(compact('page'));
             $this->set('paths', $this->Pages->getPaths($id));
