@@ -28,9 +28,15 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('easy-autocomplete.min.css') ?>
+    <?= $this->Html->css('style.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
+    
+    <?=  $this->Html->script('jquery-3.1.1.min.js') ?> 
+    <?=  $this->Html->script('jquery.easy-autocomplete.min.js') ?>
+    <?=  $this->Html->script('scripts.js') ?> 
     <?= $this->fetch('script') ?>
 </head>
 <body>
