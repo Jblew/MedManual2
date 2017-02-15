@@ -41,7 +41,7 @@ class PagesController extends AppController {
             $page = $this->Pages->get($id);
         } else {
             $page = $this->Pages->find('all', [
-                'conditions' => ['Pages.title' => base64_decode($base64)]
+                'conditions' => ['Pages.title =' => base64_decode($base64)]
                 ])->first();
         }
         if($page === null) throw new NotFoundException();
