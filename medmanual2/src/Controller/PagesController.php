@@ -35,11 +35,16 @@ class PagesController extends AppController {
         $this->set(compact('pages'));
     }
 
-    public function view($id = null) {
-        $page = $this->Pages->get($id);
+    public function view($id, $base64) {
+        $page = null;
+        if ($id > 0) {
+            $page = $this->Pages->get($id);
+        } else {
+            $page = $this->Pages->find(['title' => base64_decode($base64)]);
+        }
         $page['path'] = array_filter(explode("$$$", $page['path'])); 
-        $this->set(compact('page'));
-        $this->set('paths', $this->Pages->getPaths($id));
+            $this->set(compact('page'));
+            $this->set('paths', $this->Pages->getPaths($id));
     }
 
     public function add() {
@@ -55,9 +60,14 @@ class PagesController extends AppController {
         $this->set('page', $page);
     }
 
-    public function edit($id = null) {
-        $page = $this->Pages->get($id);
-        $page['path'] = array_filter(explode("$$$", $page['path'])); 
+    public function edit($id, $base64) {
+        $page = null;
+        if ($id > 0) {
+            $page = $this->Pages->get($id);
+        } else {
+            $page = $this->Pages->find(['title' => base64_decode($base64)]);
+        }
+        
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
