@@ -39,6 +39,7 @@ class PagesController extends AppController {
         $page = $this->Pages->get($id);
         $page['path'] = array_filter(explode("$$$", $page['path'])); 
         $this->set(compact('page'));
+        $this->set('paths', $this->Pages->getPaths($id));
     }
 
     public function add() {
@@ -56,6 +57,7 @@ class PagesController extends AppController {
 
     public function edit($id = null) {
         $page = $this->Pages->get($id);
+        $page['path'] = array_filter(explode("$$$", $page['path'])); 
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {

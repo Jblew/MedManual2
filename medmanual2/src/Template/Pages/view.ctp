@@ -2,3 +2,9 @@
 <p><?= h($page->body) ?></p>
 <hr />
 <p><?php print_r($page->path) ?></p>
+
+<hr />
+
+<pre>
+    <?php print_r($paths) ?>
+</pre>
