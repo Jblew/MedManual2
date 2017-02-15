@@ -64,7 +64,7 @@ class PagesTable extends Table {
             $childrenOfPages[$parentId][] = $pageId;
         }
 
-        $tree = $pages[0];
+        $tree = (array)$pages[0];
         $tree['children'] = _populateNode($pages[0], $pages, $childrenOfPages);
         
         return $tree;
@@ -78,7 +78,7 @@ class PagesTable extends Table {
         foreach ($childrenOfPages[$id] as $childId) {
             $child = _getPageById($childId, $pages);
             $child['children'] = _populateNode($childId, $pages, $childrenOfPages);
-            $children[] = $child;
+            $children[] = (array)$child;
         }
 
         return $children;
