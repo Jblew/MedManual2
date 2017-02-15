@@ -21,6 +21,7 @@ class PagesTable extends Table {
 
     public function initialize(array $config) {
         $this->primaryKey('id');
+        $this->belongsTo('Users');
     }
 
     public function getPaths($id) {
