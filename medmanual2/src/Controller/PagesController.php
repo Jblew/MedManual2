@@ -70,6 +70,9 @@ class PagesController extends AppController {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents']
             ]);
+            foreach($page->parents as $i => $parent) {
+                $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
+            }
         } else {
             $page = $this->Pages->find('all', [
                         'conditions' => ['Pages.title =' => base64_decode($base64)]
@@ -110,7 +113,7 @@ class PagesController extends AppController {
                     'fields' => array('title', 'id')))->all();
         $response = array();
         foreach ($pages as $page) {
-            $response[] = ['id' => $page->id, 'title' => $page->title];
+            $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
         }
         echo json_encode($response);
     }

@@ -17,9 +17,13 @@ echo $this->Form->end();
         //console.log(parentsArr);
     }
     
-    function createNewForm(id) {
-        parentsArr[id] = null;
-        var elem = "<input class=\"parents-selector\" id=\"parents-selector-"+id+"\" /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
+    function createNewForm(id, initialTitle, initialId, prePathHtml) {
+        parentsArr[id] = initialId;
+        var elem = "<span id=\"parents-selector-"+id+"-prepath\">"+prePathHtml+"</span>"
+            + "<input value=\""+initialTitle+"\" class=\"parents-selector\" id=\"parents-selector-"+id+"\" />"
+            +"<span> &raquo;<?php echo($page->title); ?></span>"
+            + "<br /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
+        
         if(id == 0) {
             $("#parents-base").after(elem);
         }
@@ -35,9 +39,12 @@ echo $this->Form->end();
             list: {
                 onSelectItemEvent: function() {
                     if(!($("#parents-selector-"+(id+1)).length)) {
-                        createNewForm(id+1);
+                        createNewForm(id+1, '', null, '');
                     }
-                    parentsArr[id] = $("#parents-selector-"+id).getSelectedItemData().id;
+                    var selData = $("#parents-selector-"+id).getSelectedItemData();
+                    parentsArr[id] = selData.id;
+                    var prepathHtml;
+                    $("#parents-selector-"+id+"-prepath").html();
                     updateParentsField();
                 }
             }
@@ -45,6 +52,13 @@ echo $this->Form->end();
     }
     
     $(document).ready(function() {
+        <?php 
+            if(!isset($addMode)) {
+                foreach($page->parents as $parent) {
+                    $prePathHtml = 
+                }
+            }
+        ?>
         createNewForm(0);
     });
 </script>

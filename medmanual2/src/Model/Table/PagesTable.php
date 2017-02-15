@@ -20,8 +20,7 @@ class PagesTable extends Table {
             'foreignKey' => 'page_id',
             'targetForeignKey' => 'parent_id',
             'bindingKey' => 'id'
-
-    ]);
+        ]);
     }
 
     public function getPaths($id) {
@@ -36,7 +35,9 @@ class PagesTable extends Table {
         $rows = $stmt->fetchAll('assoc');
 
         foreach ($rows as $row) {
-            $paths[] = array_filter(explode("$$$", $row['path']));
+            $path = array_filter(explode("$$$", $row['path']));
+            array_pop($path);
+            $paths[] = $path;
         }
 
         return $paths;
