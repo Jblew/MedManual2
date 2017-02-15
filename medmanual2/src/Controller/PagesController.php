@@ -57,7 +57,7 @@ class PagesController extends AppController {
             $page = $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been saved.'));
-                return $this->redirect(['action' => 'edit',]);
+                return $this->redirect(['action' => 'edit', $page->id]);
             }
             $this->Flash->error(__('Unable to add your page.'));
         }
@@ -85,7 +85,7 @@ class PagesController extends AppController {
             $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been updated.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', $page->id]);
             }
             $this->Flash->error(__('Unable to update your page.'));
         }
