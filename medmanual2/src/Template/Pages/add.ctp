@@ -12,17 +12,15 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
     function createNewForm(id) {
-        var elem = "";
+        var elem = "<input id=\"parents-selector-"+id+"\" />";
         if(id == 0) {
             $("#parents-base").after(elem);
         }
         else {
             $("#parents-selector-"+(id-1)).after(elem);
         }
-    }
-    
-    $(document).ready(function() {
-        $("#parent-autocomplete").easyAutocomplete({
+        
+        $("#parents-selector-"+id).easyAutocomplete({
                 url: function(phrase) {
                 return "/pages/ajaxFindPage?term=" + phrase;
             },
@@ -31,5 +29,9 @@ echo $this->Form->end();
                 
             }
         });
+    }
+    
+    $(document).ready(function() {
+        
     });
 </script>
