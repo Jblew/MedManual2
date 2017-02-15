@@ -7,7 +7,7 @@
             
             foreach($path as $elem) {
                 echo(" &raquo; ");
-                echo("<a href=\"/pages/view/0/".base64_encode(".$elem.")."\">".$elem."</a>");
+                echo("<a href=\"/pages/view/0/".base64_encode($elem)."\">".$elem."</a>");
             }
             $addBr = true;
         }
