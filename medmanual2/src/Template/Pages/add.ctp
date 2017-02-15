@@ -10,12 +10,12 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
     function createNewForm(id) {
-        var elem = "<input id=\"parents-selector-"+id+"\" />";
+        var elem = "<input id=\"parents-selector-"+id+"\" /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
         if(id == 0) {
             $("#parents-base").after(elem);
         }
         else {
-            $("#parents-selector-"+(id-1)).after(elem);
+            $("#parents-selector-"+(id-1)+"-appendbase").after(elem);
         }
         
         $("#parents-selector-"+id).easyAutocomplete({
@@ -35,5 +35,6 @@ echo $this->Form->end();
     
     $(document).ready(function() {
         createNewForm(0);
+        createNewForm(1);
     });
 </script>
