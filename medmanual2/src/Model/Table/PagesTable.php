@@ -21,7 +21,7 @@ class PagesTable extends Table {
             'targetForeignKey' => 'parent_id',
             'bindingKey' => 'id'
         ]);
-        $this->hasMany('Children', [
+        $this->belongsToMany('Children', [ //belongsToMany is not a mistae
             'joinTable' => 'pages_parents',
             'className' => 'Pages',
             'foreignKey' => 'parent_id',
