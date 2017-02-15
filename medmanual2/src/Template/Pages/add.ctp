@@ -7,7 +7,7 @@ echo $this->Form->input('body', ['rows' => '3']);
 echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();
 ?>
-<scrtipt type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function() {
         $("#provider-json").easyAutocomplete({
                 url: function(phrase) {
