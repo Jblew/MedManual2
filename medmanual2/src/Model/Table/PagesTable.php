@@ -31,7 +31,8 @@ class PagesTable extends Table {
         $conn->execute("SET @@session.max_sp_recursion_depth = 255;");
         $conn->execute("DROP TEMPORARY TABLE IF EXISTS paths;");
         $conn->execute("CREATE TEMPORARY TABLE paths (path VARCHAR(255));");
-        $stmt = $conn->execute("CALL get_paths_procedure(?, '');SELECT * FROM paths;", [$id]);
+        $conn->execute("CALL get_paths_procedure(?, '');", [$id]);
+        $stmt = $conn->execute("SELECT * FROM paths;");
 
         $rows = $stmt->fetchAll('assoc');
 
