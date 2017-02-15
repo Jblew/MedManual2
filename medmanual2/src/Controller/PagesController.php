@@ -40,7 +40,9 @@ class PagesController extends AppController {
         if ($id > 0) {
             $page = $this->Pages->get($id);
         } else {
-            $page = $this->Pages->find(['title' => base64_decode($base64)]);
+            $page = $this->Pages->find('first', [
+                'conditions' => ['Pages.title' => base64_decode($base64)]
+                ]);
         }
         $page['path'] = array_filter(explode("$$$", $page['path'])); 
             $this->set(compact('page'));
