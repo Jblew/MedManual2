@@ -20,7 +20,7 @@ echo $this->Form->end();
     }
     
     function createNewForm(id) {
-        parents[id] = null;
+        parentsArr[id] = null;
         var elem = "<input class=\"parents-selector\" id=\"parents-selector-"+id+"\" /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
         if(id == 0) {
             $("#parents-base").after(elem);
