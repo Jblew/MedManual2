@@ -39,7 +39,7 @@ echo $this->Form->end();
                     if(!($("#parents-selector-"+(id+1)).length)) {
                         createNewForm(id+1);
                     }
-                    parentsArr[id] = $("#parents-selector-"+id).getSelectedItemData()).id;
+                    parentsArr[id] = $("#parents-selector-"+id).getSelectedItemData().id;
                     updateParentsField();
                 }
             }
