@@ -1,7 +1,5 @@
 <h1><?= (isset($addMode)? "Add" : "Edit") ?> Page</h1>
 <?php
-print_r($page);
-
 echo $this->Form->create($page);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
@@ -84,15 +82,14 @@ echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
     });
 </script>
 
-<div id="md-editor" contenteditable>
+<div id="md-editor" contenteditable style="border: 1px dotted greenyellow;">
     <?php
-        $body = $page->body;
-        
+        echo $page->body;
     ?>
 </div>
 
 <?php
-echo $this->Form->input('body', ['rows' => '10']);
+echo $this->Form->hidden('body');
 ?>
 <h2>Children</h2>
 <ul>
