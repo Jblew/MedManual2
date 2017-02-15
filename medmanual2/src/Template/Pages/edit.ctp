@@ -73,12 +73,13 @@ echo $this->Form->end();
                         $prePathHtml .= "</td></tr>";
                     }
                     $prePathHtml .= "</table>";
-                    echo("createNewForm(0, '".$parent->title."', ".$parent->id.", '".$prePathHtml."');");
+                    echo("createNewForm(".$i.", '".$parent->title."', ".$parent->id.", '".$prePathHtml."');");
                     $i++;
                 }
+                echo("createNewForm(".$i.", '', null, '');");
             }
             else {
-                echo("createNewForm(0, '', null);");
+                echo("createNewForm(0, '', null, '');");
             }
         ?>
         
