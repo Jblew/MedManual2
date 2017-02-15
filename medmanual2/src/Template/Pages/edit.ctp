@@ -89,7 +89,7 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 </div>
 
 <?php
-echo $this->Form->hidden('body');
+echo $this->Form->hidden('body', ['id' => 'edit-form-body']);
 ?>
 <h2>Children</h2>
 <ul>
@@ -104,7 +104,7 @@ echo $this->Form->end();
 <script type="text/javascript">
 $('#edit-form').submit(function() {
     alert("before-submit");
-    $('#body').value($("#md-editor").text());
+    $('#edit-form-body').value($("#md-editor").text());
     return true;
 });
 </script>
