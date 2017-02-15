@@ -11,7 +11,7 @@ echo $this->Form->end();
     $(document).ready(function() {
         $("#parent-autocomplete").easyAutocomplete({
                 url: function(phrase) {
-                return "pages/ajaxFindPage?term=" + phrase;
+                return "/pages/ajaxFindPage?term=" + phrase;
             },
             getValue: "title"
         });
