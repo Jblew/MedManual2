@@ -1,7 +1,5 @@
 <h1>Add Page</h1>
 <?php
-print_r($page);
-
 echo $this->Form->create($page);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
@@ -26,12 +24,12 @@ echo $this->Form->end();
             },
             getValue: "title",
             onSelectItemEvent: function() {
-                
+                createNewForm(id+1);
             }
         });
     }
     
     $(document).ready(function() {
-        
+        createNewForm(0);
     });
 </script>
