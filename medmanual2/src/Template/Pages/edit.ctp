@@ -120,23 +120,23 @@ if (!isset($addMode)) {
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 
-                if(div.html().match(/^###### /)) {
-                    div.html("<h6>"+div.html()+"</h6>");
+                if(div.text().trim().match(/^###### /)) {
+                    div.html("<h6>"+div.text().trim()+"</h6>");
                 }
-                else if(div.html().match(/^##### /)) {
-                    div.html("<h5>"+div.html()+"</h5>");
+                else if(div.text().trim().match(/^##### /)) {
+                    div.html("<h5>"+div.text().trim()+"</h5>");
                 }
-                else if(div.html().match(/^#### /)) {
-                    div.html("<h4>"+div.html()+"</h4>");
+                else if(div.text().trim().match(/^#### /)) {
+                    div.html("<h4>"+div.text().trim()+"</h4>");
                 }
-                else if(div.html().match(/^### /)) {
-                    div.html("<h3>"+div.html()+"</h3>");
+                else if(div.text().trim().match(/^### /)) {
+                    div.html("<h3>"+div.text().trim()+"</h3>");
                 }
-                else if(div.html().match(/^## /)) {
-                    div.html("<h2>"+div.html()+"</h2>");
+                else if(div.text().trim().match(/^## /)) {
+                    div.html("<h2>"+div.html().trim()+"</h2>");
                 }
-                else if(div.html().match(/^# /)) {
-                    div.html("<h1>"+div.html()+"</h1>");
+                else if(div.text().trim().match(/^# /)) {
+                    div.html("<h1>"+div.html().trim()+"</h1>");
                 }
                 
                 $("h1, h2, h3, h4, h5, h6").each(function(i, _elem) {
@@ -149,7 +149,7 @@ if (!isset($addMode)) {
 </script>
 
 <?php
-echo $this->Form->hidden('body', ['id' => 'edit-form-body', value=>'']);
+echo $this->Form->hidden('body', ['id' => 'edit-form-body', 'value'=>'']);
 ?>
 <h2>Children</h2>
 <ul>
