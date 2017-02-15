@@ -40,6 +40,7 @@ class PagesController extends AppController {
         if ($id > 0) {
             $page = $this->Pages->get($id);
         } else {
+            echo("Searching for: ".base64_decode($base64)."\n\n<br />");
             $page = $this->Pages->find('all', [
                 'conditions' => ['Pages.title =' => base64_decode($base64)]
                 ])->first();
