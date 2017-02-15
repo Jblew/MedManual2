@@ -72,10 +72,10 @@ echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
                     echo("createNewForm(".$i.", '".$parent->title."', ".$parent->id.", '".$prePathHtml."');");
                     $i++;
                 }
-                echo("createNewForm(".$i.", '', null, '');");
+                echo("createNewForm(".$i.", '', null, 'Dodaj rodzica:');");
             }
             else {
-                echo("createNewForm(0, '', null, '');");
+                echo("createNewForm(0, '', null, 'Dodaj rodzina:');");
             }
         ?>
         
