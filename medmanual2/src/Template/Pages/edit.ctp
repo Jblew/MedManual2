@@ -43,8 +43,16 @@ echo $this->Form->end();
                     }
                     var selData = $("#parents-selector-"+id).getSelectedItemData();
                     parentsArr[id] = selData.id;
-                    var prepathHtml;
-                    $("#parents-selector-"+id+"-prepath").html();
+                    var prepathHtml = "<table style=\"display: inline;\">";
+                    for(var pathI = 0; pathI < selData.paths.length;pathI++) {
+                        prepathHtml += "<tr><td>";
+                        for(var elemI = 0; elemI < selData.paths[pathI].length;elemI++) {
+                            prepathHtml += selData.paths[pathI][elemI]+" &raquo; ";
+                        }
+                        prepathHtml += "</td></tr>";
+                    }
+                    prepathHtml += "</table>";
+                    $("#parents-selector-"+id+"-prepath").html(prepathHtml);
                     updateParentsField();
                 }
             }
@@ -54,11 +62,25 @@ echo $this->Form->end();
     $(document).ready(function() {
         <?php 
             if(!isset($addMode)) {
+                $i = 0;
                 foreach($page->parents as $parent) {
-                    $prePathHtml = 
+                    $prePathHtml = "<table style=\"display: inline;\">";
+                    foreach($parent->paths as $path) {
+                        $prePathHtml .= "<tr><td>";
+                        foreach($path as $elem) {
+                            $prePathHtml .= $elem." &raquo; ";
+                        }
+                        $prePathHtml .= "</td></tr>";
+                    }
+                    $prePathHtml .= "</table>";
+                    echo("createNewForm(0, '".$parent->title."', ".$parent->id.", '".$prePathHtml."');");
+                    $i++;
                 }
             }
+            else {
+                echo("createNewForm(0, '', null);");
+            }
         ?>
-        createNewForm(0);
+        
     });
 </script>
