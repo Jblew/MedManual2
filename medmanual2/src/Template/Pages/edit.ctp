@@ -36,6 +36,7 @@ echo $this->Form->end();
                     if(!($("#parents-selector-"+(id+1)).length)) {
                         createNewForm(id+1);
                     }
+                    console.log($("#parents-selector-"+id).getSelectedItemData());
                     updateParentsField();
                 }
             }
