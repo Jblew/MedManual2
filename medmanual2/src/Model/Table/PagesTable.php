@@ -36,7 +36,8 @@ class PagesTable extends Table {
 
         foreach ($rows as $row) {
             print_r($row);
-            $paths[] = array_filter(explode("$$$", $row));
+            //$paths[] = array_filter(explode("$$$", $row));
+            $paths[] = $row;
         }
 
         return $paths;
