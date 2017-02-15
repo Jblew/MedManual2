@@ -81,7 +81,7 @@ class PagesTable extends Table {
         }
 
         foreach ($childrenOfPages[$id] as $childId) {
-            $child = _getPageById($childId, $pages);
+            $child = $this->_getPageById($childId, $pages);
             $child['children'] = $this->_populateNode($childId, $pages, $childrenOfPages);
             $children[] = (array)$child;
         }
