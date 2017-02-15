@@ -35,7 +35,7 @@ class PagesTable extends Table {
         $rows = $stmt->fetchAll('assoc');
 
         foreach ($rows as $row) {
-            $paths[] = $row;
+            $paths[] = array_filter(explode("$$$", $row));
         }
 
         return $paths;
