@@ -9,8 +9,16 @@ echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();
 ?>
 <script type="text/javascript">
+    function updateParentsField() {
+        var parentsStr = "";
+        $(".parents-selector").each(function(item) {
+            parentsStr+=$(item).getSelectedItemData().id+",";
+        });
+        $("#parents-base").val(parentsStr);
+    }
+    
     function createNewForm(id) {
-        var elem = "<input id=\"parents-selector-"+id+"\" /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
+        var elem = "<input class=\"parents-selector\" id=\"parents-selector-"+id+"\" /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
         if(id == 0) {
             $("#parents-base").after(elem);
         }
@@ -28,6 +36,7 @@ echo $this->Form->end();
                     if(!($("#parents-selector-"+(id+1)).length)) {
                         createNewForm(id+1);
                     }
+                    updateParentsField();
                 }
             }
         });

@@ -57,7 +57,7 @@ class PagesController extends AppController {
             $page = $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', ]);
             }
             $this->Flash->error(__('Unable to add your page.'));
         }
