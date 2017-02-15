@@ -16,10 +16,11 @@ echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
     
     function createNewForm(id, initialTitle, initialId, prePathHtml) {
         parentsArr[id] = initialId;
-        var elem = "<span id=\"parents-selector-"+id+"-prepath\">"+prePathHtml+"</span>"
-            + "<input value=\""+initialTitle+"\" class=\"parents-selector\" id=\"parents-selector-"+id+"\" />"
-            +"<span> &raquo;<?php echo($page->title); ?></span>"
-            + "<br /><span id=\"parents-selector-"+id+"-appendbase\"></span>";
+        var elem = "<table style=\"width: 100%;\"><tr>"
+            + "<td id=\"parents-selector-"+id+"-prepath\">"+prePathHtml+"</span></td>"
+            + "<td><input value=\""+initialTitle+"\" class=\"parents-selector\" id=\"parents-selector-"+id+"\" /></td>"
+            + "<td><span id=\"parents-selector-"+id+"-afterpath\"> &raquo;<?php echo($page->title); ?></span></td>"
+            + "</table><span id=\"parents-selector-"+id+"-appendbase\"></span>";
         
         if(id == 0) {
             $("#parents-base").after(elem);
@@ -83,11 +84,22 @@ echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
     });
 </script>
 
+<div id="md-editor" contenteditable>
+    <?php
+        $body = $page->body;
+        
+    ?>
+</div>
 
 <?php
 echo $this->Form->input('body', ['rows' => '10']);
 ?>
-<pre><?php print_r($page); ?></pre>
+<h2>Children</h2>
+<ul>
+    <?php foreach($page->children as $child): ?>
+    <li><?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
+    <?php endforeach; ?>
+</ul>
 <?php
 echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();

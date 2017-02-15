@@ -24,29 +24,9 @@ echo _getNodeHtml($tree);
 ?>
 </ul>
 <!--
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Action</th>
-    </tr>
-
-
-    <?php foreach ($pages as $page): ?>
-    <tr>
-        <td><?= $page->id ?></td>
-        <td>
-            <?= $this->Html->link($page->title, ['action' => 'view', $page->id]) ?>
-        </td>
-        <td>
-            <?= $this->Form->postLink(
+< $this->Form->postLink(
                 'Delete',
                 ['action' => 'delete', $page->id],
                 ['confirm' => 'Are you sure?'])
             ?>
-            <?= $this->Html->link('Edit', ['action' => 'edit', $page->id]) ?>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-</table>
 -->
