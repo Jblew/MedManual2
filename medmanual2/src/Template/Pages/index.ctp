@@ -2,13 +2,14 @@
 <?= $this->Html->link('Dodaj stronę', ['action' => 'add']) ?>
 
 <ul>
+    <pre><?php print_r($tree); ?></pre>
 <?php
 
 function _getNodeHtml($page) {
     $out = "<li>"
-            . "<strong><a href=\"/pages/view/\".$page->id.\"\">".$page->title."</a></strong>"
+            . "<strong><a href=\"/pages/view/".$page['id']."\">".$page['title']."</a></strong>"
             . " &raquo; "
-            . "<a href=\"/pages/edit/\".$page->id.\"\">Edit</a>"
+            . "<a href=\"/pages/edit/".$page['id']."\">Edit</a>"
             . "<ul>";
     
     foreach($page['children'] as $child) {
