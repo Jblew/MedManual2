@@ -41,11 +41,12 @@ class PagesController extends AppController {
             $page = $this->Pages->get($id);
         } else {
             $page = $this->Pages->find('all', [
-                'conditions' => ['Pages.title =' => base64_decode($base64)]
-                ])->first();
+                        'conditions' => ['Pages.title =' => base64_decode($base64)]
+                    ])->first();
         }
-        if($page === null) throw new NotFoundException();
-        
+        if ($page === null)
+            throw new NotFoundException();
+
         $this->set(compact('page'));
         $this->set('paths', $this->Pages->getPaths($id));
     }
@@ -69,11 +70,12 @@ class PagesController extends AppController {
             $page = $this->Pages->get($id);
         } else {
             $page = $this->Pages->find('all', [
-                'conditions' => ['Pages.title =' => base64_decode($base64)]
-                ])->first();
+                        'conditions' => ['Pages.title =' => base64_decode($base64)]
+                    ])->first();
         }
-        if($page === null) throw new NotFoundException();
-        
+        if ($page === null)
+            throw new NotFoundException();
+
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
@@ -94,6 +96,21 @@ class PagesController extends AppController {
             $this->Flash->success(__('The page with id: {0} has been deleted.', h($id)));
             return $this->redirect(['action' => 'index']);
         }
+    }
+
+    public function ajaxFindPage() {
+        Configure::write('debug', 0);
+        $this->autoRender = false;
+        $this->layout = 'ajax';
+        $query = $_GET['term'];
+        $pages = $this->Pages->find('all', array(
+            'conditions' => array('Pages.title LIKE' => '%' . $query . '%'),
+            'fields' => array('title', 'id')))->all();
+        $response = array();
+        foreach ($pages as $page) {
+            $response[] = ['id' => $page->id, 'title' => $page->title];
+        }
+        echo json_encode($response);
     }
 
     /**
