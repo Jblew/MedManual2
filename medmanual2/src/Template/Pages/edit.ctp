@@ -138,6 +138,11 @@ if (!isset($addMode)) {
                 else if(div.html().match(/^# /)) {
                     div.html("<h1>"+div.html()+"</h1>");
                 }
+                
+                $("h1, h2, h3, h4, h5, h6").each(function(i, _elem) {
+                    var elem = $(_elem);
+                    if(elem.html().trim() == '') elem.remove();
+                });
             });
         });
     });
