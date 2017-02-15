@@ -68,7 +68,7 @@ class PagesController extends AppController {
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
-                'contain' => ['Parents']
+                'contain' => ['Pages']
             ]);
         } else {
             $page = $this->Pages->find('all', [
