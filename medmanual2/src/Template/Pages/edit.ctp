@@ -3,7 +3,7 @@
 echo $this->Form->create($page, ['id' => 'edit-form']);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
-echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
+echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 ?>
 <script type="text/javascript">
     var parentsArr = [];
@@ -103,7 +103,7 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
 $('#edit-form').submit(function() {
-    $('#body').value($("#md-editor").html());
+    $('#body').value($("#md-editor").text());
     return true;
 });
 </script>
