@@ -25,7 +25,7 @@ echo $this->Form->end();
             getValue: "title",
             list: {
                 onSelectItemEvent: function() {
-                    createNewForm(id+1);
+                    if(!("#parents-selector-"+(id+1))) createNewForm(id+1);
                 }
             }
         });
