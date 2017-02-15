@@ -83,6 +83,7 @@ class PagesController extends AppController {
 
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
+            $page->body = str_replace("[newline]", "\n", $page->body);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been updated.'));
                 return $this->redirect(['action' => 'edit', $page->id]);

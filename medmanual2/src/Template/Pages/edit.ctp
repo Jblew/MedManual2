@@ -89,7 +89,7 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 </div>
 
 <?php
-echo $this->Form->hidden('body', ['id' => 'edit-form-body']);
+echo $this->Form->textarea('body', ['id' => 'edit-form-body']);
 ?>
 <h2>Children</h2>
 <ul>
@@ -103,8 +103,11 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
 $('#edit-form').submit(function() {
-    alert("before-submit");
-    $('#edit-form-body').value($("#md-editor").text());
+    $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
+    $('#tmp-val').html($("#md-editor").html());
+    $('#tmp-val div').append("[newline]");
+    $('#edit-form-body').val($("#tmp-val").text());
+    $('#tmp-val').remove();
     return true;
 });
 </script>
