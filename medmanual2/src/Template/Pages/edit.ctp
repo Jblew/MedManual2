@@ -1,5 +1,7 @@
 <h1><?= (isset($addMode)? "Add" : "Edit") ?> Page</h1>
 <?php
+print_r($page);
+
 echo $this->Form->create($page);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
@@ -11,12 +13,8 @@ echo $this->Form->end();
 <script type="text/javascript">
     var parentsArr = [];
     function updateParentsField() {
-        /*var parentsStr = "";
-        $(".parents-selector").each(function(item) {
-            parentsStr+=$(item).getSelectedItemData().id+",";
-        });
-        $("#parents-base").val(parentsStr);*/
-        console.log(parentsArr);
+        $("#parents-base").val(parentsArr.join(","));
+        //console.log(parentsArr);
     }
     
     function createNewForm(id) {
