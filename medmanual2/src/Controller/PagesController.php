@@ -57,7 +57,7 @@ class PagesController extends AppController {
             $page = $this->Pages->patchEntity($page, $this->request->data);
             if ($this->Pages->save($page)) {
                 $this->Flash->success(__('Your page has been saved.'));
-                return $this->redirect(['action' => 'edit', ]);
+                return $this->redirect(['action' => 'edit',]);
             }
             $this->Flash->error(__('Unable to add your page.'));
         }
@@ -67,7 +67,9 @@ class PagesController extends AppController {
     public function edit($id, $base64 = null) {
         $page = null;
         if ($id > 0) {
-            $page = $this->Pages->get($id);
+            $page = $this->Pages->get($id, [
+                'contain' => ['Parents']
+            ]);
         } else {
             $page = $this->Pages->find('all', [
                         'conditions' => ['Pages.title =' => base64_decode($base64)]
@@ -104,8 +106,8 @@ class PagesController extends AppController {
         $this->layout = 'ajax';
         $query = $_GET['term'];
         $pages = $this->Pages->find('all', array(
-            'conditions' => array('Pages.title LIKE' => '%' . $query . '%'),
-            'fields' => array('title', 'id')))->all();
+                    'conditions' => array('Pages.title LIKE' => '%' . $query . '%'),
+                    'fields' => array('title', 'id')))->all();
         $response = array();
         foreach ($pages as $page) {
             $response[] = ['id' => $page->id, 'title' => $page->title];
