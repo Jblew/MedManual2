@@ -23,8 +23,10 @@ echo $this->Form->end();
                 return "/pages/ajaxFindPage?term=" + phrase;
             },
             getValue: "title",
-            onSelectItemEvent: function() {
-                createNewForm(id+1);
+            list: {
+                onSelectItemEvent: function() {
+                    createNewForm(id+1);
+                }
             }
         });
     }
