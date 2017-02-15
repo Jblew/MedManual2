@@ -11,17 +11,15 @@ class PagesTable extends Table {
     //    'path' => 'get_path(Page.id)'
     //);
 
-    public $hasOne = array('User');
-    public $belongsToMany = array('Parents', [
+    public function initialize(array $config) {
+        $this->primaryKey('id');
+        $this->belongsTo('Users');
+        $this->belongsTo('Parents', [
             'joinTable' => 'pages_parents',
             'className' => 'Page',
             'foreignKey' => 'page_id',
             'targetForeignKey' => 'parent_id'
     ]);
-
-    public function initialize(array $config) {
-        $this->primaryKey('id');
-        $this->belongsTo('Users');
     }
 
     public function getPaths($id) {
