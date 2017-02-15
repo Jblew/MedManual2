@@ -103,6 +103,7 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
 $('#edit-form').submit(function() {
+    alert("before-submit");
     $('#body').value($("#md-editor").text());
     return true;
 });
