@@ -6,9 +6,9 @@
 
 function _getNodeHtml($page) {
     $out = "<li>"
-            . "<strong>".$this->Html->link($page->title, ['action' => 'view', $page->id])."</strong>"
+            . "<strong><a href=\"/pages/view/\".$page->id.\"\">".$page->title."</a></strong>"
             . " &raquo; "
-            . $this->Html->link('Edit', ['action' => 'edit', $page->id])
+            . "<a href=\"/pages/edit/\".$page->id.\"\">Edit</a>"
             . "<ul>";
     
     foreach($page['children'] as $child) {
