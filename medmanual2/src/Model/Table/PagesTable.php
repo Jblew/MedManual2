@@ -14,7 +14,7 @@ class PagesTable extends Table {
     public function initialize(array $config) {
         $this->primaryKey('id');
         $this->belongsTo('Users');
-        $this->belongsTo('Parents', [
+        $this->belongsToMany('Parents', [
             'joinTable' => 'pages_parents',
             'className' => 'Pages',
             'foreignKey' => 'page_id',
