@@ -3,7 +3,7 @@
 echo $this->Form->create($page);
 echo $this->Form->input('title');
 //echo "<input id=\"parent-autocomplete\" />";
-echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\"></span>";
+echo "<input type=\"hidden\" name=\"parents\" id=\"parents-base\">";
 echo $this->Form->input('body', ['rows' => '3']);
 echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();
@@ -25,7 +25,6 @@ echo $this->Form->end();
             getValue: "title",
             list: {
                 onSelectItemEvent: function() {
-                    alert("Selected");
                     if(!($("#parents-selector-"+(id+1)).length)) {
                         createNewForm(id+1);
                     }
