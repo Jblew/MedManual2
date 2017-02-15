@@ -66,7 +66,7 @@ class PagesTable extends Table {
         }
 
         $tree = $pages[0];
-        $tree['children'] = _populateNode($pages[0], $pages, $childrenOfPages);
+        $tree['children'] = $this->_populateNode($pages[0], $pages, $childrenOfPages);
         
         return $tree;
     }
@@ -78,7 +78,7 @@ class PagesTable extends Table {
         
         foreach ($childrenOfPages[$id] as $childId) {
             $child = _getPageById($childId, $pages);
-            $child['children'] = _populateNode($childId, $pages, $childrenOfPages);
+            $child['children'] = $this->_populateNode($childId, $pages, $childrenOfPages);
             $children[] = (array)$child;
         }
 
@@ -87,7 +87,7 @@ class PagesTable extends Table {
 
     private function _getPageById($id, $pages) {
         foreach ($pages as $p) {
-            if ($p['id'] == $id) {
+            if ($p->id == $id) {
                 return $p;
             }
         }
