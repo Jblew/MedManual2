@@ -27,7 +27,7 @@ class PagesTable extends Table {
         $paths = array();
 
         $conn = ConnectionManager::get('default');
-        
+
         $conn->execute("SET @@session.max_sp_recursion_depth = 255;DROP TEMPORARY TABLE IF EXISTS paths;CREATE TEMPORARY TABLE paths (path VARCHAR(255));");
         $conn->execute("CALL get_paths_procedure(?, '');", [$id]);
         $stmt = $conn->execute("SELECT * FROM paths;");
@@ -39,6 +39,58 @@ class PagesTable extends Table {
         }
 
         return $paths;
+    }
+
+    public function buildTree() {
+        $pages = $this->find('all', ['order' => ['Pages.id' => 'ASC']]);
+        $conn = ConnectionManager::get('default');
+
+        $stmt = $conn->execute("SELECT * FROM pages_parents;");
+        $rows = $stmt->fetchAll('assoc');
+        $parentsOfPages = array();
+        $childrenOfPages = array();
+
+        foreach ($rows as $row) {
+            $pageId = $row['page_id'];
+            $parentId = $row['parent_id'];
+            if (!isset($parentsOfPages[$pageId])) {
+                $parentsOfPages[$pageId] = array();
+            }
+            $parentsOfPages[$pageId][] = $parentId;
+
+            if (!isset($childrenOfPages[$parentId])) {
+                $childrenOfPages[$parentId] = array();
+            }
+            $childrenOfPages[$parentId][] = $pageId;
+        }
+
+        $tree = $pages[0];
+        $tree['children'] = _populateNode($pages[0], $pages, $childrenOfPages);
+        
+        return $tree;
+    }
+
+    private function _populateNode($id, $pages, $childrenOfPages) {
+        $children = array();
+
+        if(!isset($childrenOfPages[$id])) return array();
+        
+        foreach ($childrenOfPages[$id] as $childId) {
+            $child = _getPageById($childId, $pages);
+            $child['children'] = _populateNode($childId, $pages, $childrenOfPages);
+            $children[] = $child;
+        }
+
+        return $children;
+    }
+
+    private function _getPageById($id, $pages) {
+        foreach ($pages as $p) {
+            if ($p['id'] == $id) {
+                return $p;
+            }
+        }
+        return null;
     }
 
     /* public function validationDefault(Validator $validator)

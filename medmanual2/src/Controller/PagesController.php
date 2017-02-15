@@ -31,16 +31,15 @@ use Cake\View\Exception\MissingTemplateException;
 class PagesController extends AppController {
 
     public function index() {
-        $pages = $this->Pages->find('all');
-        $this->set(compact('pages'));
+        $tree = $this->Pages->buildTree();
+        $this->set('tree', $tree);
     }
 
-    public function view($id, $base64) {
+    public function view($id, $base64 = null) {
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id);
         } else {
-            echo("Searching for: ".base64_decode($base64)."\n\n<br />");
             $page = $this->Pages->find('all', [
                 'conditions' => ['Pages.title =' => base64_decode($base64)]
                 ])->first();
@@ -65,13 +64,16 @@ class PagesController extends AppController {
         $this->set('page', $page);
     }
 
-    public function edit($id, $base64) {
+    public function edit($id, $base64 = null) {
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id);
         } else {
-            $page = $this->Pages->find(['title' => base64_decode($base64)]);
+            $page = $this->Pages->find('all', [
+                'conditions' => ['Pages.title =' => base64_decode($base64)]
+                ])->first();
         }
+        if($page === null) throw new NotFoundException();
         
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->patchEntity($page, $this->request->data);
