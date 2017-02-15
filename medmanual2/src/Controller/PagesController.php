@@ -46,9 +46,8 @@ class PagesController extends AppController {
         }
         if($page === null) throw new NotFoundException();
         
-        $page['path'] = array_filter(explode("$$$", $page['path'])); 
-            $this->set(compact('page'));
-            $this->set('paths', $this->Pages->getPaths($id));
+        $this->set(compact('page'));
+        $this->set('paths', $this->Pages->getPaths($id));
     }
 
     public function add() {
