@@ -9,7 +9,7 @@ echo $this->Form->end();
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#provider-json").easyAutocomplete({
+        $("#parent-autocomplete").easyAutocomplete({
                 url: function(phrase) {
                 return "pages/ajaxFindPage?term=" + phrase;
             },
