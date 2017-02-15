@@ -26,7 +26,9 @@ echo $this->Form->end();
             list: {
                 onSelectItemEvent: function() {
                     alert("Selected");
-                    if(!("#parents-selector-"+(id+1))) createNewForm(id+1);
+                    if(!($("#parents-selector-"+(id+1)).length)) {
+                        createNewForm(id+1);
+                    }
                 }
             }
         });
