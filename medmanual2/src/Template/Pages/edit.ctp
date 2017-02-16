@@ -175,7 +175,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            restore();
+            //restore();
         });
     });
 </script>
