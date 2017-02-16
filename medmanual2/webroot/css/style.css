@@ -73,6 +73,10 @@ and open the template in the editor.
     width: 100%;
 }
 
+#edit-form .label {
+    display: none;
+}
+
 #edit-form .easy-autocomplete input {
     width: 100%;
     border: 1px dotted #ddd;
