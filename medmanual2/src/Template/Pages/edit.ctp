@@ -15,7 +15,10 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
         parentsArr[id] = initialId;
         var elem = "<table style=\"width: 100%;\" class=\"parents-table\"><tr>"
                 + "<td id=\"parents-selector-" + id + "-prepath\" class=\"outer-td td-prepath\">" + prePathHtml + "</span></td>"
-                + "<td class=\"outer-td td-input\"><input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" /></td>"
+                + "<td class=\"outer-td td-input\">"
+                + "   <input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" />"
+                + " <a href=\"/pages/edit/\" ><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
+                + "</td>"
                 + "<td class=\"outer-td td-afterpath\"><span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span></td>"
                 + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
 
@@ -79,7 +82,13 @@ if (!isset($addMode)) {
 
     });
 </script>
-
+<p>Children: 
+    <?php $first = true; ?>
+    <?php foreach ($page->children as $child): ?>
+        <?= ($first? ", " : "") ?>
+        <?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
+    <?php $first = false; endforeach; ?>
+</p>
 <div id="md-editor" contenteditable style="border: 1px dotted greenyellow;">
     <?php
 
@@ -152,12 +161,6 @@ if (!isset($addMode)) {
 <?php
 echo $this->Form->hidden('body', ['id' => 'edit-form-body', 'value'=>'']);
 ?>
-<h2>Children</h2>
-<ul>
-<?php foreach ($page->children as $child): ?>
-        <li><?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
-    <?php endforeach; ?>
-</ul>
     <?php
     echo $this->Form->button(__('Save Page'));
     echo $this->Form->end();

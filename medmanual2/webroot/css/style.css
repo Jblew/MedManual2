@@ -42,18 +42,16 @@ and open the template in the editor.
 #edit-form .parents-table td.td-prepath {
     text-align: right;
     text-align-last: right;
-    width: 45%;
+    width: 40%;
 }
 
 #edit-form .parents-table td.td-input {
-    text-align: right;
-    text-align-last: right;
     width: 35%;
 }
 
 #edit-form .parents-table td.td-afterpath {
     text-align: left;
-    width: 20%;
+    width: 25%;
 }
 
 #edit-form .parents-table td table {
@@ -79,4 +77,5 @@ and open the template in the editor.
     width: 100%;
     border: 1px dotted #ddd;
     color: #777;
+    text-align: center;
 }
