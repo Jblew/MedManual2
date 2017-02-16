@@ -137,7 +137,7 @@ function saveCaretPosition(context){
         var pos = getTextNodeAtPosition(context, len);
         selection.removeAllRanges();
         var range = new Range();
-        range.setStart(pos.node ,pos.position+addToPosition);
+        range.setStart(pos.node , (pos.position+addToPosition > len? pos.position : pos.position+addToPosition));
         selection.addRange(range);
 
     }
