@@ -38,10 +38,13 @@ class PagesController extends AppController {
     public function view($id, $base64 = null) {
         $page = null;
         if ($id > 0) {
-            $page = $this->Pages->get($id);
+            $page = $this->Pages->get($id, [
+                'contain' => ['Parents', 'Children']
+            ]);
         } else {
             $page = $this->Pages->find('all', [
-                        'conditions' => ['Pages.title =' => base64_decode($base64)]
+                        'conditions' => ['Pages.title =' => base64_decode($base64)],
+                        'contain' => ['Parents', 'Children']
                     ])->first();
         }
         if ($page === null)
