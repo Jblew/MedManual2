@@ -141,8 +141,12 @@ function saveCaretPosition(context){
         console.log(pos);
         selection.removeAllRanges();
         var range = new Range();
-        if(pos.node.data.endsWith(" ")) console.log("Space detected!");
-        range.setStart(pos.node , pos.position+(pos.node.data.endsWith(" ")? 1 : 0));
+        var newposition = pos.position;
+        if(pos.node.data.endsWith(" ")) {
+            console.log("Space detected!");
+            newposition+=1;
+        }
+        range.setStart(pos.node , newposition);
         selection.addRange(range);
 
     }
