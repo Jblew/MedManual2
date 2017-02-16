@@ -206,6 +206,28 @@ if (!isset($addMode)) {
                 }
                 else div.removeClass();
                 
+                //Inline elements
+                //int boldPos = 
+                var range = rangy.createRange();
+                var searchScopeRange = rangy.createRange();
+                searchScopeRange.selectNodeContents(div);
+                range.selectNodeContents(div);
+                searchResultApplier.undoToRange(range);
+                
+                var options = {
+                    caseSensitive: false,
+                    wholeWordsOnly: false,
+                    withinRange: searchScopeRange,
+                    direction: "forward" // This is redundant because "forward" is the default
+                };
+                
+                while (range.findText("karolina", options)) {
+                    // range now encompasses the first text match
+                    searchResultApplier.applyToRange(range);
+
+                    // Collapse the range to the position immediately after the match
+                    range.collapse(false);
+                }
             });
         });
        /*
