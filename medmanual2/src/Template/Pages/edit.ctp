@@ -25,7 +25,7 @@ echo $this->Form->input('title', ['class' => 'title']);
                     + "</td>"
                     + "<td class=\"outer-td td-afterpath\">"
                     + "   <a href=\"javascript:window.open('/pages/edit/0/" + base64_encode(initialTitle) + "', '','height=800,width=600');\" id=\"parents-selector-" + id + "-parentlink\" target=\"_blank\"><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
-                    + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span>"
+                    + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; </span>"
                     + "   <span style=\"color: red;\" class=\"glyphicon glyphicon-trash\" id=\"parents-selector-" + id + "-delete\"></span>"
                     + "</td>"
                     + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
