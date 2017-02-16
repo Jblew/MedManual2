@@ -92,3 +92,11 @@ and open the template in the editor.
 #md-editor {
     border: 2px dotted green;
 }
+
+.top-bar-section {
+    text-align: right;
+}
+
+#top-search-box {
+    text-align: right;
+}

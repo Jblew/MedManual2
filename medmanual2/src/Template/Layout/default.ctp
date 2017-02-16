@@ -42,14 +42,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <nav class="top-bar expanded" data-topbar role="navigation">
         <ul class="title-area large-3 medium-4 columns">
             <li class="name">
-                <h1><a href=""><?= $this->fetch('title') ?></a></h1>
+                <h1><a href="/"><?= $this->fetch('title') ?></a></h1>
             </li>
         </ul>
         <div class="top-bar-section">
-            <ul class="right">
-                <li><a target="_blank" href="http://book.cakephp.org/3.0/">Documentation</a></li>
-                <li><a target="_blank" href="http://api.cakephp.org/3.0/">API</a></li>
-            </ul>
+            <input class="search-box" value="" id="top-search-box" />
         </div>
     </nav>
     <?= $this->Flash->render() ?>
@@ -58,5 +55,23 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </div>
     <footer>
     </footer>
+
+<script type="text/javascript">
+       $(document).ready(function() {
+           $("#top-search-box").easyAutocomplete({
+                url: function (phrase) {
+                    return "/pages/ajaxFindPage?term=" + phrase;
+                },
+                getValue: "title",
+                list: {
+                    onChooseEvent: function () {
+                        var selData = $("#top-search-box").getSelectedItemData();
+                        window.location.href='/pages/view/'+selData.id;
+                    }
+                }
+            });
+       });
+</script>
+    
 </body>
 </html>
