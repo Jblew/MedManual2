@@ -51,13 +51,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             </div>
         </div>
     </nav>
-    <?= $this->Flash->render() ?>
-    <div class="container clearfix">
-        <?= $this->fetch('content') ?>
-    </div>
-    <footer>
-    </footer>
-
 <script type="text/javascript">
     var editMode = false;
     $(document).ready(function() {
@@ -80,6 +73,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
          });
     });
 </script>
+    
+    <?= $this->Flash->render() ?>
+    <div class="container clearfix">
+        <?= $this->fetch('content') ?>
+    </div>
+    <footer>
+    </footer>
     
 </body>
 </html>
