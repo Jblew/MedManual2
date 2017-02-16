@@ -4,7 +4,7 @@
 -->
 
 <?php
-echo $this->Form->create($page, ['id' => 'edit-form']);
+echo $this->Form->create($page, ['id' => 'edit-form', 'label' => null]);
 echo $this->Form->input('title', ['class' => 'title']);
 //echo "<input id=\"parent-autocomplete\" />";
 echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
