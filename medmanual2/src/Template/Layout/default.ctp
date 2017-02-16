@@ -46,7 +46,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             </li>
         </ul>
         <div class="top-bar-section">
-            <input class="search-box" value="" id="top-search-box" />
+            <div class="search-container">
+                <input class="search-box" value="" id="top-search-box" />
+            </div>
         </div>
     </nav>
     <?= $this->Flash->render() ?>
