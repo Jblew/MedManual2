@@ -179,6 +179,7 @@ if (!isset($addMode)) {
                 else if(div.text().startsWith("###### ")) {
                     div.addClass("h6");
                 }
+                else div.removeClass();
             });
         });
        /*
