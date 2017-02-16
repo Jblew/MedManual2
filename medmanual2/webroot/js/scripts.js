@@ -118,39 +118,39 @@ function setCaretPosition(element, offset) {
 }
 
 function editableIsCaret() {
-  var sel = window.getSelection();
-  return sel.rangeCount == 1 && sel.getRangeAt(0).collapsed;
+    var sel = window.getSelection();
+    return sel.rangeCount == 1 && sel.getRangeAt(0).collapsed;
 }
 
 function editableRange() {
-  var sel = window.getSelection();
-  return sel.getRangeAt(0);
+    var sel = window.getSelection();
+    return sel.getRangeAt(0);
 }
 
-function saveCaretPosition(context){
+function saveCaretPosition(context) {
     var selection = window.getSelection();
     var range = selection.getRangeAt(0);
-    range.setStart(  context, 0 );
+    range.setStart(context, 0);
     var len = range.toString().length;
 
-    return function restore(space, newline){
+    return function restore(space, newline) {
         var pos = getTextNodeAtPosition(context, len, newline);
         //console.log("pos: ");
         //console.log(pos);
         selection.removeAllRanges();
         var range = new Range();
         var newposition = pos.position;
-        range.setStart(pos.node , newposition);
+        range.setStart(pos.node, newposition);
         selection.addRange(range);
 
     }
 }
 
-function getTextNodeAtPosition(root, index, getNextElement){
+function getTextNodeAtPosition(root, index, getNextElement) {
     var lastNode = null;
 
-    var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,function next(elem) {
-        if(index > elem.textContent.length){
+    var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, function next(elem) {
+        if (index > elem.textContent.length) {
             index -= elem.textContent.length;
             lastNode = elem;
             return NodeFilter.FILTER_REJECT
@@ -158,14 +158,214 @@ function getTextNodeAtPosition(root, index, getNextElement){
         return NodeFilter.FILTER_ACCEPT;
     });
     var c = treeWalker.nextNode();
-    if(getNextElement) {
+    if (getNextElement) {
         var c2 = treeWalker.nextNode();
-        if(c2 !== null) {
+        if (c2 !== null) {
             c = c2;
         }
     }
     return {
-        node: c? c: root,
-        position: c? index:  0
+        node: c ? c : root,
+        position: c ? index : 0
     };
 }
+
+function pasteHtmlAtCaret(html) {
+    var sel, range;
+    if (window.getSelection) {
+        // IE9 and non-IE
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+
+            // Range.createContextualFragment() would be useful here but is
+            // non-standard and not supported in all browsers (IE9, for one)
+            var el = document.createElement("div");
+            el.innerHTML = html;
+            var frag = document.createDocumentFragment(), node, lastNode;
+            while ((node = el.firstChild)) {
+                lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+
+            // Preserve the selection
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+    } else if (document.selection && document.selection.type != "Control") {
+        // IE < 9
+        document.selection.createRange().pasteHTML(html);
+    }
+}
+
+function insertTextAtCursor(text) {
+    var range, sel = rangy.getSelection();
+    if (sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.insertNode(document.createTextNode(text));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function gEBI(id) {
+    return document.getElementById(id);
+}
+
+var searchResultApplier;
+
+function toggleItalicYellowBg() {
+    searchResultApplier.toggleSelection();
+}
+
+
+function doSearch() {
+    // Remove existing highlights
+    var range = rangy.createRange();
+    var caseSensitive = caseSensitiveCheckBox.checked;
+    var searchScopeRange = rangy.createRange();
+    searchScopeRange.selectNodeContents(document.body);
+
+    var options = {
+        caseSensitive: caseSensitive,
+        wholeWordsOnly: wholeWordsOnlyCheckBox.checked,
+        withinRange: searchScopeRange,
+        direction: "forward" // This is redundant because "forward" is the default
+    };
+
+    range.selectNodeContents(document.body);
+    searchResultApplier.undoToRange(range);
+
+    // Create search term
+    var searchTerm = searchBox.value;
+
+    if (searchTerm !== "") {
+
+        // Iterate over matches
+        while (range.findText(searchTerm, options)) {
+            // range now encompasses the first text match
+            searchResultApplier.applyToRange(range);
+
+            // Collapse the range to the position immediately after the match
+            range.collapse(false);
+        }
+    }
+
+    timer = null;
+}
+
+
+function initSnapToWords1() {
+    gEBI("demo1").onmouseup = function() {
+        rangy.getSelection().expand("word");
+    };
+}
+
+function initSnapToWords2() {
+    gEBI("demo2").onmouseup = function() {
+        rangy.getSelection().expand("word", {
+            wordOptions: {
+                includeTrailingSpace: true
+            }
+        });
+    };
+}
+
+function initSnapToWords3() {
+    gEBI("demo3").onmouseup = function() {
+        rangy.getSelection().expand("word", {
+            wordOptions: {
+                wordRegex: /[a-z0-9]+(['\-][a-z0-9]+)*/gi
+            }
+        });
+    };
+}
+
+function initSnapToWords4() {
+    gEBI("demo4").onmouseup = function() {
+        rangy.getSelection().expand("word", {
+            trim: true
+        });
+    };
+}
+
+function initSaveRestore() {
+    var saveButton = gEBI("saveSelButton");
+    var restoreButton = gEBI("restoreSelButton");
+    var changeFormattingButton = gEBI("changeFormattingButton");
+    var containerElement = gEBI("demo5");
+
+    var savedSel = null;
+
+    saveButton.disabled = false;
+
+    saveButton.onclick = function() {
+        savedSel = rangy.getSelection().saveCharacterRanges(containerElement);
+        restoreButton.disabled = false;
+    };
+
+    restoreButton.onclick = function() {
+        rangy.getSelection().restoreCharacterRanges(containerElement, savedSel);
+    };
+
+    var redItalicApplier = rangy.createClassApplier("redItalic");
+    var textLength = rangy.innerText(containerElement).length;
+
+    changeFormattingButton.disabled = false;
+    changeFormattingButton.onclick = function() {
+        // Randomly apply and unapply some formatting
+        var start = Math.floor(Math.random() * textLength);
+        var end = Math.floor(Math.random() * textLength);
+        if (start > end) {
+            var temp = end;
+            end = start;
+            start = temp;
+        }
+        var range = rangy.createRange();
+        range.selectCharacters(containerElement, start, end);
+        redItalicApplier.toggleRange(range);
+    };
+}
+
+function initCaretMove() {
+    var editableDiv = gEBI("demo6");
+    var caretLeftButton = gEBI("caretLeftButton");
+    var caretRightButton = gEBI("caretRightButton");
+
+    caretLeftButton.onmousedown = function() {
+        rangy.getSelection().move("character", -1);
+        return false;
+    };
+
+    caretRightButton.onmousedown = function() {
+        rangy.getSelection().move("character", 1);
+        return false;
+    };
+}
+
+window.onload = function() {
+    rangy.init();
+    initFind();
+    initSnapToWords1();
+    initSnapToWords2();
+    initSnapToWords3();
+    initSnapToWords4();
+    initSaveRestore();
+    initCaretMove();
+};

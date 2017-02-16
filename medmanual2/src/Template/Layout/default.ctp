@@ -35,6 +35,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     
     <?=  $this->Html->script('jquery-3.1.1.min.js') ?> 
     <?=  $this->Html->script('jquery.easy-autocomplete.min.js') ?>
+    <?=  $this->Html->script('rangy/rangy-core.js') ?>
+    <?=  $this->Html->script('rangy/rangy-classapplier.js') ?>
+    <?=  $this->Html->script('rangy/rangy-textrange.js') ?>
     <?=  $this->Html->script('scripts.js') ?> 
     <?= $this->fetch('script') ?>
 </head>

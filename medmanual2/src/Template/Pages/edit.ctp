@@ -152,18 +152,43 @@ if (!isset($addMode)) {
 <script type="text/javascript">
     $(document).ready(function() {
         var mdEditor = $("#md-editor");
-        mdEditor.on('keyup', function(evt) {
-            if(evt.key === ' ') {
-                
-            }
-        });
+        var searchResultApplier = null;
+        
+        var classApplierModule = rangy.modules.ClassApplier;
+        if (rangy.supported && classApplierModule && classApplierModule.supported) {
+            searchResultApplier = rangy.createClassApplier("searchResult");
+        }
         mdEditor.on('paste input', function() {
-            var restore = saveCaretPosition(this);
-            var space = false;
-            var newline = false;
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
-                $("br", div).each(function(i, _br) {
+                if(div.text().startsWith("# ")) {
+                    div.addClass("h1");
+                }
+                else if(div.text().startsWith("## ")) {
+                    div.addClass("h2");
+                }
+                else if(div.text().startsWith("### ")) {
+                    div.addClass("h3");
+                }
+                else if(div.text().startsWith("#### ")) {
+                    div.addClass("h4");
+                }
+                else if(div.text().startsWith("##### ")) {
+                    div.addClass("h5");
+                }
+                else if(div.text().startsWith("###### ")) {
+                    div.addClass("h6");
+                }
+            });
+        });
+       /*
+        mdEditor.on('paste input', function() {
+            //var restore = saveCaretPosition(this);
+            //var space = false;
+            //var newline = false;
+            $("#md-editor div").each(function(i, _div) {
+                var div = $(_div);
+                /*$("br", div).each(function(i, _br) {
                     var br = $(_br);
                     if(!br.hasClass("marked")) {
                         br.addClass("marked");
@@ -171,18 +196,18 @@ if (!isset($addMode)) {
                         //div.append("\n");
                         newline=true;
                     }
-                });
+                });/
                 /*if(!div.html().endsWith("\n")) {
                     div.append("\n");
                     //newline=true;
-                }*/
+                }/
                 
                 /*if(div.html().endsWith(" \n")) {
                     div.html(div.html().substr(0, div.html().length-2)+"&nbsp;\n");
                 }
                 if(div.html().endsWith(" ")) {
                     div.html(div.html().substr(0, div.html().length-1)+"&nbsp;");
-                }*/
+                }/
                 //div.html(div.html().replace(" ", "&nbsp;"));
                 
                 if(div.html().trim().match(/^###### /)) {
@@ -213,8 +238,8 @@ if (!isset($addMode)) {
             //$("#md-editor").html($("#md-editor").html().replace("<br class=\"marked\"></div>", "<br>\n</div>"));
             
             console.log($("#md-editor").html());
-            restore(space, newline);
-        });
+            //restore(space, newline);
+        });*/
     });
 </script>
 <p> </p>
