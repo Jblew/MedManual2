@@ -267,6 +267,11 @@ if (!isset($addMode)) {
             console.log($("#md-editor").html());
             //restore(space, newline);
         });*/
+        
+        $("#md-editor").trigger('input');
+        $(window).on('resize', function() {
+            $("#md-editor").trigger('input');
+        });
     });
 </script>
 <p> </p>
