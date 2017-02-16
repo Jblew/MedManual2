@@ -152,7 +152,7 @@ if (!isset($addMode)) {
                 var div = $(_div);
                 if(!div.html().endsWith("\n")) {
                     div.append("\n");
-                    addToPos++;
+                    addToPos+=2;
                 }
                 
                 if(div.html().trim().match(/^###### /)) {

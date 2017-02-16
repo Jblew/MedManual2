@@ -128,6 +128,8 @@ function editableRange() {
 }
 
 function saveCaretPosition(context){
+    console.log("context: ");
+    console.log(context);
     var selection = window.getSelection();
     var range = selection.getRangeAt(0);
     range.setStart(  context, 0 );
@@ -135,6 +137,7 @@ function saveCaretPosition(context){
 
     return function restore(addToPosition){
         var pos = getTextNodeAtPosition(context, len+addToPosition);
+        console.log("pos: ");
         console.log(pos);
         selection.removeAllRanges();
         var range = new Range();
