@@ -100,8 +100,5 @@ and open the template in the editor.
 
 #top-search-box {
     text-align: right;
-}
-
-#top-search-box input {
     top: 0;
 }
