@@ -103,7 +103,7 @@ if (!isset($addMode)) {
         <?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
     <?php $first = false; endforeach; ?>
 </p>
-<div id="md-editor" contenteditable style="border: 1px dotted greenyellow;">
+<div id="md-editor" contenteditable style="border: 2px dotted green;">
     <?php
 
     function startsWith($haystack, $needle) {
@@ -158,6 +158,7 @@ if (!isset($addMode)) {
                 }
                 else if(div.html().trim().match(/^## /)) {
                     div.html("<h2>"+div.text().trim()+"</h2>");
+                    console.log("Inserting h2");
                 }
                 else if(div.html().trim().match(/^# /)) {
                     div.html("<h1>"+div.text().trim()+"</h1>");
@@ -171,7 +172,7 @@ if (!isset($addMode)) {
         });
     });
 </script>
-
+<p><br /></p>
 <?php
 echo $this->Form->hidden('body', ['id' => 'edit-form-body', 'value'=>'']);
 ?>
