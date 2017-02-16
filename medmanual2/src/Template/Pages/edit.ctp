@@ -155,11 +155,18 @@ if (!isset($addMode)) {
             var newline = false;
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
-                if(!div.html().endsWith("\n")) {
+                $("br", div).each(function(i, _br) {
+                    var br = $(_br);
+                    if(!br.hasClass("marked")) {
+                        br.addClass("marked");
+                        newline=true;
+                    }
+                });
+                /*if(!div.html().endsWith("\n")) {
                     div.append("\n");
-                    newline=true;
-                }
-                console.log($("#md-editor").html());
+                    //newline=true;
+                }*/
+                
                 /*if(div.html().endsWith(" \n")) {
                     div.html(div.html().substr(0, div.html().length-2)+"&nbsp;\n");
                 }
@@ -193,6 +200,9 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
+            //$("#md-editor").html($("#md-editor").html().replace("<br></div>", "<br>\n</div>"));
+            
+            console.log($("#md-editor").html());
             restore(space, newline);
         });
     });
