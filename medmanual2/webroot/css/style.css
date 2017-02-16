@@ -88,3 +88,7 @@ and open the template in the editor.
 .children-field a {
     color: #5fc3cd;
 }
+
+#md-editor {
+    border: 2px dotted green;
+}

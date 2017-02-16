@@ -103,7 +103,7 @@ if (!isset($addMode)) {
         <?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
     <?php $first = false; endforeach; ?>
 </p>
-<div id="md-editor" contenteditable style="border: 2px dotted green;">
+<div id="md-editor" contenteditable>
     <?php
 
     function startsWith($haystack, $needle) {
@@ -141,7 +141,7 @@ if (!isset($addMode)) {
 <script type="text/javascript">
     $(document).ready(function() {
         $("#md-editor").on('blur keyup paste input', function() {
-            console.log("Editor event");
+            console.log("Editor event");});
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 
