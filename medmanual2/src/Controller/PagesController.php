@@ -85,9 +85,9 @@ class PagesController extends AppController {
 
         if ($this->request->is(['post', 'put'])) {
             $newParents = array_filter(explode(",", $this->request->data['parentsids']), 
-            function($v, $k) {
+            function($v) {
                 return $v != null && trim($v) != '' && $v !== "null";
-            }, ARRAY_FILTER_USE_BOTH);
+            });
             
             $this->request->data['Parents'] = ['_ids' => $newParents];
             $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
