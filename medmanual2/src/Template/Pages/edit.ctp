@@ -146,7 +146,7 @@ if (!isset($addMode)) {
         var mdEditor = $("#md-editor");
         mdEditor.on('blur paste input', function() {
             console.log("Editor event");
-            var caretPosition = getCaretCharacterOffsetWithin(mdEditor.get(0));
+            var restore = saveCaretPosition(this);
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 
@@ -175,7 +175,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            setCaretPosition(mdEditor.get(0), caretPosition);
+            restore();
         });
     });
 </script>
