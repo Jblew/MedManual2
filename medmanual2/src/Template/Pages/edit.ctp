@@ -159,6 +159,7 @@ if (!isset($addMode)) {
                     var br = $(_br);
                     if(!br.hasClass("marked")) {
                         br.addClass("marked");
+                        br.after("\n");
                         newline=true;
                     }
                 });
