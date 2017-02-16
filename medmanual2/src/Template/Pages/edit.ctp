@@ -221,13 +221,13 @@ if (!isset($addMode)) {
                     direction: "forward" // This is redundant because "forward" is the default
                 };
                 
-                while (range.findText("karolina", options)) {
+                /*while (range.findText("karolina", options)) {
                     // range now encompasses the first text match
                     searchResultApplier.applyToRange(range);
 
                     // Collapse the range to the position immediately after the match
                     range.collapse(false);
-                }
+                }*/
             });
         });
        /*
