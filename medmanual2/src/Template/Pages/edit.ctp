@@ -183,8 +183,9 @@ if (!isset($addMode)) {
                     if(!div.hasClass("img")) {
                         var re = /\!\[[^\]]*\]\(([^\)]*)\)/g;
                         var res = re.exec(div.text());
-                        if(res.length > 1) {
+                        if(res !== null && res.length > 1) {
                             var url = res[1];
+                            div.addClass('img');
                             div.css('background: url('+url+');');
                         }
                     }
