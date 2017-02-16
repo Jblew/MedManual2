@@ -179,7 +179,18 @@ if (!isset($addMode)) {
                 else if(div.text().startsWith("###### ")) {
                     div.addClass("h6");
                 }
+                else if(div.text().startsWith("![")) {
+                    if(!div.hasClass("img")) {
+                        var re = /\!\[[^\]]*\]\(([^\)]*)\)/g;
+                        var res = re.exec(div.text());
+                        if(res.length > 1) {
+                            var url = res[1];
+                            div.css('background: url('+url+');');
+                        }
+                    }
+                }
                 else div.removeClass();
+                
             });
         });
        /*
