@@ -210,7 +210,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            $("#md-editor").html($("#md-editor").html().replace("<br class=\"marked\"></div>", "<br>\n</div>"));
+            //$("#md-editor").html($("#md-editor").html().replace("<br class=\"marked\"></div>", "<br>\n</div>"));
             
             console.log($("#md-editor").html());
             restore(space, newline);
