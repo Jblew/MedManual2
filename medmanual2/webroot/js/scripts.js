@@ -222,6 +222,54 @@ function insertTextAtCursor(text) {
 
 
 
+
+/*
+function initSaveRestore() {
+    var saveButton = gEBI("saveSelButton");
+    var restoreButton = gEBI("restoreSelButton");
+    var changeFormattingButton = gEBI("changeFormattingButton");
+    var containerElement = gEBI("demo5");
+
+    var savedSel = null;
+
+    saveButton.disabled = false;
+
+    saveButton.onclick = function() {
+        savedSel = rangy.getSelection().saveCharacterRanges(containerElement);
+        restoreButton.disabled = false;
+    };
+
+    restoreButton.onclick = function() {
+        rangy.getSelection().restoreCharacterRanges(containerElement, savedSel);
+    };
+
+    var redItalicApplier = rangy.createClassApplier("redItalic");
+    var textLength = rangy.innerText(containerElement).length;
+
+    changeFormattingButton.disabled = false;
+    changeFormattingButton.onclick = function() {
+        // Randomly apply and unapply some formatting
+        var start = Math.floor(Math.random() * textLength);
+        var end = Math.floor(Math.random() * textLength);
+        if (start > end) {
+            var temp = end;
+            end = start;
+            start = temp;
+        }
+        var range = rangy.createRange();
+        range.selectCharacters(containerElement, start, end);
+        redItalicApplier.toggleRange(range);
+    };
+}
+
+
+
+*/
+
+
+
+
+
 /*
 
 function gEBI(id) {

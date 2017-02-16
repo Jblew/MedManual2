@@ -153,10 +153,16 @@ if (!isset($addMode)) {
     $(document).ready(function () {
         var mdEditor = $("#md-editor");
         var searchResultApplier = null;
+        var boldApplier = null;
+        var italicApplier = null;
+        var linkApplier = null;
 
         var classApplierModule = rangy.modules.ClassApplier;
         if (rangy.supported && classApplierModule && classApplierModule.supported) {
             searchResultApplier = rangy.createClassApplier("searchResult");
+            boldApplier = rangy.createClassApplier("bold");
+            italicApplier = rangy.createClassApplier("italic");
+            linkApplier = rangy.createClassApplier("link");
         }
         mdEditor.on('paste input', function () {
             $("#md-editor div").each(function (i, _div) {
@@ -206,23 +212,28 @@ if (!isset($addMode)) {
             var elem = $("#md-editor").get(0);
             var savedSel = rangy.getSelection().saveCharacterRanges(elem);
             
-            var range = rangy.createRange();
-            var searchScopeRange = rangy.createRange();
-            searchScopeRange.selectNodeContents(elem); // (div.get(0));
-
-            var options = {
-                caseSensitive: false,
-                wholeWordsOnly: false,
-                withinRange: searchScopeRange,
-                direction: "forward" // This is redundant because "forward" is the default
-            };
-
-            range.selectNodeContents(elem); //(div.get(0));
-            searchResultApplier.undoToRange(range);
-
-            while (range.findText("karolina", options)) {
-                searchResultApplier.applyToRange(range);range.collapse(false);
+            function highlightText(searchTerm, applier) {
+                var range = rangy.createRange();
+                var searchScopeRange = rangy.createRange();
+                searchScopeRange.selectNodeContents(elem);
+                
+                var options = {
+                    caseSensitive: false,
+                    wholeWordsOnly: false,
+                    withinRange: searchScopeRange,
+                    direction: "forward" // This is redundant because "forward" is the default
+                };
+                
+                range.selectNodeContents(elem);
+                searchResultApplier.undoToRange(range);
+                
+                while (range.findText(term, options)) {
+                    applier.applyToRange(range);range.collapse(false);
+                }
             }
+            
+            highlightText("karolina", searchResultApplier);
+            
             
             rangy.getSelection().restoreCharacterRanges(elem, savedSel);
         });
