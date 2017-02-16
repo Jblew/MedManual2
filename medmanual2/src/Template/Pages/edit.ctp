@@ -155,7 +155,7 @@ if (!isset($addMode)) {
                     div.append("\n");
                     newline=true;
                 }
-                if(div.html().endsWith(" \n")) {
+                if(div.html().endsWith(" \n") || div.html().endsWith(" ")) {
                     space=true;
                 }
                 
