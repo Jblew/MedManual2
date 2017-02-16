@@ -45,7 +45,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <nav class="top-bar expanded" data-topbar role="navigation">
         <ul class="title-area large-3 medium-4 columns">
             <li class="name">
-                <h1><a href="/"><?= $this->fetch('title') ?></a></h1>
+                <h1><a href="/">Manuał Medyczny JL 2.0</a></h1>
             </li>
         </ul>
         <div class="top-bar-section">
@@ -66,7 +66,10 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                  onChooseEvent: function () {
                      var selData = $("#top-search-box").getSelectedItemData();
                      if(editMode) {
-                         window.location.href='/pages/edit/'+selData.id;
+                         window.open(
+                            '/pages/edit/'+selData.id,
+                            "", "height=800,width=600"
+                            );
                      }
                      else {
                          window.location.href='/pages/view/'+selData.id;
