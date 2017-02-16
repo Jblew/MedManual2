@@ -149,7 +149,7 @@ if (!isset($addMode)) {
             var restore = saveCaretPosition(this);
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
-                if(!div.html().endsWith("\n")) div.append("\n");
+                if(!div.html().endsWith("n")) div.append("n");
                 
                 if(div.html().trim().match(/^###### /)) {
                     div.html("<h6>"+div.text().trim()+"</h6>");
