@@ -186,10 +186,19 @@ if (!isset($addMode)) {
                     if(res !== null && res.length > 1) {
                         var url = res[1];
                         div.addClass('img');
-                        div.css('background', 'url('+url+') no-repeat 22px center');
+                        div.css('background', '#dddddd url('+url+')');
+                        div.css('background-repeat', 'no-repeat');
+                        div.css('background-position-x', 'center');
+                        div.css('background-position-y', '22px');
                         var img = new Image();
                         img.onload = function() {
-                            div.css('height', img.height);
+                            if(img.width > window.innerWidth) {
+                                var newWidth = window.innerWidth;
+                                var newHeight = img.height*newWidth/img.width;
+                                div.css('height', newHeight+40);
+                                div.css('background-size', newWidth+'px '+newHeight+'px');
+                            }
+                            else div.css('height', img.height+40);
                         };
                         img.src = url;
                     }
