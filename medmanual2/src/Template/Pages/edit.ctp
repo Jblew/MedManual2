@@ -156,10 +156,10 @@ if (!isset($addMode)) {
                     newline=true;
                 }
                 if(div.html().endsWith(" \n")) {
-                    div.html(div.html().substr(0, div.html().length()-2)+"&nbsp;\n");
+                    div.html(div.html().substr(0, div.html().length-2)+"&nbsp;\n");
                 }
                 if(div.html().endsWith(" ")) {
-                    div.html(div.html().substr(0, div.html().length()-1)+"&nbsp;");
+                    div.html(div.html().substr(0, div.html().length-1)+"&nbsp;");
                 }
                 
                 if(div.html().trim().match(/^###### /)) {
