@@ -151,18 +151,15 @@ if (!isset($addMode)) {
             var newline = false;
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
-                var html = div.html();
-                if(!html.endsWith("\n")) {
+                if(!div.html().endsWith("\n")) {
                     div.append("\n");
                     newline=true;
                 }
-                html = div.html();
-                if(html.endsWith(" \n")) {
-                    div.html(html.substr(0, html.length()-2)+"&nbsp;\n");
+                if(div.html().endsWith(" \n")) {
+                    div.html(div.html().substr(0, div.html().length()-2)+"&nbsp;\n");
                 }
-                html = div.html();
-                if(html.endsWith(" ")) {
-                    div.html(html.substr(0, html.length()-1)+"&nbsp;");
+                if(div.html().endsWith(" ")) {
+                    div.html(div.html().substr(0, div.html().length()-1)+"&nbsp;");
                 }
                 
                 if(div.html().trim().match(/^###### /)) {
