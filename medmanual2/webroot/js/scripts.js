@@ -135,8 +135,8 @@ function saveCaretPosition(context){
 
     return function restore(space, newline){
         var pos = getTextNodeAtPosition(context, len, newline);
-        console.log("pos: ");
-        console.log(pos);
+        //console.log("pos: ");
+        //console.log(pos);
         selection.removeAllRanges();
         var range = new Range();
         var newposition = pos.position;

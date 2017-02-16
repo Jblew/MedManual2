@@ -150,16 +150,16 @@ if (!isset($addMode)) {
             }
         });
         mdEditor.on('paste input', function() {
-            console.log("Editor event");
             var restore = saveCaretPosition(this);
             var space = false;
             var newline = false;
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 if(!div.html().endsWith("\n")) {
-                    div.append("&nbsp;\n");
+                    div.append("\n");
                     newline=true;
                 }
+                console.log($("#md-editor").html());
                 /*if(div.html().endsWith(" \n")) {
                     div.html(div.html().substr(0, div.html().length-2)+"&nbsp;\n");
                 }
