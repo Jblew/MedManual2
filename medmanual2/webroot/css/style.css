@@ -25,6 +25,7 @@ and open the template in the editor.
 #edit-form .parents-table td {
     vertical-align: middle;
     padding: 3px;
+    width: 33.3%;
 }
 
 #edit-form .parents-table td table {
