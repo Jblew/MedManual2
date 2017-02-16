@@ -22,6 +22,11 @@ and open the template in the editor.
     border: 1px dotted #ddd;
 }
 
+#edit-form .parents-table {
+    margin: 0;
+    color: #888;
+}
+
 #edit-form .parents-table td {
     vertical-align: middle;
     padding: 3px;
@@ -30,6 +35,7 @@ and open the template in the editor.
 
 #edit-form .parents-table td.td-prepath {
     text-align: right;
+    text-align-last: right;
 }
 
 #edit-form .parents-table td.td-afterpath {
@@ -38,6 +44,8 @@ and open the template in the editor.
 
 #edit-form .parents-table td table {
     border: none;
+    margin: 0;
+    width: 100%;
 }
 
 #edit-form .parents-table td table tr {
