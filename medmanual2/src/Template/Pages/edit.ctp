@@ -144,7 +144,7 @@ if (!isset($addMode)) {
 <script type="text/javascript">
     $(document).ready(function() {
         var mdEditor = $("#md-editor");
-        mdEditor.on('blur keyup paste input', function() {
+        mdEditor.on('blur paste input', function() {
             console.log("Editor event");
             $("#md-editor div").each(function(i, _div) {
                 var caretPosition = getCaretCharacterOffsetWithin(mdEditor.get(0));
