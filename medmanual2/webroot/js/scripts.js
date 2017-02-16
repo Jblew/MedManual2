@@ -144,7 +144,7 @@ function saveCaretPosition(context){
         var newposition = pos.position;
         if(pos.node.data.endsWith(" ")) {
             console.log("Space detected!");
-            newposition+=2;
+            //newposition+=2;
         }
         range.setStart(pos.node , newposition);
         selection.addRange(range);
