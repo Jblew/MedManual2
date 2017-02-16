@@ -146,7 +146,7 @@ if (!isset($addMode)) {
         var mdEditor = $("#md-editor");
         mdEditor.on('keyup', function(evt) {
             if(evt.key === ' ') {
-                insertTextAtCursor('&nbsp;');
+                
             }
         });
         mdEditor.on('paste input', function() {
