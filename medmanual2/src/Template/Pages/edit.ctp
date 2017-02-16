@@ -204,6 +204,8 @@ if (!isset($addMode)) {
             //Inline elements
             //int boldPos = 
             var elem = $("#md-editor").get(0);
+            var savedSel = rangy.getSelection().saveCharacterRanges(elem);
+            
             var range = rangy.createRange();
             var searchScopeRange = rangy.createRange();
             searchScopeRange.selectNodeContents(elem); // (div.get(0));
@@ -221,6 +223,8 @@ if (!isset($addMode)) {
             while (range.findText("karolina", options)) {
                 searchResultApplier.applyToRange(range);range.collapse(false);
             }
+            
+            rangy.getSelection().restoreCharacterRanges(elem, savedSel);
         });
         /*
          mdEditor.on('paste input', function() {
