@@ -136,7 +136,7 @@ function saveCaretPosition(context){
     var len = range.toString().length;
 
     return function restore(addToPosition){
-        var pos = getTextNodeAtPosition(context, len+addToPosition);
+        var pos = getTextNodeAtPosition(context, len, (addToPosition > 0));
         console.log("pos: ");
         console.log(pos);
         selection.removeAllRanges();
@@ -147,7 +147,7 @@ function saveCaretPosition(context){
     }
 }
 
-function getTextNodeAtPosition(root, index){
+function getTextNodeAtPosition(root, index, getNextElement){
     var lastNode = null;
 
     var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,function next(elem) {
@@ -159,6 +159,12 @@ function getTextNodeAtPosition(root, index){
         return NodeFilter.FILTER_ACCEPT;
     });
     var c = treeWalker.nextNode();
+    if(getNextElement) {
+        var c2 = treeWalker.nextNode();
+        if(c2 != null) {
+            c = c2;
+        }
+    }
     return {
         node: c? c: root,
         position: c? index:  0
