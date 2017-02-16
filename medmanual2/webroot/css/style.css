@@ -28,6 +28,10 @@ and open the template in the editor.
 }
 
 #edit-form .parents-table td {
+    color: #888;
+}
+
+#edit-form .parents-table td.outer-td {
     vertical-align: middle;
     padding: 3px;
     width: 33.3%;
@@ -63,4 +67,6 @@ and open the template in the editor.
 
 #edit-form .easy-autocomplete input {
     width: 100%;
+    border: 1px dotted #ddd;
+    color: #777;
 }
