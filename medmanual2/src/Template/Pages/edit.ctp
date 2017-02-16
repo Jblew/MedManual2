@@ -156,14 +156,23 @@ if (!isset($addMode)) {
         var boldApplier = null;
         var italicApplier = null;
         var linkApplier = null;
+        
+        var onLinkClick = function(evt) {
+            console.log(this);
+        };
 
         var classApplierModule = rangy.modules.ClassApplier;
         if (rangy.supported && classApplierModule && classApplierModule.supported) {
             searchResultApplier = rangy.createClassApplier("searchResult");
             boldApplier = rangy.createClassApplier("bold");
             italicApplier = rangy.createClassApplier("italic");
-            linkApplier = rangy.createClassApplier("link");
+            linkApplier = rangy.createClassApplier("link", {
+                onElementCreate: function(element, applier) {
+                    $(element).on('click', onLinkClick);
+                }
+            });
         }
+        
         mdEditor.on('paste input', function () {
             $("#md-editor div").each(function (i, _div) {
                 var div = $(_div);
