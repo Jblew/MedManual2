@@ -132,3 +132,16 @@ and open the template in the editor.
     color: #1798A5;
     text-decoration: underline;
 }
+
+.open-edit-button {
+    width: 100%;
+    text-align: center;
+    border: 1px dotted #ccc;
+    padding: 20px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.open-edit-button a {
+    font-size: 3em;
+}

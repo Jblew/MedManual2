@@ -161,7 +161,7 @@ if (!isset($addMode)) {
             console.log(this);
             var text = $(this).text().trim();
             window.open(
-                    '/pages/match/'+base64_encode(text.substr(1, text.length-2)),
+                    '/pages/match/edit/'+base64_encode(text.substr(1, text.length-2)),
                     "", "height=800,width=600"
             );
         };

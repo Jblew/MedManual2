@@ -1,4 +1,4 @@
-<h1>Strony</h1>
+<h1>Manuał medyczny</h1>
 <?= $this->Html->link('Dodaj stronę', ['action' => 'add']) ?>
 
 <ul>
