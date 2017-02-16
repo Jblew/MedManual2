@@ -14,9 +14,9 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
     function createNewForm(id, initialTitle, initialId, prePathHtml) {
         parentsArr[id] = initialId;
         var elem = "<table style=\"width: 100%;\" class=\"parents-table\"><tr>"
-                + "<td id=\"parents-selector-" + id + "-prepath\">" + prePathHtml + "</span></td>"
-                + "<td><input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" /></td>"
-                + "<td><span id=\"parents-selector-" + id + "-afterpath\"> &raquo;<?php echo($page->title); ?></span></td>"
+                + "<td id=\"parents-selector-" + id + "-prepath\" class=\"td-prepath\">" + prePathHtml + "</span></td>"
+                + "<td class=\"td-input\"><input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" /></td>"
+                + "<td class=\"td-afterpath\"><span id=\"parents-selector-" + id + "-afterpath\"> &raquo;<?php echo($page->title); ?></span></td>"
                 + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
 
         if (id == 0) {
@@ -51,6 +51,7 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
                 }
             }
         });
+        $("#parents-selector-" + id).parent().attr("style", "width: 100%;");
     }
 
     $(document).ready(function () {

@@ -28,6 +28,14 @@ and open the template in the editor.
     width: 33.3%;
 }
 
+#edit-form .parents-table td.td-prepath {
+    text-align: right;
+}
+
+#edit-form .parents-table td.td-afterpath {
+    text-align: left;
+}
+
 #edit-form .parents-table td table {
     border: none;
 }
@@ -39,4 +47,12 @@ and open the template in the editor.
 #edit-form .parents-table td table tr td {
     border: none;
     vertical-align: none;
+}
+
+#edit-form .easy-autocomplete {
+    width: 100%;
+}
+
+#edit-form .easy-autocomplete input {
+    width: 100%;
 }
