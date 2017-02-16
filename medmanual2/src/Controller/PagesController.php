@@ -76,8 +76,9 @@ class PagesController extends AppController {
             }
         } else {
             $page = $this->Pages->find('all', [
-                        'conditions' => ['Pages.title =' => base64_decode($base64)]
-                    ])->first();
+                'conditions' => ['Pages.title =' => base64_decode($base64)],
+                'contain' => ['Parents', 'Children']
+            ])->first();
         }
         if ($page === null)
             throw new NotFoundException();
