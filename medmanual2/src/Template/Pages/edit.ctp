@@ -217,7 +217,7 @@ if (!isset($addMode)) {
         });
     });
 </script>
-<p><br /></p>
+<p> </p>
 <?php
 echo $this->Form->hidden('body', ['id' => 'edit-form-body', 'value'=>'']);
 ?>

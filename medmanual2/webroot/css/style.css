@@ -73,7 +73,7 @@ and open the template in the editor.
     width: 100%;
 }
 
-#edit-form .label {
+#edit-form label {
     display: none;
 }
 
@@ -90,7 +90,7 @@ and open the template in the editor.
 }
 
 .parents-field {
-    border: 1px dotted #ddd;
+    border: 1px dotted #ccc;
 }
 
 .children-field a {
