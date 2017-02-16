@@ -66,6 +66,7 @@ echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
         $("#parents-selector-" + id + "-delete").on('click', function() {
             parentsArr[id] = null;
             $("#parents-selector-" + id + "-table").remove();
+            updateParentsField();
         });
     }
 
