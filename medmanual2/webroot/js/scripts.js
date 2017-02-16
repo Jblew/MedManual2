@@ -128,8 +128,6 @@ function editableRange() {
 }
 
 function saveCaretPosition(context){
-    console.log("context: ");
-    console.log(context);
     var selection = window.getSelection();
     var range = selection.getRangeAt(0);
     range.setStart(  context, 0 );
@@ -142,10 +140,6 @@ function saveCaretPosition(context){
         selection.removeAllRanges();
         var range = new Range();
         var newposition = pos.position;
-        if(pos.node.data.endsWith(" ")) {
-            console.log("Space detected!");
-            //newposition+=2;
-        }
         range.setStart(pos.node , newposition);
         selection.addRange(range);
 
