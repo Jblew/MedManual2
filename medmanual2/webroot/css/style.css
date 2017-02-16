@@ -89,6 +89,10 @@ and open the template in the editor.
     border: 1px dotted #ddd;
 }
 
+.parents-field {
+    border: 1px dotted #ddd;
+}
+
 .children-field a {
     color: #5fc3cd;
 }

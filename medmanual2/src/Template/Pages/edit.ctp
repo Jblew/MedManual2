@@ -6,9 +6,9 @@
 <?php
 echo $this->Form->create($page, ['id' => 'edit-form', 'label' => '']);
 echo $this->Form->input('title', ['class' => 'title']);
-//echo "<input id=\"parent-autocomplete\" />";
-echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
 ?>
+<p class="parents-field">
+<input type="hidden" name="parentsids" id="parents-base">
 <script type="text/javascript">
     var parentsArr = [];
     function updateParentsField() {
@@ -103,6 +103,7 @@ if (!isset($addMode)) {
         updateParentsField();
     });
 </script>
+</p>
 <p class="children-field">Dzieci: 
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
