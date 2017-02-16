@@ -234,6 +234,7 @@ if (!isset($addMode)) {
             }
             
             highlightText("karolina", searchResultApplier);
+            highlightText(/(\*\*.*\*\*)/g, boldApplier);
             
             
             rangy.getSelection().restoreCharacterRanges(elem, savedSel);
