@@ -76,7 +76,7 @@ echo $this->Form->input('title', ['class' => 'title']);
 if (!isset($addMode)) {
     $i = 0;
     foreach ($page->parents as $parent) {
-        $prePathHtml = "<table style=\"display: inline;\">";
+        $prePathHtml = "<table style=\\\"display: inline;\\\">";
         if (isset($parent->paths)) {
             foreach ($parent->paths as $path) {
                 $prePathHtml .= "<tr><td>";
@@ -88,7 +88,7 @@ if (!isset($addMode)) {
             }
         } else {
             $prePathHtml .= "<tr><td>";
-            $prePathHtml .= "<span class=\"glyphicon glyphicon-home\"></span> &raquo; ";
+            $prePathHtml .= "<span class=\\\"glyphicon glyphicon-home\\\"></span> &raquo; ";
             $prePathHtml .= "</td></tr>";
         }
         $prePathHtml .= "</table>";
