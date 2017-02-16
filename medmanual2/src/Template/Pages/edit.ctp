@@ -147,12 +147,16 @@ if (!isset($addMode)) {
         mdEditor.on('blur paste input', function() {
             console.log("Editor event");
             var restore = saveCaretPosition(this);
-            var addToPos = 0;
+            var space = false;
+            var newline = false;
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 if(!div.html().endsWith("\n")) {
                     div.append("\n");
-                    addToPos++;
+                    newline=true;
+                }
+                if(div.html().endsWith(" \n")) {
+                    space=true;
                 }
                 
                 if(div.html().trim().match(/^###### /)) {
@@ -180,7 +184,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            restore(addToPos);
+            restore(space, newline);
         });
     });
 </script>

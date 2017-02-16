@@ -135,8 +135,8 @@ function saveCaretPosition(context){
     range.setStart(  context, 0 );
     var len = range.toString().length;
 
-    return function restore(addToPosition){
-        var pos = getTextNodeAtPosition(context, len, (addToPosition > 0));
+    return function restore(space, newline){
+        var pos = getTextNodeAtPosition(context, len+(space? 1:0), newline);
         console.log("pos: ");
         console.log(pos);
         selection.removeAllRanges();
@@ -161,7 +161,7 @@ function getTextNodeAtPosition(root, index, getNextElement){
     var c = treeWalker.nextNode();
     if(getNextElement) {
         var c2 = treeWalker.nextNode();
-        if(c2 != null) {
+        if(c2 !== null) {
             c = c2;
         }
     }
