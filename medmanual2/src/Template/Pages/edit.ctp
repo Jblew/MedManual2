@@ -70,11 +70,18 @@ if (!isset($addMode)) {
     $i = 0;
     foreach ($page->parents as $parent) {
         $prePathHtml = "<table style=\"display: inline;\">";
-        foreach ($parent->paths as $path) {
-            $prePathHtml .= "<tr><td>";
-            foreach ($path as $elem) {
-                $prePathHtml .= "<a href=\"/pages/edit/0/".base64_encode($elem)."\" target=\"_blank\">" . $elem . "</a> &raquo; ";
+        if(isset($parent->paths)) {
+            foreach ($parent->paths as $path) {
+                $prePathHtml .= "<tr><td>";
+                foreach ($path as $elem) {
+                    $prePathHtml .= "<a href=\"/pages/edit/0/".base64_encode($elem)."\" target=\"_blank\">" . $elem . "</a> &raquo; ";
+                }
+                $prePathHtml .= "</td></tr>";
             }
+        }
+        else {
+            $prePathHtml .= "<tr><td>";
+            $prePathHtml .= "<span class=\"glyphicon glyphicon-home\"></span> &raquo; ";
             $prePathHtml .= "</td></tr>";
         }
         $prePathHtml .= "</table>";
