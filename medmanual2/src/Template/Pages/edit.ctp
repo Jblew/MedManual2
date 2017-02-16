@@ -81,8 +81,9 @@ if (!isset($addMode)) {
             foreach ($parent->paths as $path) {
                 $prePathHtml .= "<tr><td>";
                 foreach ($path as $elem) {
-                    $prePathHtml .= "<a href=\"javascript:window.open(\\\"/pages/edit/0/" . base64_encode($elem) . "', '','height=800,width=600');\\\">" . $elem . "</a> &raquo; ";
-                }
+                    $prePathHtml .= "<a href=\\\"javascript:window.open('/pages/edit/0/" . base64_encode($elem) . "', '','height=800,width=600');\\\">" . $elem . "</a> &raquo; ";
+                }//createNewForm(0, 'Układ immunologiczny', 3, "<table style=\"display: inline;\"><tr><td><a href=\"javascript:window.open('/pages/edit/0/TWFudWHFgiBNZWR5Y3pueQ==', '','height=800,width=600');\">Manuał Medyczny</a> &raquo; <a href="javascript:window.open(\"/pages/edit/0/Q2hvcm9ieSBpIG9iamF3eQ==', '','height=800,width=600');\">Choroby i objawy</a> &raquo; </td></tr></table>');createNewForm(1, 'Choroby jednogenowe', 5, '<table style="display: inline;"><tr><td><a href="javascript:window.open(\"/pages/edit/0/TWFudWHFgiBNZWR5Y3pueQ==', '','height=800,width=600');\">Manuał Medyczny</a> &raquo; <a href="javascript:window.open(\"/pages/edit/0/Q2hvcm9ieSBpIG9iamF3eQ==', '','height=800,width=600');\">Choroby i objawy</a> &raquo; <a href="javascript:window.open(\"/pages/edit/0/Q2hvcm9ieSBnZW5ldHljem5l', '','height=800,width=600');\">Choroby genetyczne</a> &raquo; </td></tr></table>');createNewForm(2, '', null, 'Dodaj nowego rodzica:');            updateParentsField();
+
                 $prePathHtml .= "</td></tr>";
             }
         } else {
@@ -91,7 +92,7 @@ if (!isset($addMode)) {
             $prePathHtml .= "</td></tr>";
         }
         $prePathHtml .= "</table>";
-        echo("createNewForm(" . $i . ", '" . $parent->title . "', " . $parent->id . ", '" . $prePathHtml . "');");
+        echo("createNewForm(" . $i . ", '" . $parent->title . "', " . $parent->id . ", \"" . $prePathHtml . "\");");
         $i++;
     }
     echo("createNewForm(" . $i . ", '', null, 'Dodaj nowego rodzica:');");
