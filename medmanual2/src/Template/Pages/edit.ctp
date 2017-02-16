@@ -157,8 +157,7 @@ if (!isset($addMode)) {
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 if(!div.html().endsWith("\n")) {
-                    if(div.html().endsWith(" ")) div.append(" \n");
-                    else  div.append("\n");
+                    div.append("d\n");
                     newline=true;
                 }
                 /*if(div.html().endsWith(" \n")) {
