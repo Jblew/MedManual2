@@ -24,7 +24,7 @@ echo $this->Form->input('title', ['class' => 'title']);
                     + "   <input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" />"
                     + "</td>"
                     + "<td class=\"outer-td td-afterpath\">"
-                    + "   <a href=\"/pages/edit/0/" + base64_encode(initialTitle) + "\" id=\"parents-selector-" + id + "-parentlink\" target=\"_blank\"><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
+                    + "   <a href=\"javascript:window.open('/pages/edit/0/" + base64_encode(initialTitle) + "', '','height=800,width=600');\" id=\"parents-selector-" + id + "-parentlink\" target=\"_blank\"><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
                     + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span>"
                     + "   <span style=\"color: red;\" class=\"glyphicon glyphicon-trash\" id=\"parents-selector-" + id + "-delete\"></span>"
                     + "</td>"
@@ -52,13 +52,13 @@ echo $this->Form->input('title', ['class' => 'title']);
                         for (var pathI = 0; pathI < selData.paths.length; pathI++) {
                             prepathHtml += "<tr><td>";
                             for (var elemI = 0; elemI < selData.paths[pathI].length; elemI++) {
-                                prepathHtml += "<a href=\"/pages/edit/0/" + base64_encode(selData.paths[pathI][elemI]) + "\" target=\"_blank\">" + selData.paths[pathI][elemI] + "</a> &raquo; ";
+                                prepathHtml += "<a href=\"javascript:window.open('/pages/edit/0/" + base64_encode(selData.paths[pathI][elemI]) + "', '','height=800,width=600');\" target=\"_blank\">" + selData.paths[pathI][elemI] + "</a> &raquo; ";
                             }
                             prepathHtml += "</td></tr>";
                         }
                         prepathHtml += "</table>";
                         $("#parents-selector-" + id + "-prepath").html(prepathHtml);
-                        $("#parents-selector-" + id + "-parentlink").attr("href", "/pages/edit/" + selData.id);
+                        $("#parents-selector-" + id + "-parentlink").attr("href", "javascript:window.open('/pages/edit/" + selData.id + "', '','height=800,width=600');");
                         updateParentsField();
                     }
                 }
@@ -81,7 +81,7 @@ if (!isset($addMode)) {
             foreach ($parent->paths as $path) {
                 $prePathHtml .= "<tr><td>";
                 foreach ($path as $elem) {
-                    $prePathHtml .= "<a href=\"/pages/edit/0/" . base64_encode($elem) . "\" target=\"_blank\">" . $elem . "</a> &raquo; ";
+                    $prePathHtml .= "<a href=\"javascript:window.open('/pages/edit/0/" . base64_encode($elem) . "', '','height=800,width=600');\" target=\"_blank\">" . $elem . "</a> &raquo; ";
                 }
                 $prePathHtml .= "</td></tr>";
             }
@@ -107,7 +107,7 @@ if (!isset($addMode)) {
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
         <?= ($first ? "" : ", ") ?>
-        <a href="javascript:window.open('/pages/edit/<?= $child->id ?>', '','height=800,width=600');"">
+        <a href="javascript:window.open('/pages/edit/<?= $child->id ?>', '','height=800,width=600');">
             <?= $child->title ?>
         </a>
         <?php $first = false;
