@@ -144,6 +144,11 @@ if (!isset($addMode)) {
 <script type="text/javascript">
     $(document).ready(function() {
         var mdEditor = $("#md-editor");
+        mdEditor.on('keyup', function(evt) {
+            if(evt.key === ' ') {
+                insertTextAtCursor('&nbsp;');
+            }
+        });
         mdEditor.on('paste input', function() {
             console.log("Editor event");
             var restore = saveCaretPosition(this);
