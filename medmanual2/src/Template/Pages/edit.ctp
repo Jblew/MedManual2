@@ -146,8 +146,8 @@ if (!isset($addMode)) {
         var mdEditor = $("#md-editor");
         mdEditor.on('blur paste input', function() {
             console.log("Editor event");
+            var caretPosition = getCaretCharacterOffsetWithin(mdEditor.get(0));
             $("#md-editor div").each(function(i, _div) {
-                var caretPosition = getCaretCharacterOffsetWithin(mdEditor.get(0));
                 var div = $(_div);
                 
                 if(div.html().trim().match(/^###### /)) {
@@ -174,9 +174,8 @@ if (!isset($addMode)) {
                     var elem = $(_elem);
                     if(elem.html().trim() == '') elem.remove();
                 });
-                
-                setCaretPosition(mdEditor.get(0), caretPosition);
             });
+            setCaretPosition(mdEditor.get(0), caretPosition);
         });
     });
 </script>
