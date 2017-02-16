@@ -17,9 +17,11 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
                 + "<td id=\"parents-selector-" + id + "-prepath\" class=\"outer-td td-prepath\">" + prePathHtml + "</span></td>"
                 + "<td class=\"outer-td td-input\">"
                 + "   <input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" />"
-                + " <a href=\"/pages/edit/\" ><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
                 + "</td>"
-                + "<td class=\"outer-td td-afterpath\"><span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span></td>"
+                + "<td class=\"outer-td td-afterpath\">"
+                + "   <a href=\"/pages/edit/\" ><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
+                + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span>"
+                + "</td>"
                 + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
 
         if (id == 0) {
