@@ -1,3 +1,7 @@
+<!--
+<?php var_dump($page); ?>
+-->
+
 <?php
 echo $this->Form->create($page, ['id' => 'edit-form']);
 echo $this->Form->input('title', ['class' => 'title']);
@@ -69,7 +73,7 @@ if (!isset($addMode)) {
         foreach ($parent->paths as $path) {
             $prePathHtml .= "<tr><td>";
             foreach ($path as $elem) {
-                $prePathHtml .= $elem . " &raquo; ";
+                $prePathHtml .= "<a href=\"/pages/edit/0/".base64_encode($elem)."\" target=\"_blank\">" . $elem . "</a> &raquo; ";
             }
             $prePathHtml .= "</td></tr>";
         }
@@ -88,7 +92,7 @@ if (!isset($addMode)) {
 <p>Children: 
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
-        <?= ($first? ", " : "") ?>
+        <?= ($first? "" : ", ") ?>
         <?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
     <?php $first = false; endforeach; ?>
 </p>
