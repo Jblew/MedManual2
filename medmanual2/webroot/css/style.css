@@ -110,3 +110,7 @@ and open the template in the editor.
     text-align: right;
     top: 0;
 }
+
+.searchResult {
+    background-color: yellow;
+}
