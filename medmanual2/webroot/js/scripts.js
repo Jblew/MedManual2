@@ -131,7 +131,7 @@ function saveCaretPosition(context){
     var selection = window.getSelection();
     var range = selection.getRangeAt(0);
     range.setStart(  context, 0 );
-    var len = range.toString().length;
+    var len = range.toString().replace(" ", "&nbsp;").length;
 
     return function restore(space, newline){
         var pos = getTextNodeAtPosition(context, len, newline);
