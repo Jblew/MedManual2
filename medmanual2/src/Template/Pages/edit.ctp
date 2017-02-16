@@ -225,7 +225,7 @@ if (!isset($addMode)) {
                 };
                 
                 range.selectNodeContents(elem);
-                searchResultApplier.undoToRange(range);
+                applier.undoToRange(range);
                 
                 while (range.findText(searchTerm, options)) {
                     applier.applyToRange(range);
