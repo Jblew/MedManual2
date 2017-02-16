@@ -96,7 +96,7 @@ if (!isset($addMode)) {
 
     });
 </script>
-<p>Children: 
+<p class="children-field">Dzieci: 
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
         <?= ($first? "" : ", ") ?>
