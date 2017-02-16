@@ -1,3 +1,7 @@
+/**
+WARNING: DEPRECATED TABLE SCHEME. CURREMTLY USED: tables2.sql
+**/
+
 ALTER DATABASE medmanual2 CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 

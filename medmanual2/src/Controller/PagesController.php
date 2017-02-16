@@ -95,8 +95,7 @@ class PagesController extends AppController {
             
             if ($this->Pages->save($page, ['associated' => ['Parents']])) {
                 $this->Flash->success(__('Your page has been updated.'));
-                print_r($this->request->data);
-                //return $this->redirect(['action' => 'edit', $page->id]);
+                return $this->redirect(['action' => 'edit', $page->id]);
             }
             else {
                 $this->Flash->error(__('Unable to update your page.'));

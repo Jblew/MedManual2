@@ -19,6 +19,7 @@ CREATE TABLE pages (
 );
 
 CREATE TABLE pages_parents (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     page_id INT UNSIGNED,
     parent_id INT UNSIGNED
 );
