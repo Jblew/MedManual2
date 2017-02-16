@@ -1,4 +1,4 @@
-module.exports = function base64_encode (stringToEncode) { // eslint-disable-line camelcase
+function base64_encode (stringToEncode) { // eslint-disable-line camelcase
   //  discuss at: http://locutus.io/php/base64_encode/
   // original by: Tyler Akins (http://rumkin.com)
   // improved by: Bayron Guevara
