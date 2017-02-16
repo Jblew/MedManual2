@@ -17,7 +17,7 @@ echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
 
     function createNewForm(id, initialTitle, initialId, prePathHtml) {
         parentsArr[id] = initialId;
-        var elem = "<table style=\"width: 100%;\" class=\"parents-table\"><tr>"
+        var elem = "<table style=\"width: 100%;\" class=\"parents-table\" id=\"parents-selector-" + id + "-table\"><tr>"
                 + "<td id=\"parents-selector-" + id + "-prepath\" class=\"outer-td td-prepath\">" + prePathHtml + "</span></td>"
                 + "<td class=\"outer-td td-input\">"
                 + "   <input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" />"
@@ -25,6 +25,7 @@ echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
                 + "<td class=\"outer-td td-afterpath\">"
                 + "   <a href=\"/pages/edit/0/"+base64_encode(initialTitle)+"\" id=\"parents-selector-"+id+"-parentlink\" target=\"_blank\"><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
                 + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span>"
+                + "   <span style=\"color: red;\" class=\"glyphicon glyphicon-trash\" id=\"parents-selector-" + id + "-delete\"></span>"
                 + "</td>"
                 + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
 
@@ -62,6 +63,10 @@ echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
             }
         });
         $("#parents-selector-" + id).parent().attr("style", "width: 100%;");
+        $("#parents-selector-" + id + "-delete").on('click', function() {
+            parentsArr[id] = null;
+            $("#parents-selector-" + id + "-table").remove();
+        });
     }
 
     $(document).ready(function () {
