@@ -149,6 +149,7 @@ if (!isset($addMode)) {
             var restore = saveCaretPosition(this);
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
+                if(!div.endsWith("\n")) div.append("\n");
                 
                 if(div.html().trim().match(/^###### /)) {
                     div.html("<h6>"+div.text().trim()+"</h6>");
@@ -175,7 +176,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            //restore();
+            restore();
         });
     });
 </script>
