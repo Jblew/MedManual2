@@ -161,7 +161,7 @@ if (!isset($addMode)) {
                 if(div.html().endsWith(" ")) {
                     div.html(div.html().substr(0, div.html().length-1)+"&nbsp;");
                 }*/
-                //div.html(div.html().replace(" ", "&nbsp;"));
+                div.html(div.html().replace(" ", "&nbsp;"));
                 
                 if(div.html().trim().match(/^###### /)) {
                     div.html("<h6>"+div.text().trim()+"</h6>");
