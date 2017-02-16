@@ -15,3 +15,27 @@ and open the template in the editor.
 .easy-autocomplete {
     display: inline;
 }
+
+#edit-form .title {
+    font-size: 3em;
+    height: 1.2em;
+    border: 1px dotted #ddd;
+}
+
+#edit-form .parents-table td {
+    vertical-align: middle;
+    padding: 3px;
+}
+
+#edit-form .parents-table td table {
+    border: none;
+}
+
+#edit-form .parents-table td table tr {
+    border: none;
+}
+
+#edit-form .parents-table td table tr td {
+    border: none;
+    vertical-align: none;
+}

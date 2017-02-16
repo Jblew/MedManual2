@@ -1,6 +1,6 @@
 <?php
 echo $this->Form->create($page, ['id' => 'edit-form']);
-echo $this->Form->input('title', ['style' => 'font-size: 3em;']);
+echo $this->Form->input('title', ['class' => 'title']);
 //echo "<input id=\"parent-autocomplete\" />";
 echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 ?>
@@ -13,7 +13,7 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
 
     function createNewForm(id, initialTitle, initialId, prePathHtml) {
         parentsArr[id] = initialId;
-        var elem = "<table style=\"width: 100%;\"><tr>"
+        var elem = "<table style=\"width: 100%;\" class=\"parents-table\"><tr>"
                 + "<td id=\"parents-selector-" + id + "-prepath\">" + prePathHtml + "</span></td>"
                 + "<td><input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" /></td>"
                 + "<td><span id=\"parents-selector-" + id + "-afterpath\"> &raquo;<?php echo($page->title); ?></span></td>"
@@ -120,23 +120,23 @@ if (!isset($addMode)) {
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 
-                if(div.text().trim().match(/^###### /)) {
+                if(div.html().trim().match(/^###### /)) {
                     div.html("<h6>"+div.text().trim()+"</h6>");
                 }
-                else if(div.text().trim().match(/^##### /)) {
+                else if(div.html().trim().match(/^##### /)) {
                     div.html("<h5>"+div.text().trim()+"</h5>");
                 }
-                else if(div.text().trim().match(/^#### /)) {
+                else if(div.html().trim().match(/^#### /)) {
                     div.html("<h4>"+div.text().trim()+"</h4>");
                 }
-                else if(div.text().trim().match(/^### /)) {
+                else if(div.html().trim().match(/^### /)) {
                     div.html("<h3>"+div.text().trim()+"</h3>");
                 }
-                else if(div.text().trim().match(/^## /)) {
-                    div.html("<h2>"+div.html().trim()+"</h2>");
+                else if(div.html().trim().match(/^## /)) {
+                    div.html("<h2>"+div.text().trim()+"</h2>");
                 }
-                else if(div.text().trim().match(/^# /)) {
-                    div.html("<h1>"+div.html().trim()+"</h1>");
+                else if(div.html().trim().match(/^# /)) {
+                    div.html("<h1>"+div.text().trim()+"</h1>");
                 }
                 
                 $("h1, h2, h3, h4, h5, h6", div).each(function(i, _elem) {
