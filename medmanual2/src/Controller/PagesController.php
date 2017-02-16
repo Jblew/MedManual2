@@ -89,7 +89,7 @@ class PagesController extends AppController {
                 return $v != null && trim($v) != '' && $v !== "null";
             });
             
-            $this->request->data['Parents'] = ['_ids' => $newParents];
+            $this->request->data['parents'] = ['_ids' => $newParents];
             $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
             $page = $this->_preparePageData($page);
             
@@ -98,7 +98,9 @@ class PagesController extends AppController {
                 print_r($this->request->data);
                 //return $this->redirect(['action' => 'edit', $page->id]);
             }
-            $this->Flash->error(__('Unable to update your page.'));
+            else {
+                $this->Flash->error(__('Unable to update your page.'));
+            }
         }
 
         $this->set('page', $page);
