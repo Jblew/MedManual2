@@ -210,8 +210,8 @@ if (!isset($addMode)) {
                 //int boldPos = 
                 var range = rangy.createRange();
                 var searchScopeRange = rangy.createRange();
-                searchScopeRange.selectNodeContents(div);
-                range.selectNodeContents(div);
+                searchScopeRange.selectNodeContents(div.get(0));
+                range.selectNodeContents(div.get(0));
                 searchResultApplier.undoToRange(range);
                 
                 var options = {
