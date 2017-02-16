@@ -136,12 +136,12 @@ function saveCaretPosition(context){
     var len = range.toString().length;
 
     return function restore(space, newline){
-        var pos = getTextNodeAtPosition(context, len+(space? 1:0), newline);
+        var pos = getTextNodeAtPosition(context, len, newline);
         console.log("pos: ");
         console.log(pos);
         selection.removeAllRanges();
         var range = new Range();
-        range.setStart(pos.node , pos.position);
+        range.setStart(pos.node , pos.position+(pos.node.data.endsWith(" ")? 1 : 0));
         selection.addRange(range);
 
     }
