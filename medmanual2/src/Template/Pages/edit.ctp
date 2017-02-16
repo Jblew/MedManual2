@@ -1,3 +1,4 @@
+<script type="text/javascript">editMode = true;</script>
 <!--
 <?php var_dump($page); ?>
 -->

@@ -59,20 +59,26 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </footer>
 
 <script type="text/javascript">
-       $(document).ready(function() {
-           $("#top-search-box").easyAutocomplete({
-                url: function (phrase) {
-                    return "/pages/ajaxFindPage?term=" + phrase;
-                },
-                getValue: "title",
-                list: {
-                    onChooseEvent: function () {
-                        var selData = $("#top-search-box").getSelectedItemData();
-                        window.location.href='/pages/view/'+selData.id;
-                    }
-                }
-            });
-       });
+    var editMode = false;
+    $(document).ready(function() {
+        $("#top-search-box").easyAutocomplete({
+             url: function (phrase) {
+                 return "/pages/ajaxFindPage?term=" + phrase;
+             },
+             getValue: "title",
+             list: {
+                 onChooseEvent: function () {
+                     var selData = $("#top-search-box").getSelectedItemData();
+                     if(editMode) {
+                         window.location.href='/pages/edit/'+selData.id;
+                     }
+                     else {
+                         window.location.href='/pages/view/'+selData.id;
+                     }
+                 }
+             }
+         });
+    });
 </script>
     
 </body>
