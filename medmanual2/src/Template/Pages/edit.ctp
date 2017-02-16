@@ -160,7 +160,7 @@ if (!isset($addMode)) {
                     if(!br.hasClass("marked")) {
                         br.addClass("marked");
                         //br.insertAfter("\n");
-                        div.append("\n");
+                        //div.append("\n");
                         newline=true;
                     }
                 });
@@ -202,7 +202,7 @@ if (!isset($addMode)) {
                     if(elem.html().trim() == '') elem.remove();
                 });
             });
-            //$("#md-editor").html($("#md-editor").html().replace("<br></div>", "<br>\n</div>"));
+            $("#md-editor").html($("#md-editor").html().replace("<br class=\"marked\"></div>", "<br>\n</div>"));
             
             console.log($("#md-editor").html());
             restore(space, newline);
