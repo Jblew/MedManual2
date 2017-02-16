@@ -222,7 +222,7 @@ function insertTextAtCursor(text) {
 
 
 
-
+/*
 
 function gEBI(id) {
     return document.getElementById(id);
@@ -291,7 +291,7 @@ function initSnapToWords3() {
     gEBI("demo3").onmouseup = function() {
         rangy.getSelection().expand("word", {
             wordOptions: {
-                wordRegex: /[a-z0-9]+(['\-][a-z0-9]+)*/gi
+                wordRegex: /[a-z0-9]+(['\-][a-z0-9]+)* /gi
             }
         });
     };
@@ -369,3 +369,4 @@ window.onload = function() {
     initSaveRestore();
     initCaretMove();
 };
+*/
