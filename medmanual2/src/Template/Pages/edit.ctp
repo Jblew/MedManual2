@@ -127,17 +127,17 @@ if (!isset($addMode)) {
             if ($line == '') {
                 echo("<div><br /></div>");
             } else if (startsWith($line, "###### ")) {
-                echo("<div><h6>".$line."</h6></div>");
+                echo("<div class=\"h6\">".$line."</div>");
             } else if (startsWith($line, "##### ")) {
-                echo("<div><h5>".$line."</h5></div>");
+                echo("<div class=\"h5\">".$line."</div>");
             } else if (startsWith($line, "#### ")) {
-                echo("<div><h4>".$line."</h4></div>");
+                echo("<div class=\"h4\">".$line."</div>");
             } else if (startsWith($line, "### ")) {
-                echo("<div><h3>".$line."</h3></div>");
+                echo("<div class=\"h3\">".$line."</div>");
             } else if (startsWith($line, "## ")) {
-                echo("<div><h2>".$line."</h2></div>");
+                echo("<div class=\"h2\">".$line."</div>");
             } else if (startsWith($line, "# ")) {
-                echo("<div><h1>".$line."</h1></div>");
+                echo("<div class=\"h1\">".$line."</div>");
             } else {
                 echo("<div>" . $line . "</div>");
             }
