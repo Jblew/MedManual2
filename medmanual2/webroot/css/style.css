@@ -52,16 +52,16 @@ and open the template in the editor.
 #edit-form .parents-table td.td-prepath {
     text-align: right;
     text-align-last: right;
-    width: 40%;
+    width: 50%;
 }
 
 #edit-form .parents-table td.td-input {
-    width: 35%;
+    width: 30%;
 }
 
 #edit-form .parents-table td.td-afterpath {
     text-align: left;
-    width: 25%;
+    width: 10%;
 }
 
 #edit-form .parents-table td table {
