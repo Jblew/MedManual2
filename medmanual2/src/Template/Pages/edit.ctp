@@ -19,7 +19,7 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
                 + "   <input value=\"" + initialTitle + "\" class=\"parents-selector\" id=\"parents-selector-" + id + "\" />"
                 + "</td>"
                 + "<td class=\"outer-td td-afterpath\">"
-                + "   <a href=\"/pages/edit/\" ><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
+                + "   <a href=\"/pages/edit/0/"+base64_encode(initialTitle)+"\" id=\"parents-selector-"+id+"-parentlink\" target=\"_blank\"><span class=\"glyphicon glyphicon-hand-left\"></span></a>"
                 + "   <span id=\"parents-selector-" + id + "-afterpath\"> &raquo; <?php echo($page->title); ?></span>"
                 + "</td>"
                 + "</table><span id=\"parents-selector-" + id + "-appendbase\"></span>";
@@ -46,12 +46,13 @@ echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
                     for (var pathI = 0; pathI < selData.paths.length; pathI++) {
                         prepathHtml += "<tr><td>";
                         for (var elemI = 0; elemI < selData.paths[pathI].length; elemI++) {
-                            prepathHtml += selData.paths[pathI][elemI] + " &raquo; ";
+                            prepathHtml += "<a href=\"/pages/edit/0/"+base64_encode(selData.paths[pathI][elemI])+"\" target=\"_blank\">" + selData.paths[pathI][elemI] + "</a> &raquo; ";
                         }
                         prepathHtml += "</td></tr>";
                     }
                     prepathHtml += "</table>";
                     $("#parents-selector-" + id + "-prepath").html(prepathHtml);
+                    $("#parents-selector-"+id+"-parentlink").attr("href", "/pages/edit/"+selData.id);
                     updateParentsField();
                 }
             }
