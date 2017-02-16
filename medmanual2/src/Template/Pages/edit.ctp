@@ -81,7 +81,7 @@ if (!isset($addMode)) {
             foreach ($parent->paths as $path) {
                 $prePathHtml .= "<tr><td>";
                 foreach ($path as $elem) {
-                    $prePathHtml .= "<a href=\"javascript:window.open('/pages/edit/0/" . base64_encode($elem) . "', '','height=800,width=600');\" target=\"_blank\">" . $elem . "</a> &raquo; ";
+                    $prePathHtml .= "<a href=\"javascript:window.open(\\\"/pages/edit/0/" . base64_encode($elem) . "', '','height=800,width=600');\\\">" . $elem . "</a> &raquo; ";
                 }
                 $prePathHtml .= "</td></tr>";
             }
