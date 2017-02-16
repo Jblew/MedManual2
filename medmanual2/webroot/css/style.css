@@ -95,8 +95,13 @@ and open the template in the editor.
 
 .search-container {
     text-align: right;
+    padding-right: 15px;
 }
 
 #top-search-box {
     text-align: right;
+}
+
+#top-search-box input {
+    top: 0;
 }
