@@ -136,13 +136,18 @@ if (!isset($addMode)) {
         }
         $i++;
     }
-    ?>
+    if (trim($page->body) === "") {
+    echo("<div>Tu wpisz treść...</div>");
+}
+?>
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#md-editor").on('blur keyup paste input', function() {
+        var mdEditor = $("#md-editor");
+        mdEditor.on('blur keyup paste input', function() {
             console.log("Editor event");
             $("#md-editor div").each(function(i, _div) {
+                var caretPosition = getCaretCharacterOffsetWithin(mdEditor.get(0));
                 var div = $(_div);
                 
                 if(div.html().trim().match(/^###### /)) {
@@ -169,6 +174,8 @@ if (!isset($addMode)) {
                     var elem = $(_elem);
                     if(elem.html().trim() == '') elem.remove();
                 });
+                
+                setCaretPosition(mdEditor.get(0), caretPosition);
             });
         });
     });
