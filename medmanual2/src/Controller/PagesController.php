@@ -93,7 +93,7 @@ class PagesController extends AppController {
             $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
             $page = $this->_preparePageData($page);
             
-            if ($this->Pages->save($page)) {
+            if ($this->Pages->save($page, ['associated' => ['Parents']])) {
                 $this->Flash->success(__('Your page has been updated.'));
                 print_r($this->request->data);
                 //return $this->redirect(['action' => 'edit', $page->id]);
