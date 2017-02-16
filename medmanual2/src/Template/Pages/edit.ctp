@@ -141,6 +141,7 @@ if (!isset($addMode)) {
 <script type="text/javascript">
     $(document).ready(function() {
         $("#md-editor").on('blur keyup paste input', function() {
+            console.log("Editor event");
             $("#md-editor div").each(function(i, _div) {
                 var div = $(_div);
                 
