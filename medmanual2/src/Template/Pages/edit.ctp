@@ -99,7 +99,7 @@ if (!isset($addMode)) {
     echo("createNewForm(0, '', null, 'Dodaj nowego rodzica:');");
 }
 ?>
-
+        updateParentsField();
     });
 </script>
 <p class="children-field">Dzieci: 
