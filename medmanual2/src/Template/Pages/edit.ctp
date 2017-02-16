@@ -186,7 +186,7 @@ if (!isset($addMode)) {
                         if(res !== null && res.length > 1) {
                             var url = res[1];
                             div.addClass('img');
-                            div.css('background: url('+url+');');
+                            div.css('background', 'url('+url+')');
                         }
                     }
                 }
