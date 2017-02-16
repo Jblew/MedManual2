@@ -180,15 +180,20 @@ if (!isset($addMode)) {
                     div.addClass("h6");
                 }
                 else if(div.text().startsWith("![")) {
-                    if(!div.hasClass("img")) {
-                        var re = /\!\[[^\]]*\]\(([^\)]*)\)/g;
-                        var res = re.exec(div.text());
-                        if(res !== null && res.length > 1) {
-                            var url = res[1];
-                            div.addClass('img');
-                            div.css('background', 'url('+url+')');
-                        }
+                    //if(!div.hasClass("img")) {
+                    var re = /\!\[[^\]]*\]\(([^\)]*)\)/g;
+                    var res = re.exec(div.text());
+                    if(res !== null && res.length > 1) {
+                        var url = res[1];
+                        div.addClass('img');
+                        div.css('background', 'url('+url+') no-repeat 22px center');
+                        var img = new Image();
+                        img.onload = function() {
+                            div.css('height', img.height);
+                        };
+                        img.src = url;
                     }
+                    //}
                 }
                 else div.removeClass();
                 
