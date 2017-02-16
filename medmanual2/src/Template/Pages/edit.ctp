@@ -107,7 +107,9 @@ if (!isset($addMode)) {
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
         <?= ($first ? "" : ", ") ?>
-        <?= $this->Html->link($child->title, ['action' => 'edit', $child->id], ['target' => '_blank']) ?></li>
+        <a href="javascript:window.open('/pages/edit/<?= $child->id ?>', '','height=800,width=600');"">
+            <?= $child->title ?>
+        </a>
         <?php $first = false;
     endforeach; ?>
 </p>
@@ -256,65 +258,6 @@ if (!isset($addMode)) {
             
             rangy.getSelection().restoreCharacterRanges(elem, savedSel);
         });
-        /*
-         mdEditor.on('paste input', function() {
-         //var restore = saveCaretPosition(this);
-         //var space = false;
-         //var newline = false;
-         $("#md-editor div").each(function(i, _div) {
-         var div = $(_div);
-         /*$("br", div).each(function(i, _br) {
-         var br = $(_br);
-         if(!br.hasClass("marked")) {
-         br.addClass("marked");
-         //br.insertAfter("\n");
-         //div.append("\n");
-         newline=true;
-         }
-         });/
-         /*if(!div.html().endsWith("\n")) {
-         div.append("\n");
-         //newline=true;
-         }/
-         
-         /*if(div.html().endsWith(" \n")) {
-         div.html(div.html().substr(0, div.html().length-2)+"&nbsp;\n");
-         }
-         if(div.html().endsWith(" ")) {
-         div.html(div.html().substr(0, div.html().length-1)+"&nbsp;");
-         }/
-         //div.html(div.html().replace(" ", "&nbsp;"));
-         
-         if(div.html().trim().match(/^###### /)) {
-         div.html("<h6>"+div.text().trim()+"</h6>");
-         }
-         else if(div.html().trim().match(/^##### /)) {
-         div.html("<h5>"+div.text().trim()+"</h5>");
-         }
-         else if(div.html().trim().match(/^#### /)) {
-         div.html("<h4>"+div.text().trim()+"</h4>");
-         }
-         else if(div.html().trim().match(/^### /)) {
-         div.html("<h3>"+div.text().trim()+"</h3>");
-         }
-         else if(div.html().trim().match(/^## /)) {
-         div.html("<h2>"+div.text().trim()+"</h2>");
-         console.log("Inserting h2");
-         }
-         else if(div.html().trim().match(/^# /)) {
-         div.html("<h1>"+div.text().trim()+"</h1>");
-         }
-         
-         $("h1, h2, h3, h4, h5, h6", div).each(function(i, _elem) {
-         var elem = $(_elem);
-         if(elem.html().trim() == '') elem.remove();
-         });
-         });
-         //$("#md-editor").html($("#md-editor").html().replace("<br class=\"marked\"></div>", "<br>\n</div>"));
-         
-         console.log($("#md-editor").html());
-         //restore(space, newline);
-         });*/
 
         $("#md-editor").trigger('input');
         $(window).on('resize', function () {
