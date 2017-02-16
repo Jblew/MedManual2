@@ -6,7 +6,7 @@
 echo $this->Form->create($page, ['id' => 'edit-form']);
 echo $this->Form->input('title', ['class' => 'title']);
 //echo "<input id=\"parent-autocomplete\" />";
-echo "<input type=\"hidden\" name=\"psarents\" id=\"parents-base\">";
+echo "<input type=\"hidden\" name=\"parentsids\" id=\"parents-base\">";
 ?>
 <script type="text/javascript">
     var parentsArr = [];

@@ -84,7 +84,13 @@ class PagesController extends AppController {
             throw new NotFoundException();
 
         if ($this->request->is(['post', 'put'])) {
-            $this->Pages->patchEntity($page, $this->request->data);
+            $newParents = array_filter(explode(",", $this->request->data['parentsids']), 
+            function($v, $k) {
+                return $v != null && trim($v) != '' && $v !== "null";
+            }, ARRAY_FILTER_USE_BOTH);
+            
+            $this->request->data['Parents'] = ['_ids' => $newParents];
+            $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
             $page = $this->_preparePageData($page);
             
             if ($this->Pages->save($page)) {
