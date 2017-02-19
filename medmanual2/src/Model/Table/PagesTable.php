@@ -66,7 +66,7 @@ class PagesTable extends Table {
             $pageId = $row['page_id'];
             $parentId = $row['parent_id'];
             if ($parentId === 'NULL' || $parentId == null) {
-                $pagesWithoutParents = $this->_getPageById($pageId, $pages);
+                $pagesWithoutParents[] = $this->_getPageById($pageId, $pages);
             } else {
                 if (!isset($parentsOfPages[$pageId])) {
                     $parentsOfPages[$pageId] = array();
