@@ -86,9 +86,10 @@ class PagesTable extends Table {
         
         $tree['children'] = $this->_populateNode($pages[0]->id, $pages, $childrenOfPages);
         
-        $tree['children'][] = ['title' => 'Pages withous parents', 'id' => 0,
-            'children' => $pagesWithoutParents
-        ];
+        $orphanPagesNode = $this->Pages->newEntity();
+        $orphanPagesNode->title = 'Pages withous parents';
+        $orphanPagesNode->id = 0;
+        $orphanPagesNode->children = $pagesWithousParents;
         
         return $tree;
     }
