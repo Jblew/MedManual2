@@ -137,6 +137,12 @@ class PagesController extends AppController {
         }
         echo json_encode($response);
     }
+    
+    public function match($target, $findStr) {
+        if($target !== "edit" || $target !== "view") {
+            throw new NotFoundException("Matching target should be edit or view.");
+        }
+    }
 
     /**
      * Displays a view

@@ -28,6 +28,7 @@ class PagesTable extends Table {
             'targetForeignKey' => 'page_id',
             'bindingKey' => 'id'
         ]);
+        $this->hasMany('Tags');
     }
 
     public function getPaths($id) {

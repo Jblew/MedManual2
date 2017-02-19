@@ -26,8 +26,8 @@ CREATE TABLE pages_parents (
 
 CREATE TABLE tags (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    tag VARCHAR(255) UNIQUE,
-    article_id INT UNSIGNED
+    tag VARCHAR(255) UNIQUE NOT NULL,
+    page_id INT UNSIGNED NOT NULL
 );
 
 

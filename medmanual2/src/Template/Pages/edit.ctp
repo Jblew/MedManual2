@@ -104,6 +104,7 @@ if (!isset($addMode)) {
         });
     </script>
 </p>
+<?php if(isset($page->children)): ?>
 <p class="children-field">Dzieci: 
     <?php $first = true; ?>
     <?php foreach ($page->children as $child): ?>
@@ -114,6 +115,7 @@ if (!isset($addMode)) {
         <?php $first = false;
     endforeach; ?>
 </p>
+<?php endif; ?>
 <div id="md-editor" contenteditable>
     <?php
 
