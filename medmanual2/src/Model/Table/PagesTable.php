@@ -90,7 +90,7 @@ class PagesTable extends Table {
         $orphanPagesNode->title = 'Pages withous parents';
         $orphanPagesNode->id = 0;
         $orphanPagesNode->children = $pagesWithoutParents;
-        $tree['children'][] = $orphanPagesNode;
+        //$tree['children'][] = $orphanPagesNode;
         
         return $tree;
     }
