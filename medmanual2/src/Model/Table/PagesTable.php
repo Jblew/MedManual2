@@ -89,7 +89,7 @@ class PagesTable extends Table {
         $orphanPagesNode = $this->newEntity();
         $orphanPagesNode->title = 'Pages withous parents';
         $orphanPagesNode->id = 0;
-        $orphanPagesNode->children = $pagesWithousParents;
+        $orphanPagesNode->children = $pagesWithoutParents;
         
         return $tree;
     }
