@@ -80,7 +80,7 @@ class PagesTable extends Table {
             }
         }
 
-        //var_dump($childrenOfPages);
+        var_dump($pagesWithoutParents);
 
         $tree = $pages[0];
         
