@@ -65,7 +65,7 @@ class PagesTable extends Table {
         foreach ($rows as $row) {
             $pageId = $row['page_id'];
             $parentId = $row['parent_id'];
-            if ($parentId === 'NULL' || $parentId == null) {
+            if (($parentId === 'NULL' || $parentId == null) && $parentId != 1) {
                 $pagesWithoutParents[] = $this->_getPageById($pageId, $pages);
             } else {
                 if (!isset($parentsOfPages[$pageId])) {
@@ -90,6 +90,7 @@ class PagesTable extends Table {
         $orphanPagesNode->title = 'Pages withous parents';
         $orphanPagesNode->id = 0;
         $orphanPagesNode->children = $pagesWithoutParents;
+        $tree['children'][] = $orphanPagesNode;
         
         return $tree;
     }
