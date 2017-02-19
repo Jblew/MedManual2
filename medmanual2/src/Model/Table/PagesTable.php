@@ -21,7 +21,7 @@ class PagesTable extends Table {
             'targetForeignKey' => 'parent_id',
             'bindingKey' => 'id'
         ]);
-        $this->belongsToMany('Children', [ //belongsToMany is not a mistae
+        $this->belongsToMany('Children', [//belongsToMany is not a mistae
             'joinTable' => 'pages_parents',
             'className' => 'Pages',
             'foreignKey' => 'parent_id',
@@ -56,30 +56,38 @@ class PagesTable extends Table {
         //print_r($pages);
         $conn = ConnectionManager::get('default');
 
-        $stmt = $conn->execute("SELECT * FROM pages_parents;");
+        $stmt = $conn->execute("SELECT Pages.id as page_id, Pages_parents.parent_id as parent_id from Pages LEFT JOIN Pages_parents ON Pages.id = Pages_parents.page_id;");
         $rows = $stmt->fetchAll('assoc');
         $parentsOfPages = array();
         $childrenOfPages = array();
+        $pagesWithoutParents = array();
 
         foreach ($rows as $row) {
             $pageId = $row['page_id'];
             $parentId = $row['parent_id'];
-            if (!isset($parentsOfPages[$pageId])) {
-                $parentsOfPages[$pageId] = array();
-            }
-            $parentsOfPages[$pageId][] = $parentId;
+            if ($parentId === 'NULL' || $parentId == null) {
+                $pagesWithoutParents = $this->_getPageById($pageId, $pages);
+            } else {
+                if (!isset($parentsOfPages[$pageId])) {
+                    $parentsOfPages[$pageId] = array();
+                }
+                $parentsOfPages[$pageId][] = $parentId;
 
-            if (!isset($childrenOfPages[$parentId])) {
-                $childrenOfPages[$parentId] = array();
+                if (!isset($childrenOfPages[$parentId])) {
+                    $childrenOfPages[$parentId] = array();
+                }
+                $childrenOfPages[$parentId][] = $pageId;
             }
-            $childrenOfPages[$parentId][] = $pageId;
         }
 
         //var_dump($childrenOfPages);
-        
+
         $tree = $pages[0];
+        $tree['children'][] = ['title' => 'Pages withous parents', 'id' => 0,
+            'children' => $pagesWithoutParents
+        ];
         $tree['children'] = $this->_populateNode($pages[0]->id, $pages, $childrenOfPages);
-        
+
         return $tree;
     }
 

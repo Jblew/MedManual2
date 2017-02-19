@@ -142,6 +142,7 @@ class PagesController extends AppController {
         if($target !== "edit" || $target !== "view") {
             throw new NotFoundException("Matching target should be edit or view.");
         }
+        $this->Tags->find()->where(['title' => 'REGEXP ']);
     }
 
     /**
