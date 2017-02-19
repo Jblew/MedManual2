@@ -11,8 +11,10 @@ function _getNodeHtml($page) {
             . "(<a href=\"/pages/edit/".$page->id."\">Edit</a>)"
             . "<ul>";
     
-    foreach($page['children'] as $child) {
-        $out .= _getNodeHtml($child);
+    if(isset($page['children'])) {
+        foreach($page['children'] as $child) {
+            $out .= _getNodeHtml($child);
+        }
     }
     
     $out .= "</ul>";

@@ -52,7 +52,7 @@ class PagesTable extends Table {
     }
 
     public function buildTree() {
-        $pages = $this->find('all', ['order' => ['Pages.id' => 'ASC']])->toArray();
+        $pages = $this->find('all', ['fields' => ['Pages.id', 'Pages.title', 'Pages.user_id'], 'order' => ['Pages.id' => 'ASC']])->toArray();
         //print_r($pages);
         $conn = ConnectionManager::get('default');
 
@@ -60,36 +60,43 @@ class PagesTable extends Table {
         $rows = $stmt->fetchAll('assoc');
         $parentsOfPages = array();
         $childrenOfPages = array();
-        $pagesWithoutParents = array();
 
         foreach ($rows as $row) {
             $pageId = $row['page_id'];
             $parentId = $row['parent_id'];
-            if (($parentId === 'NULL' || $parentId == null) && $parentId != 1) {
-                $pagesWithoutParents[] = $this->_getPageById($pageId, $pages);
-            } else {
-                if (!isset($parentsOfPages[$pageId])) {
-                    $parentsOfPages[$pageId] = array();
-                }
-                $parentsOfPages[$pageId][] = $parentId;
-
-                if (!isset($childrenOfPages[$parentId])) {
-                    $childrenOfPages[$parentId] = array();
-                }
-                $childrenOfPages[$parentId][] = $pageId;
+            if (($parentId === 'NULL' || $parentId == null) && $pageId != 1) {
+                //$pagesWithoutParents[] = $this->_getPageById($pageId, $pages);
+		$parentId = 1;
             }
+            if (!isset($parentsOfPages[$pageId])) {
+                $parentsOfPages[$pageId] = array();
+            }
+            $parentsOfPages[$pageId][] = $parentId;
+
+            if (!isset($childrenOfPages[$parentId])) {
+                $childrenOfPages[$parentId] = array();
+            }
+            $childrenOfPages[$parentId][] = $pageId;
+        
         }
 
-        var_dump($pagesWithoutParents);
+        //var_dump($pagesWithoutParents);
 
         $tree = $pages[0];
         
         $tree['children'] = $this->_populateNode($pages[0]->id, $pages, $childrenOfPages);
         
-        $orphanPagesNode = $this->newEntity();
-        $orphanPagesNode->title = 'Pages withous parents';
-        $orphanPagesNode->id = 0;
-        $orphanPagesNode->children = $pagesWithoutParents;
+        //$orphanPagesNode = ['title' => 'Pages without parents', 'id' => 0, 'children' => $pagesWithoutParents];
+        //$orphanPagesNode->title = 'Pages withous parents';
+        //$orphanPagesNode->id = 0;
+        //$orphanPagesNode->children = $pagesWithoutParents;
+	//$tree['children'][] = (object) $orphanPagesNode;
+	//$orphanPagesNode = (array)$this->newEntity();
+	//$orphanPagesNode['title'] = "Pages without parents";
+	//$orphanPagesNode->id = 0;
+	//$orphanPagesNode->children = [];//$pagesWithoutParents;
+	//$tree['children'][] = $orphanPagesNode;
+	//if(isset($_GET['d'])) print_r($tree['children']);
         //$tree['children'][] = $orphanPagesNode;
         
         return $tree;

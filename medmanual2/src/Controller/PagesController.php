@@ -54,12 +54,23 @@ class PagesController extends AppController {
         $this->set('paths', $this->Pages->getPaths($id));
     }
 
-    public function add() {
+    public function add($parent_id = 1) {
         $page = $this->Pages->newEntity();
+	$parent = $this->Pages->get($parent_id);
+	$parent->paths = $this->Pages->getPaths($parent->id);
+	$page->parents = [$parent];
+
         if ($this->request->is('post')) {
-            $page = $this->Pages->patchEntity($page, $this->request->data);
+            $newParents = array_filter(explode(",", $this->request->data['parentsids']),
+            function($v) {
+                return $v != null && trim($v) != '' && $v !== "null";
+            });
+
+            $this->request->data['parents'] = ['_ids' => $newParents];
+            $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
             $page = $this->_preparePageData($page);
-            if ($this->Pages->save($page)) {
+
+            if ($this->Pages->save($page, ['associated' => ['Parents']])) {
                 $this->Flash->success(__('Your page has been saved.'));
                 return $this->redirect(['action' => 'edit', $page->id]);
             }
@@ -138,11 +149,27 @@ class PagesController extends AppController {
         echo json_encode($response);
     }
     
-    public function match($target, $findStr) {
-        if($target !== "edit" || $target !== "view") {
-            throw new NotFoundException("Matching target should be edit or view.");
+    public function match($findStr = '') {
+	Configure::write('debug', 1);
+        $this->autoRender = false;
+        $this->viewBuilder()->layout('ajax');
+        $this->loadModel('Tags');
+
+	$findStr = trim(base64_decode($findStr));
+        
+	$page = $this->Pages->find()->where(['title' => $findStr])->first();
+	if($page != null) {
+            echo json_encode(['id' => $page->id]);
+	    return;
         }
-        $this->Tags->find()->where(['title' => 'REGEXP ']);
+
+        $tag = $this->Tags->find()->where(['tag' => $findStr])->first();
+	if($tag != null) {  
+            echo json_encode(['id' => $tag->page_id]);
+            return;
+        }
+
+	echo json_encode([]);
     }
 
     /**

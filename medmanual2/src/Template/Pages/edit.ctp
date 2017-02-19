@@ -73,7 +73,6 @@ echo $this->Form->input('title', ['class' => 'title']);
 
         $(document).ready(function () {
 <?php
-if (!isset($addMode)) {
     $i = 0;
     foreach ($page->parents as $parent) {
         $prePathHtml = "<table style=\\\"display: inline;\\\">";
@@ -95,18 +94,15 @@ if (!isset($addMode)) {
         echo("createNewForm(" . $i . ", '" . $parent->title . "', " . $parent->id . ", \"" . $prePathHtml . "\");");
         $i++;
     }
-    echo("createNewForm(" . $i . ", '', null, 'Dodaj nowego rodzica:');");
-} else {
-    echo("createNewForm(0, '', null, 'Dodaj nowego rodzica:');");
-}
+    echo("createNewForm(" . $i . ", '', null, 'Add new parent:');");
 ?>
             updateParentsField();
         });
     </script>
 </p>
-<?php if(isset($page->children)): ?>
-<p class="children-field">Dzieci: 
+<p class="children-field">Children:
     <?php $first = true; ?>
+    <?php if(!isset($page->children)) $page->children = []; ?>
     <?php foreach ($page->children as $child): ?>
         <?= ($first ? "" : ", ") ?>
         <a href="javascript:window.open('/pages/edit/<?= $child->id ?>', '','height=800,width=600');">
@@ -114,8 +110,14 @@ if (!isset($addMode)) {
         </a>
         <?php $first = false;
     endforeach; ?>
+    
+    <?php if(isset($page->id)): ?>
+    <?= ($first ? "" : ", ") ?>
+    <a href="javascript:window.open('/pages/add/<?php echo($page->id); ?>', '','height=800,width=600');;"><span class="glyphicon glyphicon-plus-sign"> </span> Add new child</a>
+    <?php else: ?>
+    In order to add children you have to save the page first.
+    <?php endif; ?>
 </p>
-<?php endif; ?>
 <div id="md-editor" contenteditable>
     <?php
 
@@ -165,10 +167,14 @@ if (!isset($addMode)) {
         var onLinkClick = function(evt) {
             console.log(this);
             var text = $(this).text().trim();
-            window.open(
-                    '/pages/match/edit/'+base64_encode(text.substr(1, text.length-2)),
-                    "", "height=800,width=600"
-            );
+	    $.getJSON('/pages/match/'+base64_encode(text.substr(1, text.length-2)), function(data) { 
+	    	if(data.hasOwnProperty("id")) {
+		    window.open(
+                        '/pages/edit/'+data.id,
+                        "", "height=800,width=600"
+                    );
+		}
+	    });
         };
 
         var classApplierModule = rangy.modules.ClassApplier;

@@ -145,3 +145,19 @@ and open the template in the editor.
 .open-edit-button a {
     font-size: 3em;
 }
+
+.top-bar-section {
+    float: right;
+}
+
+.title-area .name {
+    display: inline;
+}
+
+ul.title-area {
+    width: 320px;
+}
+
+.top-bar .name h1 a {
+    display: inline;
+}

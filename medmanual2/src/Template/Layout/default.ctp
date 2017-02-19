@@ -45,7 +45,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <nav class="top-bar expanded" data-topbar role="navigation">
         <ul class="title-area large-3 medium-4 columns">
             <li class="name">
-                <h1><a href="/">Manuał Medyczny JL 2.0</a></h1>
+                <h1><a href="/">Manuał Medyczny JL 2.0</a>
+		<a href="javascript:window.open('/pages/add', '','height=800,width=600');;"><span class="glyphicon glyphicon-plus-sign"> </span> </a></h1>
             </li>
         </ul>
         <div class="top-bar-section">
@@ -62,6 +63,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                  return "/pages/ajaxFindPage?term=" + phrase;
              },
              getValue: "title",
+	     requestDelay: 500,
              list: {
                  onChooseEvent: function () {
                      var selData = $("#top-search-box").getSelectedItemData();
