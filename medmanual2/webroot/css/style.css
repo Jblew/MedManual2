@@ -133,6 +133,10 @@ and open the template in the editor.
     text-decoration: underline;
 }
 
+.is-dragover {
+    background: greenyellow;
+}
+
 .open-edit-button {
     width: 100%;
     text-align: center;

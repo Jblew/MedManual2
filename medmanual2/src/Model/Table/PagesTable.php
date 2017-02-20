@@ -28,7 +28,9 @@ class PagesTable extends Table {
             'targetForeignKey' => 'page_id',
             'bindingKey' => 'id'
         ]);
-        $this->hasMany('Tags');
+        $this->hasMany('Tags', [
+	    'saveStrategy' => 'replace'
+	]);
     }
 
     public function getPaths($id) {

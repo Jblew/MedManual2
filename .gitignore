@@ -1,3 +1,4 @@
 /nbproject/private/
 composer.phar
 medmanual2/composer.lock
+/medmanual2/webroot/md_img/*

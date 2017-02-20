@@ -4,8 +4,8 @@
 -->
 
 <?php
-echo $this->Form->create($page, ['id' => 'edit-form', 'label' => '']);
-echo $this->Form->input('title', ['class' => 'title']);
+echo $this->Form->create($page, ['id' => 'edit-form', 'label' => '']); //, 'enctype' => 'multipart/form-data']);
+echo $this->Form->input('title', ['class' => 'title', 'label' => '', 'placeholder' => 'Title here...']);
 ?>
 <p class="parents-field">
     <input type="hidden" name="parentsids" id="parents-base">
@@ -117,6 +117,9 @@ echo $this->Form->input('title', ['class' => 'title']);
     <?php else: ?>
     In order to add children you have to save the page first.
     <?php endif; ?>
+</p>
+<p class="tags-field">
+Tags: <input type="text" name="tagsnames" value="<?php foreach($page->tags as $tag) {echo $tag->tag; echo ", ";} ?>">
 </p>
 <div id="md-editor" contenteditable>
     <?php
@@ -274,7 +277,7 @@ echo $this->Form->input('title', ['class' => 'title']);
         });
     });
 </script>
-<p> </p>
+<p></p>
 <?php
 echo $this->Form->hidden('body', ['id' => 'edit-form-body', 'value' => '']);
 ?>
@@ -283,6 +286,63 @@ echo $this->Form->button(__('Save Page'));
 echo $this->Form->end();
 ?>
 <script type="text/javascript">
+$("#md-editor").on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  })
+  .on('dragover dragenter', function() {
+    $("#md-editor").addClass('is-dragover');
+  })
+  .on('dragleave dragend drop', function() {
+    $("#md-editor").removeClass('is-dragover');
+  })
+  .on('drop', function(e) {
+    var droppedFiles = e.originalEvent.dataTransfer.files;
+    console.log(droppedFiles);
+    var out = "";
+    for(var index = 0;index < droppedFiles.length;index++) {
+      var file = droppedFiles[index];
+      var id = "img-awaiter"+(new Date().getTime())+"-"+index;
+      out += "<div id=\""+id+"\">!["+file.name+"](Sending file...)</div>";
+     
+      console.log("Sending file...");
+      var data = new FormData(); 
+      data.append('upload', file);
+      $.ajax({
+        url: '/pages/saveFile/',
+        type: 'POST',
+        data: data,
+        cache: false,
+        dataType: 'json',
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        success: function(data, textStatus, jqXHR)
+        {
+            if(typeof data.error === 'undefined')
+            {
+                console.log(data);
+		$("#"+id).text("!["+file.name+"]("+data.url+")");
+	        $("#md-editor").trigger('input');
+            }
+            else
+            {
+		$("#"+id).text("!["+file.name+"](Error: "+data.error+")");
+                console.log('ERRORS: ' + data.error);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+	    $("#"+id).text("!["+file.name+"](Error:"+textStatus+")");
+            console.log('ERRORS: ' + textStatus);
+        }
+    });
+    }; 
+
+    var rangyAnchor = $(rangy.getSelection().anchorNode);
+    if(rangyAnchor.is("div")) rangyAnchor.after(out);
+    else rangyAnchor.closest("div").after(out);
+  });
+
     $('#edit-form').submit(function () {
         $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
         $('#tmp-val').html($("#md-editor").html());

@@ -61,16 +61,9 @@ class PagesController extends AppController {
 	$page->parents = [$parent];
 
         if ($this->request->is('post')) {
-            $newParents = array_filter(explode(",", $this->request->data['parentsids']),
-            function($v) {
-                return $v != null && trim($v) != '' && $v !== "null";
-            });
+            $page = $this->_preparePageData($page, $this->request);
 
-            $this->request->data['parents'] = ['_ids' => $newParents];
-            $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
-            $page = $this->_preparePageData($page);
-
-            if ($this->Pages->save($page, ['associated' => ['Parents']])) {
+            if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
                 $this->Flash->success(__('Your page has been saved.'));
                 return $this->redirect(['action' => 'edit', $page->id]);
             }
@@ -83,7 +76,7 @@ class PagesController extends AppController {
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
-                'contain' => ['Parents', 'Children']
+                'contain' => ['Parents', 'Children', 'Tags']
             ]);
             foreach($page->parents as $i => $parent) {
                 $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
@@ -91,23 +84,16 @@ class PagesController extends AppController {
         } else {
             $page = $this->Pages->find('all', [
                 'conditions' => ['Pages.title =' => base64_decode($base64)],
-                'contain' => ['Parents', 'Children']
+                'contain' => ['Parents', 'Children', 'Tags']
             ])->first();
         }
         if ($page === null)
             throw new NotFoundException();
 
         if ($this->request->is(['post', 'put'])) {
-            $newParents = array_filter(explode(",", $this->request->data['parentsids']), 
-            function($v) {
-                return $v != null && trim($v) != '' && $v !== "null";
-            });
+            $page = $this->_preparePageData($page, $this->request);
             
-            $this->request->data['parents'] = ['_ids' => $newParents];
-            $this->Pages->patchEntity($page, $this->request->data, ['associated' => ['Parents']]);
-            $page = $this->_preparePageData($page);
-            
-            if ($this->Pages->save($page, ['associated' => ['Parents']])) {
+            if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
                 $this->Flash->success(__('Your page has been updated.'));
                 return $this->redirect(['action' => 'edit', $page->id]);
             }
@@ -119,8 +105,38 @@ class PagesController extends AppController {
         $this->set('page', $page);
     }
     
-    private function _preparePageData($page) {
+    private function _preparePageData($page, $request) {
+	$this->loadModel('Tags');
+
+        $newParents = array_filter(explode(",", $request->data['parentsids']),
+        function($v) {
+            return $v != null && trim($v) != '' && $v !== "null";
+        });
+
+        $request->data['parents'] = ['_ids' => $newParents];
+
+	$request->data['tags'] = [];
+	$tagsNames = array_filter(explode(",", $request->data['tagsnames']),
+        function($v) {
+            return $v != null && trim($v) != '' && $v !== "null";
+        });
+	$tags = [];
+	foreach($tagsNames as $tagName_) {
+		$tagName = strtolower(trim($tagName_));
+		$tag = $this->Tags->find()->where(['tag' => $tagName])->first();
+		
+		if($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
+			$tags[] = ['tag' => $tagName];
+		}
+	} 
+	$request->data['tags'] = $tags;
+	
+	//echo("<pre>");
+	//var_dump($request->data);
+        $this->Pages->patchEntity($page, $request->data, ['associated' => ['Parents', 'Tags']]);
         $page->body = str_replace("[newline]", "\n", $page->body);
+	if(substr($page->body, -1) === "\n") $page->body = substr($page->body, 0, strlen($page->body)-1);
+	//var_dump($page);
         return $page;
     }
 
@@ -170,6 +186,35 @@ class PagesController extends AppController {
         }
 
 	echo json_encode([]);
+    }
+
+    public function loadFromFiles($secret) {
+        if($secret !== "moraxella") throw new NotFoundException();
+	
+	$dir = "";
+    }
+
+    public function saveFile() {
+        Configure::write('debug', 1); 
+        $this->autoRender = false;
+	$this->viewBuilder()->layout('ajax');
+	$this->request->allowMethod(['post']);
+
+	if(!empty($this->request->data['upload']['name'])) {
+	    $file = $this->request->data['upload']; //put the data into a var for easy use
+
+	    $ext = substr(strtolower(strrchr($file['name'], '.')), 1); //get the extension
+	    $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //set allowed extensions
+	    $setNewFileName = time() . "_" . rand(000000, 999999);
+
+	    if (in_array($ext, $arr_ext)) {
+	      move_uploaded_file($file['tmp_name'], WWW_ROOT . '/md_img/' . $setNewFileName . '.' . $ext);
+	      $imageFileName = $setNewFileName . '.' . $ext;
+	      echo json_encode(array('url' => '/md_img/'.$imageFileName));
+	    }
+	    else echo json_encode(array('error' => 'Disallowed image extension'));
+	}
+        else echo json_encode(array('error' => 'No data'));
     }
 
     /**
