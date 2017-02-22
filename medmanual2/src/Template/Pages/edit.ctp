@@ -119,7 +119,7 @@ echo $this->Form->input('title', ['class' => 'title', 'label' => '', 'placeholde
     <?php endif; ?>
 </p>
 <p class="tags-field">
-Tags: <input type="text" name="tagsnames" value="<?php foreach($page->tags as $tag) {echo $tag->tag; echo ", ";} ?>">
+Tags: <input type="text" name="tagsnames" value="<?php if(isset($page->tags)) { foreach($page->tags as $tag) {echo $tag->tag; echo ", ";}} ?>">
 </p>
 <div id="md-editor" contenteditable>
     <?php
@@ -343,12 +343,63 @@ $("#md-editor").on('drag dragstart dragend dragover dragenter dragleave drop', f
     else rangyAnchor.closest("div").after(out);
   });
 
-    $('#edit-form').submit(function () {
+function prepareFormToSave() {
         $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
         $('#tmp-val').html($("#md-editor").html());
         $('#tmp-val div').append("[newline]");
         $('#edit-form-body').val($("#tmp-val").text());
         $('#tmp-val').remove();
         return true;
+}
+
+function ajaxSave() {
+    prepareFormToSave();
+    var formData = $("#edit-form").serialize();
+    $.ajax(
+    {
+        type:'post',
+        url:window.location.pathname+'?ajax',
+        data:formData,
+        beforeSend:function()
+        {
+            //launchpreloader();
+        },
+        complete:function()
+        {
+            //stopPreloader();
+        },
+	success: function(data, textStatus, jqXHR)
+        {
+            if(typeof data.error === 'undefined')
+            {
+                console.log(data);
+            }
+            else
+            {
+                console.log('ERRORS: ' + data.error);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+            console.log('ERRORS: ' + textStatus);
+        }
     });
+}
+
+    $('#edit-form').submit(function () {
+	prepareFormToSave();
+        return true;
+    });
+
+var isCtrl = false;
+$(document).keyup(function (e) {
+ if(e.which == 17) isCtrl=false;
+}).keydown(function (e) {
+    if(e.which == 17) isCtrl=true;
+    if(e.which == 83 && isCtrl == true) {
+	console.log("Saving page...");
+        ajaxSave();
+        return false;
+    }
+});
 </script>

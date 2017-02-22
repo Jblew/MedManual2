@@ -55,6 +55,7 @@ class PagesController extends AppController {
     }
 
     public function add($parent_id = 1) {
+	//print_r($this->request);
         $page = $this->Pages->newEntity();
 	$parent = $this->Pages->get($parent_id);
 	$parent->paths = $this->Pages->getPaths($parent->id);
@@ -73,6 +74,7 @@ class PagesController extends AppController {
     }
 
     public function edit($id, $base64 = null) {
+	$isAjax = isset($_GET['ajax']);
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
@@ -94,11 +96,25 @@ class PagesController extends AppController {
             $page = $this->_preparePageData($page, $this->request);
             
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
-                $this->Flash->success(__('Your page has been updated.'));
-                return $this->redirect(['action' => 'edit', $page->id]);
+		if($isAjax) {
+		    Configure::write('debug', 1);
+ 	            $this->autoRender = false;
+                    $this->viewBuilder()->layout('ajax');
+		    echo json_encode(array("success" => true));
+		}
+		else {
+                    $this->Flash->success(__('Your page has been updated.'));
+                    return $this->redirect(['action' => 'edit', $page->id]);
+		}
             }
             else {
-                $this->Flash->error(__('Unable to update your page.'));
+		if($isAjax) {
+                     Configure::write('debug', 1);
+                     $this->autoRender = false;
+                     $this->viewBuilder()->layout('ajax');
+                     echo json_encode(array("error" => "Unable to update page"));
+                }
+                else $this->Flash->error(__('Unable to update your page.'));
             }
         }
 
@@ -121,12 +137,16 @@ class PagesController extends AppController {
             return $v != null && trim($v) != '' && $v !== "null";
         });
 	$tags = [];
+	$tagsList = array();
 	foreach($tagsNames as $tagName_) {
 		$tagName = strtolower(trim($tagName_));
 		$tag = $this->Tags->find()->where(['tag' => $tagName])->first();
 		
 		if($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
-			$tags[] = ['tag' => $tagName];
+			if(!in_array($tagName, $tagsList)) {
+				 $tags[] = ['tag' => $tagName];
+				 $tagsList[] = $tagName;
+			}
 		}
 	} 
 	$request->data['tags'] = $tags;
@@ -214,7 +234,7 @@ class PagesController extends AppController {
 	    }
 	    else echo json_encode(array('error' => 'Disallowed image extension'));
 	}
-        else echo json_encode(array('error' => 'No data'));
+        else echo json_encode(array('error' => 'No data', 'request_data' => $this->request->data));
     }
 
     /**
