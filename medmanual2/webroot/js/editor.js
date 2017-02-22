@@ -2,6 +2,7 @@
 var parentsArr = [];
 function updateParentsField() {
     $("#parents-base").val(parentsArr.join(","));
+    setSaved(false, false);
     //console.log(parentsArr);
 }
 
@@ -97,6 +98,7 @@ $(document).ready(function () {
     }
 
     mdEditor.on('paste input', function () {
+        setSaved(false, false);
         $("#md-editor div").each(function (i, _div) {
             var div = $(_div);
             if (div.text().startsWith("# ")) {
@@ -175,128 +177,175 @@ $(document).ready(function () {
         rangy.getSelection().restoreCharacterRanges(elem, savedSel);
     });
 
+    var wasSaved = isSaved();
     $("#md-editor").trigger('input');
+    if (wasSaved)
+        setSaved(true, false);
     $(window).on('resize', function () {
+        var wasSaved = isSaved();
         $("#md-editor").trigger('input');
+        if (wasSaved)
+            setSaved(true, false);
     });
 });
 
 $("#md-editor").on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    })
-            .on('dragover dragenter', function () {
-                $("#md-editor").addClass('is-dragover');
-            })
-            .on('dragleave dragend drop', function () {
-                $("#md-editor").removeClass('is-dragover');
-            })
-            .on('drop', function (e) {
-                var droppedFiles = e.originalEvent.dataTransfer.files;
-                console.log(droppedFiles);
-                var out = "";
-                for (var index = 0; index < droppedFiles.length; index++) {
-                    var file = droppedFiles[index];
-                    var id = "img-awaiter" + (new Date().getTime()) + "-" + index;
-                    out += "<div id=\"" + id + "\">![" + file.name + "](Sending file...)</div>";
+    e.preventDefault();
+    e.stopPropagation();
+})
+        .on('dragover dragenter', function () {
+            $("#md-editor").addClass('is-dragover');
+        })
+        .on('dragleave dragend drop', function () {
+            $("#md-editor").removeClass('is-dragover');
+        })
+        .on('drop', function (e) {
+            var droppedFiles = e.originalEvent.dataTransfer.files;
+            console.log(droppedFiles);
+            var out = "";
+            for (var index = 0; index < droppedFiles.length; index++) {
+                var file = droppedFiles[index];
+                var id = "img-awaiter" + (new Date().getTime()) + "-" + index;
+                out += "<div id=\"" + id + "\">![" + file.name + "](Sending file...)</div>";
 
-                    console.log("Sending file...");
-                    var data = new FormData();
-                    data.append('upload', file);
-                    $.ajax({
-                        url: '/pages/saveFile/',
-                        type: 'POST',
-                        data: data,
-                        cache: false,
-                        dataType: 'json',
-                        processData: false, // Don't process the files
-                        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                        success: function (data, textStatus, jqXHR)
-                        {
-                            if (typeof data.error === 'undefined')
-                            {
-                                console.log(data);
-                                $("#" + id).text("![" + file.name + "](" + data.url + ")");
-                                $("#md-editor").trigger('input');
-                            } else
-                            {
-                                $("#" + id).text("![" + file.name + "](Error: " + data.error + ")");
-                                console.log('ERRORS: ' + data.error);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown)
-                        {
-                            $("#" + id).text("![" + file.name + "](Error:" + textStatus + ")");
-                            console.log('ERRORS: ' + textStatus);
-                        }
-                    });
-                }
-                ;
-
-                var rangyAnchor = $(rangy.getSelection().anchorNode);
-                if (rangyAnchor.is("div"))
-                    rangyAnchor.after(out);
-                else
-                    rangyAnchor.closest("div").after(out);
-            });
-
-    function prepareFormToSave() {
-        $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
-        $('#tmp-val').html($("#md-editor").html());
-        $('#tmp-val div').append("[newline]");
-        $('#edit-form-body').val($("#tmp-val").text());
-        $('#tmp-val').remove();
-        return true;
-    }
-
-    function ajaxSave() {
-        prepareFormToSave();
-        var formData = $("#edit-form").serialize();
-        $.ajax(
-                {
-                    type: 'post',
-                    url: window.location.pathname + '?ajax',
-                    data: formData,
-                    beforeSend: function ()
-                    {
-                        //launchpreloader();
-                    },
-                    complete: function ()
-                    {
-                        //stopPreloader();
-                    },
+                console.log("Sending file...");
+                var data = new FormData();
+                data.append('upload', file);
+                $.ajax({
+                    url: '/pages/saveFile/',
+                    type: 'POST',
+                    data: data,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false, // Don't process the files
+                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
                     success: function (data, textStatus, jqXHR)
                     {
                         if (typeof data.error === 'undefined')
                         {
                             console.log(data);
+                            $("#" + id).text("![" + file.name + "](" + data.url + ")");
+                            $("#md-editor").trigger('input');
                         } else
                         {
+                            $("#" + id).text("![" + file.name + "](Error: " + data.error + ")");
                             console.log('ERRORS: ' + data.error);
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
+                        $("#" + id).text("![" + file.name + "](Error:" + textStatus + ")");
                         console.log('ERRORS: ' + textStatus);
                     }
                 });
+            }
+            ;
+
+            var rangyAnchor = $(rangy.getSelection().anchorNode);
+            if (rangyAnchor.is("div"))
+                rangyAnchor.after(out);
+            else
+                rangyAnchor.closest("div").after(out);
+        });
+
+function prepareFormToSave() {
+    $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
+    $('#tmp-val').html($("#md-editor").html());
+    $('#tmp-val div').append("[newline]");
+    $('#edit-form-body').val($("#tmp-val").text());
+    $('#tmp-val').remove();
+    return true;
+}
+
+function ajaxSave() {
+    prepareFormToSave();
+    var formData = $("#edit-form").serialize();
+    $.ajax(
+            {
+                type: 'post',
+                url: window.location.pathname + '?ajax',
+                data: formData,
+                beforeSend: function ()
+                {
+                    //launchpreloader();
+                },
+                complete: function ()
+                {
+                    //stopPreloader();
+                },
+                success: function (data, textStatus, jqXHR)
+                {
+                    if (typeof data.error === 'undefined')
+                    {
+                        console.log(data);
+                        setSaved(true, false);
+                    } else
+                    {
+                        console.log('ERRORS: ' + data.error);
+                        setSaved(false, true);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.log('ERRORS: ' + textStatus);
+                    setSaved(false, true);
+                }
+            });
+}
+
+$('#edit-form').submit(function () {
+    prepareFormToSave();
+    return true;
+});
+
+var isCtrl = false;
+$(document).keyup(function (e) {
+    if (e.which == 17)
+        isCtrl = false;
+}).keydown(function (e) {
+    if (e.which == 17)
+        isCtrl = true;
+    if (e.which == 83 && isCtrl == true) {
+        console.log("Saving page...");
+        ajaxSave();
+        return false;
     }
+});
 
-    $('#edit-form').submit(function () {
-        prepareFormToSave();
-        return true;
-    });
 
-    var isCtrl = false;
-    $(document).keyup(function (e) {
-        if (e.which == 17)
-            isCtrl = false;
-    }).keydown(function (e) {
-        if (e.which == 17)
-            isCtrl = true;
-        if (e.which == 83 && isCtrl == true) {
-            console.log("Saving page...");
-            ajaxSave();
-            return false;
-        }
-    });
+var pageTitle = "";
+var saved_ = true;
+var errorWhileSaving_ = false;
+function setSaved(saved, errorWhileSaving) {
+    saved_ = saved;
+    errorWhileSaving_ = errorWhileSaving;
+    updateWindowTitle();
+}
+
+function updateWindowTitle() {
+    if (!saved_ && errorWhileSaving_) {
+        document.title = "!* " + pageTitle;
+    } else if (!saved_) {
+        document.title = "* " + pageTitle;
+    } else {
+        document.title = pageTitle;
+    }
+}
+
+function isSaved() {
+    return saved_;
+}
+
+$("#edit-title").on('input', function (evt) {
+    setSaved(false, false);
+    pageTitle = $("#edit-title").val();
+    updateWindowTitle();
+});
+
+$(document).ready(function () {
+    pageTitle = $("#edit-title").val();
+});
+
+$("#edit-tags").on('input', function (evt) {
+    setSaved(false, false);
+});

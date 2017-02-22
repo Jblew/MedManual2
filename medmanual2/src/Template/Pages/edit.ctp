@@ -5,7 +5,7 @@
 
 <?php
 echo $this->Form->create($page, ['id' => 'edit-form', 'label' => '']); //, 'enctype' => 'multipart/form-data']);
-echo $this->Form->input('title', ['class' => 'title', 'label' => '', 'placeholder' => 'Title here...']);
+echo $this->Form->input('title', ['id' => 'edit-title', 'class' => 'title', 'label' => '', 'placeholder' => 'Title here...']);
 ?>
 <p class="parents-field">
     <input type="hidden" name="parentsids" id="parents-base">
@@ -60,7 +60,7 @@ echo("createNewForm(" . $i . ", '', null, 'Add new parent:');");
 <?php endif; ?>
 </p>
 <p class="tags-field">
-    Tags: <input type="text" name="tagsnames" value="<?php
+    Tags: <input type="text" name="tagsnames" id="edit-tags" value="<?php
     if (isset($page->tags)) {
         foreach ($page->tags as $tag) {
             echo $tag->tag;
