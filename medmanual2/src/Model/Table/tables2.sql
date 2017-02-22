@@ -1,4 +1,4 @@
-ALTER DATABASE medmanual2 CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER DATABASE medmanual2 CHARACTER SET utf8 COLLATE utf8_bin;
 
 
 CREATE TABLE users (
@@ -41,22 +41,22 @@ CREATE TABLE tags (
 # Manuał medyczny (1) > choroby i objawy (2) > Choroby genetyczne (4) > Choroby jednogenowe (5) > Wrodzony niedobór IgA (6)
 
 insert into pages VALUES (1, 'Manuał Medyczny', 'Zapraszam!', 1, NOW());
-insert into pages VALUES (2, 'Choroby i objawy', '', 1, NOW());
-insert into pages VALUES (3, 'Układ immunologiczny', '', 1, NOW());
-insert into pages VALUES (4, 'Choroby genetyczne', '', 1, NOW());
-insert into pages VALUES (5, 'Choroby jednogenowe', '', 1, NOW());
-insert into pages VALUES (6, 'Wrodzony niedobór IgA', '', 1, NOW());
-insert into pages VALUES (7, 'Aberracje chromosomowe', '', 1, NOW());
-insert into pages VALUES (8, 'Zespół Patau', '', 1, NOW());
+# insert into pages VALUES (2, 'Choroby i objawy', '', 1, NOW());
+# insert into pages VALUES (3, 'Układ immunologiczny', '', 1, NOW());
+# insert into pages VALUES (4, 'Choroby genetyczne', '', 1, NOW());
+# insert into pages VALUES (5, 'Choroby jednogenowe', '', 1, NOW());
+# insert into pages VALUES (6, 'Wrodzony niedobór IgA', '', 1, NOW());
+# insert into pages VALUES (7, 'Aberracje chromosomowe', '', 1, NOW());
+#  insert into pages VALUES (8, 'Zespół Patau', '', 1, NOW());
 
-insert into pages_parents (page_id, parent_id) VALUES (2, 1);
-insert into pages_parents (page_id, parent_id) VALUES (3, 2);
-insert into pages_parents (page_id, parent_id) VALUES (4, 2);
-insert into pages_parents (page_id, parent_id) VALUES (5, 4);
-insert into pages_parents (page_id, parent_id) VALUES (6, 3);
-insert into pages_parents (page_id, parent_id) VALUES (6, 5);
-insert into pages_parents (page_id, parent_id) VALUES (7, 4);
-insert into pages_parents (page_id, parent_id) VALUES (8, 7);
+# insert into pages_parents (page_id, parent_id) VALUES (2, 1);
+# insert into pages_parents (page_id, parent_id) VALUES (3, 2);
+# insert into pages_parents (page_id, parent_id) VALUES (4, 2);
+# insert into pages_parents (page_id, parent_id) VALUES (5, 4);
+# insert into pages_parents (page_id, parent_id) VALUES (6, 3);
+# insert into pages_parents (page_id, parent_id) VALUES (6, 5);
+# insert into pages_parents (page_id, parent_id) VALUES (7, 4);
+# insert into pages_parents (page_id, parent_id) VALUES (8, 7);
 
 # Teraz chcę zdobyć ścieżki do (6). 
 
