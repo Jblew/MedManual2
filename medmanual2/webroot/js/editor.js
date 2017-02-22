@@ -325,10 +325,16 @@ function setSaved(saved, errorWhileSaving) {
 function updateWindowTitle() {
     if (!saved_ && errorWhileSaving_) {
         document.title = "!* " + pageTitle;
+        $(".top-bar ul").removeClass("unsaved");
+        $(".top-bar ul").addClass("unsaved-error");
     } else if (!saved_) {
         document.title = "* " + pageTitle;
+        $(".top-bar ul").addClass("unsaved");
+        $(".top-bar ul").removeClass("unsaved-error");
     } else {
         document.title = pageTitle;
+        $(".top-bar ul").removeClass("unsaved");
+        $(".top-bar ul").removeClass("unsaved-error");
     }
 }
 

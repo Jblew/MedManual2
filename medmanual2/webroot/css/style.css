@@ -165,3 +165,11 @@ ul.title-area {
 .top-bar .name h1 a {
     display: inline;
 }
+
+.top-bar ul.unsaved {
+    background-color: #960700 !important;
+}
+
+.top-bar ul.unsaved-error {
+    background-color: red !important;
+}
