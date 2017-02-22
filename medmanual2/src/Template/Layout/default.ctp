@@ -88,6 +88,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </div>
     <footer>
     </footer>
-    
+    <!-- <?php
+        echo round(microtime(true) - TIME_START, 3);
+    ?> ms -->
 </body>
 </html>
