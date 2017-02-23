@@ -1,0 +1,175 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-02-15, 14:23:59
+    Author     : teofil
+*/
+
+.container {
+    padding: 10px;
+}
+
+.easy-autocomplete {
+    display: inline;
+}
+
+.search-container {
+    text-align: right;
+    padding-right: 15px;
+}
+
+#top-search-box {
+    text-align: right;
+    top: 0;
+}
+
+#edit-form .title {
+    font-size: 3em;
+    height: 1.2em;
+    border: 1px dotted #ddd;
+}
+
+#edit-form .parents-table {
+    margin: 0;
+    color: #888;
+}
+#edit-form .parents-table tr {
+    border: none;
+}
+
+#edit-form .parents-table td {
+    color: #888;
+}
+
+#edit-form .parents-table td.outer-td {
+    vertical-align: middle;
+    padding: 3px;
+}
+
+#edit-form .parents-table td.td-prepath {
+    text-align: right;
+    text-align-last: right;
+    width: 50%;
+}
+
+#edit-form .parents-table td.td-input {
+    width: 30%;
+}
+
+#edit-form .parents-table td.td-afterpath {
+    text-align: left;
+    width: 10%;
+}
+
+#edit-form .parents-table td table {
+    border: none;
+    margin: 0;
+    width: 100%;
+}
+
+#edit-form .parents-table td table tr {
+    border: none;
+}
+
+#edit-form .parents-table td table tr td {
+    border: none;
+    vertical-align: none;
+}
+
+#edit-form .easy-autocomplete {
+    width: 100%;
+}
+
+#edit-form label {
+    display: none;
+}
+
+#edit-form .easy-autocomplete input {
+    width: 100%;
+    border: 1px dotted #ddd;
+    color: #777;
+    text-align: center;
+}
+
+.children-field {
+    color: #666;
+    border: 1px dotted #ddd;
+}
+
+.parents-field {
+    border: 1px dotted #ccc;
+}
+
+.children-field a {
+    color: #5fc3cd;
+}
+
+#md-editor {
+    border: 2px dotted green;
+}
+
+#md-editor .searchResult {
+    background-color: yellow;
+}
+
+#md-editor .bold {
+    font-weight: bold;
+}
+
+#md-editor .italic {
+    font-style: italic;
+}
+
+#md-editor .link {
+    color: #1798A5;
+    text-decoration: none;
+}
+
+#md-editor .link:hover {
+    color: #1798A5;
+    text-decoration: underline;
+}
+
+.is-dragover {
+    background: greenyellow;
+}
+
+.open-edit-button {
+    width: 100%;
+    text-align: center;
+    border: 1px dotted #ccc;
+    padding: 20px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.open-edit-button a {
+    font-size: 3em;
+}
+
+.top-bar-section {
+    float: right;
+}
+
+.title-area .name {
+    display: inline;
+}
+
+ul.title-area {
+    width: 320px;
+}
+
+.top-bar .name h1 a {
+    display: inline;
+}
+
+.top-bar ul.unsaved {
+    background-color: #960700 !important;
+}
+
+.top-bar ul.unsaved-error {
+    background-color: red !important;
+}

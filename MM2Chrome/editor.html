@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Editor - Manuał Medyczny JL 2.0
+        </title>
+        <link rel="stylesheet" href="css/base.css"/>
+        <link rel="stylesheet" href="css/cake.css"/>
+        <link rel="stylesheet" href="css/easy-autocomplete.min.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
+
+        <script src="lib/jquery-3.1.1.min.js"></script> 
+        <script src="lib/jquery.easy-autocomplete.min.js"></script>
+        <script src="lib/rangy/rangy-core.js"></script>
+        <script src="lib/rangy/rangy-classapplier.js"></script>
+        <script src="lib/rangy/rangy-textrange.js"></script>
+        <script src="scripts.js"></script> 
+        <script src="editor.js"></script> 
+        <script type="text/javascript" src="search.js"></script>
+    </head>
+    <body>
+        <nav class="top-bar expanded" data-topbar role="navigation">
+            <ul class="title-area large-3 medium-4 columns">
+                <li class="name">
+                    <h1><a href="/">Manuał Medyczny JL 2.0</a>
+                        <a href="javascript:window.open('/pages/add', '','height=800,width=600');;"><span class="glyphicon glyphicon-plus-sign"> </span> </a></h1>
+                </li>
+            </ul>
+            <div class="top-bar-section">
+                <div class="search-container">
+                    <input class="search-box" value="" id="top-search-box" />
+                </div>
+            </div>
+        </nav>
+        <div class="container clearfix">
+           
+            <form method="post" accept-charset="utf-8" id="edit-form" action="javascript:;">
+                <div style="display:none;"><input type="hidden" name="_method" value="PUT"/></div>
+                <div class="input text">
+                    <input type="text" name="title" id="edit-title" class="title" placeholder="Title here..." maxlength="255" value=""/>
+                </div>
+                <p class="parents-field">
+                    <input type="hidden" name="parentsids" id="parents-base">
+                    <!--<script type="text/javascript">
+                        $(document).ready(function () {
+                            createNewForm(0, 'Badania', 21, "<table style=\"display: inline;\"><tr><td><a href=\"javascript:window.open('/pages/edit/0/TWFudWHFgiBNZWR5Y3pueQ==', '','height=800,width=600');\">Manuał Medyczny</a> &raquo; </td></tr></table>");
+                            createNewForm(1, '', null, 'Add new parent:');
+                            updateParentsField();
+                        });
+                    </script>-->
+                </p>
+                <p class="children-field">Children:
+                    <span id="children-list"></span>
+                    <a href="javascript:;"><span class="glyphicon glyphicon-plus-sign"> </span> Add new child</a>
+                </p>
+                <p class="tags-field">
+                    Tags: <input type="text" name="tagsnames" id="edit-tags" value="">
+                </p>
+                <div id="md-editor" contenteditable>
+                    <div>Content here...</div>
+                </div>
+                <p></p>
+                <input type="hidden" name="body" id="edit-form-body" value=""/>
+                <button type="submit">Save Page</button>
+            </form>
+        </div>
+        <footer>
+        </footer>
+    </body>
+</html>

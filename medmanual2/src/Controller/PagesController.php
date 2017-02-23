@@ -55,11 +55,11 @@ class PagesController extends AppController {
     }
 
     public function add($parent_id = 1) {
-	//print_r($this->request);
+        //print_r($this->request);
         $page = $this->Pages->newEntity();
-	$parent = $this->Pages->get($parent_id);
-	$parent->paths = $this->Pages->getPaths($parent->id);
-	$page->parents = [$parent];
+        $parent = $this->Pages->get($parent_id);
+        $parent->paths = $this->Pages->getPaths($parent->id);
+        $page->parents = [$parent];
 
         if ($this->request->is('post')) {
             $page = $this->_preparePageData($page, $this->request);
@@ -74,89 +74,92 @@ class PagesController extends AppController {
     }
 
     public function edit($id, $base64 = null) {
-	$isAjax = isset($_GET['ajax']);
+        $isAjax = isset($_GET['ajax']);
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents', 'Children', 'Tags']
             ]);
-            foreach($page->parents as $i => $parent) {
+            foreach ($page->parents as $i => $parent) {
                 $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
             }
         } else {
             $page = $this->Pages->find('all', [
-                'conditions' => ['Pages.title =' => base64_decode($base64)],
-                'contain' => ['Parents', 'Children', 'Tags']
-            ])->first();
+                        'conditions' => ['Pages.title =' => base64_decode($base64)],
+                        'contain' => ['Parents', 'Children', 'Tags']
+                    ])->first();
         }
         if ($page === null)
             throw new NotFoundException();
 
         if ($this->request->is(['post', 'put'])) {
             $page = $this->_preparePageData($page, $this->request);
-            
+
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
-		if($isAjax) {
-		    Configure::write('debug', 1);
- 	            $this->autoRender = false;
+                if ($isAjax) {
+                    Configure::write('debug', 1);
+                    $this->autoRender = false;
                     $this->viewBuilder()->layout('ajax');
-		    echo json_encode(array("success" => true));
-		}
-		else {
+                    echo json_encode(array("success" => true));
+                } else {
                     $this->Flash->success(__('Your page has been updated.'));
                     return $this->redirect(['action' => 'edit', $page->id]);
-		}
-            }
-            else {
-		if($isAjax) {
-                     Configure::write('debug', 1);
-                     $this->autoRender = false;
-                     $this->viewBuilder()->layout('ajax');
-                     echo json_encode(array("error" => "Unable to update page"));
                 }
-                else $this->Flash->error(__('Unable to update your page.'));
+            } else {
+                if ($isAjax) {
+                    Configure::write('debug', 1);
+                    $this->autoRender = false;
+                    $this->viewBuilder()->layout('ajax');
+                    echo json_encode(array("error" => "Unable to update page"));
+                } else
+                    $this->Flash->error(__('Unable to update your page.'));
             }
         }
 
-        $this->set('page', $page);
+        if ($isAjax) {
+            Configure::write('debug', 1);
+            $this->autoRender = false;
+            $this->viewBuilder()->layout('ajax');
+            echo json_encode($page);
+        } else
+            $this->set('page', $page);
     }
-    
-    private function _preparePageData($page, $request) {
-	$this->loadModel('Tags');
 
-        $newParents = array_filter(explode(",", $request->data['parentsids']),
-        function($v) {
+    private function _preparePageData($page, $request) {
+        $this->loadModel('Tags');
+
+        $newParents = array_filter(explode(",", $request->data['parentsids']), function($v) {
             return $v != null && trim($v) != '' && $v !== "null";
         });
 
         $request->data['parents'] = ['_ids' => $newParents];
 
-	$request->data['tags'] = [];
-	$tagsNames = array_filter(explode(",", $request->data['tagsnames']),
-        function($v) {
+        $request->data['tags'] = [];
+        $tagsNames = array_filter(explode(",", $request->data['tagsnames']), function($v) {
             return $v != null && trim($v) != '' && $v !== "null";
         });
-	$tags = [];
-	$tagsList = array();
-	foreach($tagsNames as $tagName_) {
-		$tagName = strtolower(trim($tagName_));
-		$tag = $this->Tags->find()->where(['tag' => $tagName])->first();
-		
-		if($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
-			if(!in_array($tagName, $tagsList)) {
-				 $tags[] = ['tag' => $tagName];
-				 $tagsList[] = $tagName;
-			}
-		}
-	} 
-	$request->data['tags'] = $tags;
-	
-	//echo("<pre>");
-	//var_dump($request->data);
+        $tags = [];
+        $tagsList = array();
+        foreach ($tagsNames as $tagName_) {
+            $tagName = strtolower(trim($tagName_));
+            $tag = $this->Tags->find()->where(['tag' => $tagName])->first();
+
+            if ($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
+                if (!in_array($tagName, $tagsList)) {
+                    $tags[] = ['tag' => $tagName];
+                    $tagsList[] = $tagName;
+                }
+            }
+        }
+        $request->data['tags'] = $tags;
+
+        //echo("<pre>");
+        //var_dump($request->data);
         $this->Pages->patchEntity($page, $request->data, ['associated' => ['Parents', 'Tags']]);
         $page->body = str_replace("[newline]", "\n", $page->body);
-	if(substr($page->body, -1) === "\n") $page->body = substr($page->body, 0, strlen($page->body)-1);
-	//var_dump($page);
+        if (substr($page->body, -1) === "\n")
+            $page->body = substr($page->body, 0, strlen($page->body) - 1);
+        //var_dump($page);
         return $page;
     }
 
@@ -184,57 +187,58 @@ class PagesController extends AppController {
         }
         echo json_encode($response);
     }
-    
+
     public function match($findStr = '') {
-	Configure::write('debug', 1);
+        Configure::write('debug', 1);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
         $this->loadModel('Tags');
 
-	$findStr = trim(base64_decode($findStr));
-        
-	$page = $this->Pages->find()->where(['title' => $findStr])->first();
-	if($page != null) {
+        $findStr = trim(base64_decode($findStr));
+
+        $page = $this->Pages->find()->where(['title' => $findStr])->first();
+        if ($page != null) {
             echo json_encode(['id' => $page->id]);
-	    return;
+            return;
         }
 
         $tag = $this->Tags->find()->where(['tag' => $findStr])->first();
-	if($tag != null) {  
+        if ($tag != null) {
             echo json_encode(['id' => $tag->page_id]);
             return;
         }
 
-	echo json_encode([]);
+        echo json_encode([]);
     }
 
     public function loadFromFiles($secret) {
-        if($secret !== "moraxella") throw new NotFoundException();
-	
-	$dir = "";
+        if ($secret !== "moraxella")
+            throw new NotFoundException();
+
+        $dir = "";
     }
 
     public function saveFile() {
-        Configure::write('debug', 1); 
+        Configure::write('debug', 1);
         $this->autoRender = false;
-	$this->viewBuilder()->layout('ajax');
-	$this->request->allowMethod(['post']);
+        $this->viewBuilder()->layout('ajax');
+        $this->request->allowMethod(['post']);
 
-	if(!empty($this->request->data['upload']['name'])) {
-	    $file = $this->request->data['upload']; //put the data into a var for easy use
+        if (!empty($this->request->data['upload']['name'])) {
+            $file = $this->request->data['upload']; //put the data into a var for easy use
 
-	    $ext = substr(strtolower(strrchr($file['name'], '.')), 1); //get the extension
-	    $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //set allowed extensions
-	    $setNewFileName = time() . "_" . rand(000000, 999999);
+            $ext = substr(strtolower(strrchr($file['name'], '.')), 1); //get the extension
+            $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //set allowed extensions
+            $setNewFileName = time() . "_" . rand(000000, 999999);
 
-	    if (in_array($ext, $arr_ext)) {
-	      move_uploaded_file($file['tmp_name'], WWW_ROOT . '/md_img/' . $setNewFileName . '.' . $ext);
-	      $imageFileName = $setNewFileName . '.' . $ext;
-	      echo json_encode(array('url' => '/md_img/'.$imageFileName));
-	    }
-	    else echo json_encode(array('error' => 'Disallowed image extension'));
-	}
-        else echo json_encode(array('error' => 'No data', 'request_data' => $this->request->data));
+            if (in_array($ext, $arr_ext)) {
+                move_uploaded_file($file['tmp_name'], WWW_ROOT . '/md_img/' . $setNewFileName . '.' . $ext);
+                $imageFileName = $setNewFileName . '.' . $ext;
+                echo json_encode(array('url' => '/md_img/' . $imageFileName));
+            } else
+                echo json_encode(array('error' => 'Disallowed image extension'));
+        } else
+            echo json_encode(array('error' => 'No data', 'request_data' => $this->request->data));
     }
 
     /**
