@@ -4,7 +4,7 @@ namespace App\Model\Table;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Utility\Text;
-use Cake\Event;
+use Cake\Event\Event;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -22,9 +22,9 @@ class UsersTable extends Table
                 'message' => 'Please enter a valid role'
             ]);
     }
-    public function beforeSave(Event $event)
+    public function beforeSave(Event $event, $entity)
     {
-        $entity = $event->getData('entity');
+        //$entity = $event->getData('entity');
 
         if ($entity->isNew()) {
             $hasher = new DefaultPasswordHasher();
