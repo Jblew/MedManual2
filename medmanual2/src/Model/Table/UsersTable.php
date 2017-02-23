@@ -2,6 +2,9 @@
 
 namespace App\Model\Table;
 
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Utility\Text;
+use Cake\Event\Event;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
