@@ -31,7 +31,7 @@ function createNewForm(id, initialTitle, initialId, prePathHtml) {
 
     $("#parents-selector-" + id).easyAutocomplete({
         url: function (phrase) {
-            return "/pages/ajaxFindPage?term=" + phrase;
+            return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + phrase;
         },
         getValue: "title",
         list: {
