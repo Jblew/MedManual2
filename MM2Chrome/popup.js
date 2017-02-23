@@ -129,7 +129,7 @@ $(document).ready(function () {
 
     $("#edit-article-btn").on('click', function (evt) {
         window.open(
-                'editor.html',
+                'editor.html?pageId=25',
                 "", "height=800,width=600"
                 );
     });

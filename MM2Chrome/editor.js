@@ -1,3 +1,6 @@
+pageId = findGetParameter("pageId");
+if(pageId === null || pageId < 1) pageId = 1;
+    
 
 var parentsArr = [];
 function updateParentsField() {
@@ -189,64 +192,66 @@ $(document).ready(function () {
     });
 });
 
-$("#md-editor").on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-})
-        .on('dragover dragenter', function () {
-            $("#md-editor").addClass('is-dragover');
-        })
-        .on('dragleave dragend drop', function () {
-            $("#md-editor").removeClass('is-dragover');
-        })
-        .on('drop', function (e) {
-            var droppedFiles = e.originalEvent.dataTransfer.files;
-            console.log(droppedFiles);
-            var out = "";
-            for (var index = 0; index < droppedFiles.length; index++) {
-                var file = droppedFiles[index];
-                var id = "img-awaiter" + (new Date().getTime()) + "-" + index;
-                out += "<div id=\"" + id + "\">![" + file.name + "](Sending file...)</div>";
+$(document).ready(function () {
+    $("#md-editor").on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    })
+            .on('dragover dragenter', function () {
+                $("#md-editor").addClass('is-dragover');
+            })
+            .on('dragleave dragend drop', function () {
+                $("#md-editor").removeClass('is-dragover');
+            })
+            .on('drop', function (e) {
+                var droppedFiles = e.originalEvent.dataTransfer.files;
+                console.log(droppedFiles);
+                var out = "";
+                for (var index = 0; index < droppedFiles.length; index++) {
+                    var file = droppedFiles[index];
+                    var id = "img-awaiter" + (new Date().getTime()) + "-" + index;
+                    out += "<div id=\"" + id + "\">![" + file.name + "](Sending file...)</div>";
 
-                console.log("Sending file...");
-                var data = new FormData();
-                data.append('upload', file);
-                $.ajax({
-                    url: '/pages/saveFile/',
-                    type: 'POST',
-                    data: data,
-                    cache: false,
-                    dataType: 'json',
-                    processData: false, // Don't process the files
-                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        if (typeof data.error === 'undefined')
+                    console.log("Sending file...");
+                    var data = new FormData();
+                    data.append('upload', file);
+                    $.ajax({
+                        url: '/pages/saveFile/',
+                        type: 'POST',
+                        data: data,
+                        cache: false,
+                        dataType: 'json',
+                        processData: false, // Don't process the files
+                        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                        success: function (data, textStatus, jqXHR)
                         {
-                            console.log(data);
-                            $("#" + id).text("![" + file.name + "](" + data.url + ")");
-                            $("#md-editor").trigger('input');
-                        } else
+                            if (typeof data.error === 'undefined')
+                            {
+                                console.log(data);
+                                $("#" + id).text("![" + file.name + "](" + data.url + ")");
+                                $("#md-editor").trigger('input');
+                            } else
+                            {
+                                $("#" + id).text("![" + file.name + "](Error: " + data.error + ")");
+                                console.log('ERRORS: ' + data.error);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown)
                         {
-                            $("#" + id).text("![" + file.name + "](Error: " + data.error + ")");
-                            console.log('ERRORS: ' + data.error);
+                            $("#" + id).text("![" + file.name + "](Error:" + textStatus + ")");
+                            console.log('ERRORS: ' + textStatus);
                         }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        $("#" + id).text("![" + file.name + "](Error:" + textStatus + ")");
-                        console.log('ERRORS: ' + textStatus);
-                    }
-                });
-            }
-            ;
+                    });
+                }
+                ;
 
-            var rangyAnchor = $(rangy.getSelection().anchorNode);
-            if (rangyAnchor.is("div"))
-                rangyAnchor.after(out);
-            else
-                rangyAnchor.closest("div").after(out);
-        });
+                var rangyAnchor = $(rangy.getSelection().anchorNode);
+                if (rangyAnchor.is("div"))
+                    rangyAnchor.after(out);
+                else
+                    rangyAnchor.closest("div").after(out);
+            });
+});
 
 function prepareFormToSave() {
     $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
@@ -260,43 +265,14 @@ function prepareFormToSave() {
 function ajaxSave() {
     prepareFormToSave();
     var formData = $("#edit-form").serialize();
-    $.ajax(
-            {
-                type: 'post',
-                url: window.location.pathname + '?ajax',
-                data: formData,
-                beforeSend: function ()
-                {
-                    //launchpreloader();
-                },
-                complete: function ()
-                {
-                    //stopPreloader();
-                },
-                success: function (data, textStatus, jqXHR)
-                {
-                    if (typeof data.error === 'undefined')
-                    {
-                        console.log(data);
-                        setSaved(true, false);
-                    } else
-                    {
-                        console.log('ERRORS: ' + data.error);
-                        setSaved(false, true);
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    console.log('ERRORS: ' + textStatus);
-                    setSaved(false, true);
-                }
-            });
+    mmRequestPost('pages/edit/' + pageId, 'POST', formData, function(data, isSuccess, error) {
+        if(isSuccess) {
+            setSaved(true, false);
+        }
+        else setSaved(false, true);
+    });
 }
 
-$('#edit-form').submit(function () {
-    prepareFormToSave();
-    return true;
-});
 
 var isCtrl = false;
 $(document).keyup(function (e) {
@@ -342,17 +318,81 @@ function isSaved() {
     return saved_;
 }
 
-$("#edit-title").on('input', function (evt) {
-    setSaved(false, false);
-    pageTitle = $("#edit-title").val();
-    updateWindowTitle();
-});
+function loadPage(pageId) {
+    mmRequestPost('pages/edit/'+pageId, 'GET', {}, function (data, isSuccess, error) {
+        if (isSuccess) {
+            console.log('loaded');
+            $("#edit-title").val(data.title);
+
+            var body = "";
+            var lines = data.body.split("\n");
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i] === "")
+                    body += "<div><br /></div>\n";
+                else
+                    body += "<div>" + lines[i] + "</div>\n";
+            }
+            $("#md-editor").html(body);
+
+            var tagsStr = "";
+            for (var i = 0; i < data.tags.length; i++)
+                tagsStr += data.tags[i].tag + ", ";
+            $("#edit-tags").val(tagsStr);
+
+            for (var i = 0; i < data.parents.length; i++) {
+                var prePathHtml = "<table style=\"display: inline;\">";
+                if (data.parents[i].paths) {
+                    for (var j = 0; j < data.parents[i].paths.length; j++) {
+                        prePathHtml += "<tr><td>";
+                        for (var k = 0; k < data.parents[i].paths[j].length; k++) {
+                            prePathHtml += "<a>" + data.parents[i].paths[j][k] + "</a> &raquo; ";
+                        }
+                        prePathHtml += "</td></tr>";
+                    }
+                } else {
+                    prePathHtml += "<tr><td>";
+                    prePathHtml += "<span class=\\\"glyphicon glyphicon-home\\\"></span> &raquo; ";
+                    prePathHtml += "</td></tr>";
+                }
+                prePathHtml += "</table>";
+                createNewForm(i, data.parents[i].title, data.parents[i].id, prePathHtml);
+            }
+            createNewForm(data.parents.length, '', null, 'Add new parent:');
+
+            var childrenHtml = "";
+            for (var i = 0; i < data.children.length; i++) {
+                childrenHtml += "<a>" + data.children[i].title + "</a>, ";
+            }
+            $("#children-list").html(childrenHtml);
+
+            $('#md-editor').trigger('input');
+            setTimeout(function () {
+                setSaved(true);
+                pageTitle = $("#edit-title").val();
+                updateWindowTitle();
+
+            }, 1000);
+        }
+    });
+}
 
 $(document).ready(function () {
-    pageTitle = $("#edit-title").val();
-    updateWindowTitle();
+    $('#edit-form').submit(function () {
+        ajaxSave();
+        return false;
+    });
+
+    $("#edit-title").on('input', function (evt) {
+        setSaved(false, false);
+        pageTitle = $("#edit-title").val();
+        updateWindowTitle();
+    });
+
+    $("#edit-tags").on('input', function (evt) {
+        console.log("Edit-tags.input");
+        setSaved(false, false);
+    });
+
+    loadPage(pageId);
 });
 
-$("#edit-tags").on('input', function (evt) {
-    setSaved(false, false);
-});

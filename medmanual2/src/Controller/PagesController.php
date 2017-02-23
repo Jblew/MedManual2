@@ -96,12 +96,7 @@ class PagesController extends AppController {
             $page = $this->_preparePageData($page, $this->request);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
-                if ($isAjax) {
-                    Configure::write('debug', 1);
-                    $this->autoRender = false;
-                    $this->viewBuilder()->layout('ajax');
-                    echo json_encode(array("success" => true));
-                } else {
+                if (!$isAjax) {
                     $this->Flash->success(__('Your page has been updated.'));
                     return $this->redirect(['action' => 'edit', $page->id]);
                 }
