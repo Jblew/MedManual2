@@ -19,5 +19,21 @@ class UsersTable extends Table
                 'message' => 'Please enter a valid role'
             ]);
     }
+    public function beforeSave(Event $event)
+    {
+        $entity = $event->getData('entity');
+
+        if ($entity->isNew()) {
+            $hasher = new DefaultPasswordHasher();
+
+            // Generate an API 'token'
+            $entity->api_key_plain = sha1(Text::uuid());
+
+            // Bcrypt the token so BasicAuthenticate can check
+            // it during login.
+            $entity->api_key = $hasher->hash($entity->api_key_plain);
+        }
+        return true;
+    }
 
 }

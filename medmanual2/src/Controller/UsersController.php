@@ -45,7 +45,7 @@ class UsersController extends AppController
         $this->set(compact('user'));
     }
 
-    /*public function add()
+    public function add()
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
@@ -57,7 +57,7 @@ class UsersController extends AppController
             $this->Flash->error(__('Unable to add the user.'));
         }
         $this->set('user', $user);
-    }*/
+    }
     
     
 

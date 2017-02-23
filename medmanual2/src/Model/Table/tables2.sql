@@ -7,7 +7,9 @@ CREATE TABLE users (
     password VARCHAR(255),
     role VARCHAR(20),
     created DATETIME DEFAULT NULL,
-    modified DATETIME DEFAULT NULL
+    modified DATETIME DEFAULT NULL,
+    api_key VARCHAR(255),
+    api_key_plain VARCHAR(255)
 );
 
 CREATE TABLE pages (
