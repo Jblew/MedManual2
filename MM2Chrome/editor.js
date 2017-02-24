@@ -1,5 +1,5 @@
 pageId = findGetParameter("pageId");
-if(pageId === null || pageId < 1) pageId = 1;
+if(pageId === null || pageId < 1) pageId = 0;
     
 
 var parentsArr = [];
@@ -255,7 +255,10 @@ $(document).ready(function () {
 
 function prepareFormToSave() {
     $('#edit-form-body').after("<span id=\"tmp-val\" style=\"display: none;\"></span>");
-    $('#tmp-val').html($("#md-editor").html());
+    $('#tmp-val').html($("#md-editor").html().replace('<br />', ''));
+    $('#tmp-val div').each(function(i, elem) {
+        if($(elem).html().trim() === '') $(elem).remove();
+    });
     $('#tmp-val div').append("[newline]");
     $('#edit-form-body').val($("#tmp-val").text());
     $('#tmp-val').remove();
@@ -265,7 +268,9 @@ function prepareFormToSave() {
 function ajaxSave() {
     prepareFormToSave();
     var formData = $("#edit-form").serialize();
-    mmRequestPost('pages/edit/' + pageId, 'POST', formData, function(data, isSuccess, error) {
+    
+    mmRequestPost(url, 'POST', formData, function(data, isSuccess, error) {
+        if(pageId === 0) pageId = data.id;
         if(isSuccess) {
             setSaved(true, false);
         }
@@ -373,6 +378,9 @@ function loadPage(pageId) {
 
             }, 1000);
         }
+        else {
+            setMsgBar("Cannot load page. Press Ctrl+R.", 'error');
+        }
     });
 }
 
@@ -393,6 +401,9 @@ $(document).ready(function () {
         setSaved(false, false);
     });
 
-    loadPage(pageId);
+    if(pageId > 0) loadPage(pageId);
+    else {
+        
+    }
 });
 

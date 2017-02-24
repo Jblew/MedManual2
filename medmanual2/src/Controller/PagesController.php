@@ -32,7 +32,16 @@ class PagesController extends AppController {
 
     public function index() {
         $tree = $this->Pages->buildTree();
-        $this->set('tree', $tree);
+
+        $isAjax = isset($_GET['ajax']);
+
+        if ($isAjax) {
+            Configure::write('debug', 0);
+            $this->autoRender = false;
+            $this->viewBuilder()->layout('ajax');
+            echo json_encode($tree);
+        } else
+            $this->set('tree', $tree);
     }
 
     public function view($id, $base64 = null) {
