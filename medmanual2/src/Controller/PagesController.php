@@ -39,7 +39,7 @@ class PagesController extends AppController {
             Configure::write('debug', 0);
             $this->autoRender = false;
             $this->viewBuilder()->layout('ajax');
-            echo json_encode($tree);
+            echo json_encode(array("tree" => $tree));
         } else
             $this->set('tree', $tree);
     }

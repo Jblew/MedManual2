@@ -13,7 +13,11 @@ and open the template in the editor.
 }
 
 .easy-autocomplete {
-    display: inline;
+    width: auto;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
 }
 
 .search-container {
@@ -172,4 +176,14 @@ ul.title-area {
 
 .top-bar ul.unsaved-error {
     background-color: red !important;
+}
+
+#msg-bar {
+    display: none;
+}
+
+.loading-placeholder {
+    width: 100%;
+    padding: 50px;
+    text-align: center;
 }

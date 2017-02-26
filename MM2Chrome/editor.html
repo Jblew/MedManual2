@@ -18,27 +18,35 @@
         <script src="lib/rangy/rangy-classapplier.js"></script>
         <script src="lib/rangy/rangy-textrange.js"></script>
         <script src="scripts.js"></script>
-        <script src="communication.js"></script> 
+        <script src="communication.js"></script>
+        <script src="navigation.js"></script>
+        
+        <script src="js/model/Page.js"></script>
+        <script src="js/model/MedmanualTree.js"></script>
+        <script src="js/util/ErrorLogger.js"></script>
+        
         <script src="editor.js"></script> 
-        <script type="text/javascript" src="navigation.js"></script>
+        
     </head>
     <body>
+        <div class="search-container">
+            <input class="search-box" value="" id="top-search-box" />
+        </div>
         <nav class="top-bar expanded" data-topbar role="navigation">
             <ul class="title-area large-3 medium-4 columns">
                 <li class="name">
-                    <h1><a href="/">Manuał Medyczny JL 2.0</a>
-                        <a href="javascript:window.open('/pages/add', '','height=800,width=600');;"><span class="glyphicon glyphicon-plus-sign"> </span> </a></h1>
+                    <h1><a class="btn-index">Manuał Medyczny JL 2.0</a>
+                        <a class="btn-add"><span class="glyphicon glyphicon-plus-sign"> </span> </a>
+                    </h1>
                 </li>
             </ul>
             <div class="top-bar-section">
-                <div class="search-container">
-                    <input class="search-box" value="" id="top-search-box" />
-                </div>
+                &nbsp;
             </div>
         </nav>
         <div class="message" id="msg-bar"></div>
         <div class="container clearfix">
-           
+
             <form method="post" accept-charset="utf-8" id="edit-form" action="javascript:;">
                 <div style="display:none;"><input type="hidden" name="_method" value="PUT"/></div>
                 <div class="input text">

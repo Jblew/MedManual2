@@ -120,9 +120,9 @@
  */
 
 $(document).ready(function () {
-    $("#index-open-btn").on('click', function (evt) {
+    $("#tree-open-btn").on('click', function (evt) {
         window.open(
-                'http://medmanual2.jblew.pl/pages/index/',
+                'tree.html',
                 "", "height=800,width=600"
                 );
     });
