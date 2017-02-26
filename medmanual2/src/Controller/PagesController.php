@@ -71,7 +71,7 @@ class PagesController extends AppController {
         $page->parents = [$parent];
 
         if ($this->request->is('post')) {
-            $page = $this->_preparePageData($page, $this->request);
+            $page = $this->_preparePageData($page, $this->request->data);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
                 $this->Flash->success(__('Your page has been saved.'));
@@ -102,7 +102,7 @@ class PagesController extends AppController {
             throw new NotFoundException();
 
         if ($this->request->is(['post', 'put'])) {
-            $page = $this->_preparePageData($page, $this->request);
+            $page = $this->_preparePageData($page, $this->request->data);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
                 if (!$isAjax) {
@@ -129,17 +129,58 @@ class PagesController extends AppController {
             $this->set('page', $page);
     }
 
-    private function _preparePageData($page, $request) {
+     public function jsonSave($id) {
+        Configure::write('debug', 0);
+                    $this->autoRender = false;
+                    $this->viewBuilder()->layout('ajax');
+                    
+        $page = null;
+        if ($id > 0) {
+            $page = $this->Pages->get($id, [
+                'contain' => ['Parents', 'Children', 'Tags']
+            ]);
+            foreach ($page->parents as $i => $parent) {
+                $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
+            }
+        }
+        if ($page === null) {
+            $page = $this->Pages->newEntity();
+        }
+
+        if ($this->request->is(['post', 'put'])) {
+            $jsonData = $this->request->input('json_decode');
+            $page = $this->_preparePageData($page, $jsonData);
+
+            if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
+                $pageReloaded = $this->Pages->get($id, [
+                    'contain' => ['Parents', 'Children', 'Tags']
+                ]);
+                echo json_encode(array("error" => $this->Pages->buildTree(), "pages" => array($pageReloaded)));
+            } else {
+                echo json_encode(array("error" => "Unable to update page"));
+            }
+        }
+
+        if ($isAjax) {
+            Configure::write('debug', 1);
+            $this->autoRender = false;
+            $this->viewBuilder()->layout('ajax');
+            echo json_encode($page);
+        } else
+            $this->set('page', $page);
+    }
+    
+    private function _preparePageData($page, $requestData) {
         $this->loadModel('Tags');
 
-        $newParents = array_filter(explode(",", $request->data['parentsids']), function($v) {
+        $newParents = array_filter(explode(",", $requestData['parentsids']), function($v) {
             return $v != null && trim($v) != '' && $v !== "null";
         });
 
-        $request->data['parents'] = ['_ids' => $newParents];
+        $requestData['parents'] = ['_ids' => $newParents];
 
-        $request->data['tags'] = [];
-        $tagsNames = array_filter(explode(",", $request->data['tagsnames']), function($v) {
+        $requestData['tags'] = [];
+        $tagsNames = array_filter(explode(",", $requestData['tagsnames']), function($v) {
             return $v != null && trim($v) != '' && $v !== "null";
         });
         $tags = [];
@@ -155,14 +196,15 @@ class PagesController extends AppController {
                 }
             }
         }
-        $request->data['tags'] = $tags;
+        $requestData['tags'] = $tags;
 
         //echo("<pre>");
-        //var_dump($request->data);
-        $this->Pages->patchEntity($page, $request->data, ['associated' => ['Parents', 'Tags']]);
+        //var_dump($requestData);
+        $this->Pages->patchEntity($page, $requestData, ['associated' => ['Parents', 'Tags']]);
         $page->body = str_replace("[newline]", "\n", $page->body);
-        if (substr($page->body, -1) === "\n")
+        if (substr($page->body, -1) === "\n") {
             $page->body = substr($page->body, 0, strlen($page->body) - 1);
+        }
         //var_dump($page);
         return $page;
     }
@@ -213,13 +255,6 @@ class PagesController extends AppController {
         }
 
         echo json_encode([]);
-    }
-
-    public function loadFromFiles($secret) {
-        if ($secret !== "moraxella")
-            throw new NotFoundException();
-
-        $dir = "";
     }
 
     public function saveFile() {

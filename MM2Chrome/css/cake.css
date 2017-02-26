@@ -405,7 +405,7 @@ fieldset legend {
     box-shadow: none;
 }
 
-button {
+.form button {
     background: #966600;
 }
 
