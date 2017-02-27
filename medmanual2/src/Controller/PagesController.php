@@ -141,7 +141,7 @@ class PagesController extends AppController {
         Configure::write('debug', 0);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
-
+        var_dump($id);
         $page = null;
         if (intval($id) > 0) {
             $page = $this->Pages->get($id, [
