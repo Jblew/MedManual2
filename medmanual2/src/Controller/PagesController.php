@@ -261,6 +261,7 @@ class PagesController extends AppController {
         }*/
         $response = array();
         if(count($pages) > 0) {
+            var_dump($pages);
             foreach ($pages as $page) {
                 $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
             }
