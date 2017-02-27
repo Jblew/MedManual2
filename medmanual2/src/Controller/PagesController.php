@@ -240,16 +240,14 @@ class PagesController extends AppController {
         Configure::write('debug', 0);
         $this->autoRender = false;
         $this->layout = 'ajax';
-        $query = $_GET['term'];
+        $query = $this->request->getParam('term');
         $pages = $this->Pages->find('all', array(
                     'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                     'fields' => array('title', 'id')))->limit(10)->all();
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
-                        'contain' => ['Tags'],
-                        'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
-                        'fields' => array('Tags.tag', 'Tags.page_id', 'Pages.title', 'Pages.id'))
-                    )->limit(10)->all();
+                        'contain' => ['Tags']
+                        )->limit(10)->all();
         }
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
