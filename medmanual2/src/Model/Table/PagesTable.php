@@ -76,8 +76,6 @@ class PagesTable extends Table {
         $stmt = $conn->execute("SELECT pages.id as page_id, pages_parents.parent_id as parent_id from pages LEFT JOIN pages_parents ON pages.id = pages_parents.page_id;");
         $rows = $stmt->fetchAll('assoc');
 
-
-
         $parentsOfPages = array();
         $childrenOfPages = array();
 

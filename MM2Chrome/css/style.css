@@ -12,7 +12,7 @@ and open the template in the editor.
     padding: 10px;
 }
 
-.easy-autocomplete {
+.search-container .easy-autocomplete {
     width: auto;
     position: absolute;
     top: 8px;
@@ -186,4 +186,12 @@ ul.title-area {
     width: 100%;
     padding: 50px;
     text-align: center;
+}
+
+.container {
+    padding-bottom: 500px;
+}
+
+.modal-error {
+    color: red;
 }

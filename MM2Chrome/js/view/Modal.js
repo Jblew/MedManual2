@@ -31,10 +31,10 @@ Modal.prototype.show = function () {
             + '             <a class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a>'
             + '             <h4 class="modal-title">' + this.title + '</h4>'
             + '         </div>'
-            + '         '
-            + '         <div class="modal-body"><p>' + this.content + '</p></div>'
-            + '         '
-            + '         '
+            + '         <div class="modal-body">'
+            + (this.content !== ""? '<p>' + this.content + '</p>':'')
+            + '         <div class=\"modal-error\" id="'+this.id+'-error"></div>'
+            + '         </div>'
             + '         <div class="modal-footer">'
             + '             ' + this.buttonsHtml
             + '         </div>'
@@ -49,6 +49,10 @@ Modal.prototype.show = function () {
         modalOpened = false;
         $("#" + this.id).remove();
     });
+};
+
+Modal.prototype.displayError = function(msg) {
+    $("#" + this.id + "-error").html(msg);
 };
 
 Modal.prototype.close = function () {

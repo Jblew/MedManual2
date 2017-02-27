@@ -45,8 +45,8 @@ class PagesController extends AppController {
     }
 
     public function ajaxFlatTree() {
-	$flatTree = $this->Pages->getFlatTreePages();
-	Configure::write('debug', 0);
+        $flatTree = $this->Pages->getFlatTreePages();
+        Configure::write('debug', 0);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
         echo json_encode(array("flatTree" => $flatTree));
@@ -137,32 +137,27 @@ class PagesController extends AppController {
             $this->set('page', $page);
     }
 
-     public function jsonSave($id) {
+    public function jsonSave($id) {
         Configure::write('debug', 0);
-                    $this->autoRender = false;
-                    $this->viewBuilder()->layout('ajax');
-	//echo "jsonSave";
-                    
+        $this->autoRender = false;
+        $this->viewBuilder()->layout('ajax');
+
         $page = null;
         if ($id > 0) {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents', 'Children', 'Tags']
             ]);
-            foreach ($page->parents as $i => $parent) {
-                $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
-            }
+            //foreach ($page->parents as $i => $parent) {
+            //    $page->parents[$i]->paths = $this->Pages->getPaths($page->parents[$i]->id);
+            //}
         }
+
         if ($page === null) {
             $page = $this->Pages->newEntity();
         }
 
         if ($this->request->is(['post', 'put'])) {
-            $jsonData = (array)$this->request->input('json_decode');
-	    //var_dump($this->request);
-	    //echo("Raw input: ".$this->request->input()."\n");
-	    //echo "Json: \n";
-	    //var_dump($jsonData);
-	    //return;
+            $jsonData = (array) $this->request->input('json_decode');
             $page = $this->_preparePageData($page, $jsonData);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
@@ -174,56 +169,52 @@ class PagesController extends AppController {
                 echo json_encode(array("error" => "Unable to update page"));
             }
         }
-
-        if ($isAjax) {
-            Configure::write('debug', 0);
-            $this->autoRender = false;
-            $this->viewBuilder()->layout('ajax');
-            echo json_encode($page);
-        } else
-            $this->set('page', $page);
     }
-    
+
     private function _preparePageData($page, $requestData) {
         $this->loadModel('Tags');
-	$log = "";
-	if(isset($requestData['parentsids'])) {
-        	$newParents = array_filter(explode(",", $requestData['parentsids']), function($v) {
-        	    return $v != null && trim($v) != '' && $v !== "null";
-        	});
-	
-	        $requestData['parents'] = ['_ids' => $newParents];
-		$log .= "Parents loaded";
-	}
+        $log = "";
+        if (isset($requestData['parentsids'])) {
+            $newParents = array_filter(explode(",", $requestData['parentsids']), function($v) {
+                return $v != null && trim($v) != '' && $v !== "null";
+            });
 
-	if(isset($requestData['tagsnames'])) {
-        $requestData['tags'] = [];
-        $tagsNames = array_filter(explode(",", $requestData['tagsnames']), function($v) {
-            return $v != null && trim($v) != '' && $v !== "null";
-        });
-        $tags = [];
-        $tagsList = array();
-        foreach ($tagsNames as $tagName_) {
-            $tagName = strtolower(trim($tagName_));
-            $tag = $this->Tags->find()->where(['tag' => $tagName])->first();
+            $requestData['parents'] = ['_ids' => $newParents];
+            $log .= "Parents loaded";
+        }
 
-            if ($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
-                if (!in_array($tagName, $tagsList)) {
-                    $tags[] = ['tag' => $tagName];
-                    $tagsList[] = $tagName;
+        if (isset($requestData['tagsnames'])) {
+            $requestData['tags'] = [];
+            $tagsNames = array_filter(explode(",", $requestData['tagsnames']), function($v) {
+                return $v != null && trim($v) != '' && $v !== "null";
+            });
+            $tags = [];
+            $tagsList = array();
+            foreach ($tagsNames as $tagName_) {
+                $tagName = strtolower(trim($tagName_));
+                $tag = $this->Tags->find()->where(['tag' => $tagName])->first();
+
+                if ($tag == null || (isset($page->id) && $page->id == $tag->page_id)) {
+                    if (!in_array($tagName, $tagsList)) {
+                        $tags[] = ['tag' => $tagName];
+                        $tagsList[] = $tagName;
+                    }
                 }
             }
+            $requestData['tags'] = $tags;
+            $log .= "tags loaded; ";
         }
-        $requestData['tags'] = $tags;
-	$log .= "tags loaded; ";
-	}
-	
+
         //echo("<pre>");
         //var_dump($requestData);
-        if(isset($requestData['parentsids']) && isset($requestData['tagsnames'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents', 'Tags'])]);
-	else if(isset($requestData['parentsids'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents'])]);
-	else if(isset($requestData['tagsnames'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Tags'])]);
-	else $this->Pages->patchEntity($page, $requestData, []);
+        if (isset($requestData['parentsids']) && isset($requestData['tagsnames']))
+            $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents', 'Tags'])]);
+        else if (isset($requestData['parentsids']))
+            $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents'])]);
+        else if (isset($requestData['tagsnames']))
+            $this->Pages->patchEntity($page, $requestData, ['associated' => (['Tags'])]);
+        else
+            $this->Pages->patchEntity($page, $requestData, []);
 
         $page->body = str_replace("[newline]", "\n", $page->body);
         if (substr($page->body, -1) === "\n") {

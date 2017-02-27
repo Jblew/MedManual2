@@ -49,13 +49,13 @@ Page.prototype.update = function (pageAjaxData, medmanualTree) {
         this.bodyLoaded = true;
     }
     if (pageAjaxData.hasOwnProperty("tags")) {
-        this.body = pageAjaxData.tags;
+        this.tags = pageAjaxData.tags;
         this.bodyLoaded = true;
     }
     if (pageAjaxData.hasOwnProperty("children")) {
         this.children = [];
         for (var i = 0; i < pageAjaxData.children.length; i++) {
-            this.children[i] = medmanualTree.getPageById(pageAjaxData.children[i].id);
+            if(!this.hasChildOfId(pageAjaxData.children[i].id)) this.children[i] = medmanualTree.getPageById(pageAjaxData.children[i].id);
         }
         this.childrenLoaded = true;
     }
@@ -71,7 +71,7 @@ Page.prototype.update = function (pageAjaxData, medmanualTree) {
 
 Page.prototype.hasChildOfId = function (id_) {
     for (var i = 0; i < this.children.length; i++) {
-        if (this.children[i].id === id_)
+        if (this.children[i].id+"" === id_+"")
             return true;
     }
     return false;
@@ -79,7 +79,7 @@ Page.prototype.hasChildOfId = function (id_) {
 
 Page.prototype.hasParentOfId = function (id_) {
     for (var i = 0; i < this.parents.length; i++) {
-        if (this.parents[i].id === id_)
+        if (this.parents[i].id+"" === id_+"")
             return true;
     }
     return false;
@@ -88,6 +88,11 @@ Page.prototype.hasParentOfId = function (id_) {
 Page.prototype.update_clearParents = function () {
     this.parents = [];
     this.parentsLoaded = true;
+};
+
+Page.prototype.update_clearChildren = function () {
+    this.children = [];
+    this.childrenLoaded = true;
 };
 
 Page.prototype.update_addParent = function (page) {
@@ -108,7 +113,7 @@ Page.prototype.changeTitle = function (newTitle) {
 Page.prototype.changeBody = function (newBody) {
     if (!this.isFullyLoaded())
         throw "Page must be fully loaded before modifications";
-    this.title = newBody;
+    this.body = newBody;
     this.contentModified = true;
 };
 
@@ -130,10 +135,23 @@ Page.prototype.changeParents = function (newParents) {
 Page.prototype.removeParent = function (parent) {
     if (!(this.parentsLoaded && this.childrenLoaded))
         throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
+    console.log("Remove parent "+parent.id);
     for (var i = 0; i < this.parents.length; i++) {
         if (this.parents[i].id === parent.id)
             this.parents.splice(i, 1);
     }
+    parent.removeChild(this.id);
+    this.structureModified = true;
+};
+
+Page.prototype.addParent = function (parent) {
+    if (!(this.parentsLoaded && this.childrenLoaded))
+        throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
+    console.log("Add parent "+parent.id);
+    if(!this.hasParentOfId(parseInt(parent.id))) {
+        this.parents.push(parent);
+    }
+    parent.addChild(this.id);
     this.structureModified = true;
 };
 
@@ -159,44 +177,57 @@ Page.prototype.getSaveObject = function () {
     var save = new Object();
     if (this.titleLoaded)
         save.title = this.title;
-    if (this.bodyLoaded)
+    if (this.bodyLoaded) {
         save.body = this.body.replace("\n", "[newline]");
+    }
     if (this.tagsLoaded)
-        save.tags = this.tags.join(",");
+        save.tagsnames = this.tags.join(",");
 
     if (this.parentsLoaded) {
         save.parentsids = "";
         for (var i = 0; i < this.parents.length; i++)
-            save.parentsids += this.parents[i] + ",";
+            save.parentsids += this.parents[i].id + ",";
     }
 
     return save;
 };
 
 Page.prototype.markSaved = function (saveData) {
+    var markSavedLog = "MK_SAVED:";
     if (this.structureModified) {
+        markSavedLog+= " structure:{";
         if (saveData.hasOwnProperty("parents")) {
             if (saveData.parents.length === this.parents.length) {
+                markSavedLog += "length_ok, ";
                 var saveCorrect = true;
                 for (var i = 0; i < saveData.parents.length; i++) {
-                    if (!this.hasParentOfId(saveData.parents[i].id)) {
+                    console.log("Checking parent "+parseInt(saveData.parents[i].id));
+                    if (!this.hasParentOfId(parseInt(saveData.parents[i].id))) {
                         saveCorrect = false;
+                        console.log("The page "+this.id+" has not "+parseInt(saveData.parents[i].id)+" in parents: ");
                     }
                 }
                 if (saveCorrect) {
+                    markSavedLog += "parents_identical";
                     this.structureModified = false;
                 }
             }
         }
+        markSavedLog+= "}";
     } else if (this.contentModified) {
+        markSavedLog+= " content:{";
         if (saveData.hasOwnProperty("title") && this.title === saveData.title
                 && saveData.hasOwnProperty("body") && this.body === saveData.body
                 && saveData.hasOwnProperty("tags") && this.tags === saveData.tags) {
             this.contentModified = false;
+            markSavedLog+= "correct";
         }
+        else markSavedLog+= "incorrect";
+        markSavedLog+= "}";
     } else {
         throw "Trying to markSaved unmodified page!";
     }
+    console.log(markSavedLog);
 };
 
 //parents paths

@@ -6,7 +6,7 @@ function TreeEditor(mmTree_, containerSelector_) {
 }
 
 TreeEditor.prototype.init = function () {
-    
+
 };
 TreeEditor.prototype.updateTree = function () {
     var links = [];
@@ -71,11 +71,110 @@ TreeEditor.prototype._getNodeHtml = function (page, links, callingParent) {
 };
 
 TreeEditor.prototype.showEditParentsDialog = function (page) {
+    var that = this;
+    var modal = new Modal("Edit parents of \"" + page.title + "\" (#" + page.id + ")");
+    modal.withContent("");
 
+    var cancelButton = new Link("Cancel").withCallback(function () {
+        modal.close();
+    });
+
+    var saveButton = new Link("Save").withCallback(function () {
+        that.mmTree.unlinkPageFromParent(page, parent, function () {
+            console.log("Unlinked");
+            modal.close();
+        });
+    });
+
+    modal.addButton(cancelButton.getButtonHtml('default'));
+    modal.addButton(saveButton.getButtonHtml('primary'));
+    modal.show();
+
+    cancelButton.initCallback();
+    saveButton.initCallback();
 };
 
 TreeEditor.prototype.showAddChildDialog = function (page) {
+    var that = this;
+    var modal = new Modal("Add child to \"" + page.title + "\" (#" + page.id + ")");
+    var content = "";
 
+    var pageSelector = new PageSelector(this.mmTree, null);
+    content += "<div>Select page: ";
+    content += pageSelector.getHtml();
+    content += " </div>";
+
+    content += "<hr />";
+
+    var newInput = new Input().name("newpage");
+    content += "<div>or Create new page (type title): ";
+    content += newInput.getHtml();
+    content += " </div>";
+
+    modal.withContent(content);
+
+    var addChild = function (callback) {
+        try {
+            if (pageSelector.getSelectedPage() !== null) {
+                var newChild = pageSelector.getSelectedPage();
+                that.mmTree.addChildToPage(page, newChild, function (success) {
+                    if (success) {
+                        callback(newChild);
+                    } else {
+                        modal.displayError("Error: could not save");
+                    }
+                });
+            } else if (newInput.getValue().trim() !== "") {
+                var newPage = new Page(null);
+                newPage.parents.push(page);
+                newPage.parentsLoaded = true;
+                newPage.title = newInput.getValue();
+                newPage.titleLoaded = true;
+                that.mmTree.saveNewPage(newPage, function (success, createdPage) {
+                    if (success) {
+                        callback(createdPage);
+                    } else {
+                        modal.displayError("Error: could not create new page: "+createdPage);
+                    }
+                });
+            } else
+                modal.displayError("Please specify the child");
+        } catch (msg) {
+            modal.displayError("Error: " + msg);
+        }
+
+    };
+
+    var cancelButton = new Link("Cancel").withCallback(function () {
+        modal.close();
+    });
+
+    var addAndQuitButton = new Link("Add child").withCallback(function () {
+        addChild(function (child) {
+            if (child !== null)
+                modal.close();
+        });
+
+    });
+
+    var addAndEditButton = new Link("Add & edit child").withCallback(function () {
+        addChild(function (child) {
+            if (child !== null) {
+                PageEditor.openInNewWindow(child);
+                modal.close();
+            }
+        });
+    });
+
+    modal.addButton(cancelButton.getButtonHtml('default'));
+    modal.addButton(addAndEditButton.getButtonHtml('info'));
+    modal.addButton(addAndQuitButton.getButtonHtml('primary'));
+    modal.show();
+
+    cancelButton.initCallback();
+    addAndQuitButton.initCallback();
+    addAndEditButton.initCallback();
+    pageSelector.init();
 };
 
 TreeEditor.prototype.showRemoveFromParentDialog = function (page, parent) {
@@ -99,7 +198,7 @@ TreeEditor.prototype.showRemoveFromParentDialog = function (page, parent) {
     modal.addButton(cancelButton.getButtonHtml('default'));
     modal.addButton(unlinkButton.getButtonHtml('danger'));
     modal.show();
-    
+
     cancelButton.initCallback();
     unlinkButton.initCallback();
 };
