@@ -258,7 +258,7 @@ class PagesController extends AppController {
         }*/
         $response = array();
         foreach ($pages as $page) {
-            $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
+            $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id), 'tags' => $this->Pages->tags];
         }
         echo json_encode($response);
     }
