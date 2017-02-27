@@ -251,25 +251,26 @@ class PagesController extends AppController {
             $tags = $this->Tags->find('all', array(
                         'contain' => ['Pages'],
                         'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+			'fields' => array('Tags.id', 'Tags.tag', 'Tags.page_id', 'Pages.id', 'Pages.title')
                         ))->limit(10)->all();
         }
-        /*if (count($pages) < 1) {
+        if (count($tags) < 1) {
             $pages = $this->Pages->find('all', array(
                         'conditions' => array('Pages.body COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                         'fields' => array('title', 'id'))
                     )->limit(10)->all();
-        }*/
+        }
         $response = array();
         if(count($pages) > 0) {
             foreach ($pages as $page) {
-                var_dump($page);
+                //var_dump($page);
                 $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
             }
         }
         else {
             foreach ($tags as $tag) {
-                var_dump($tag);
-                $response[] = ['id' => $tag->Pages->id, 'title' => $tag->Pages->title, 'paths' => $this->Pages->getPaths($tag->Pages->id)];
+                //var_dump($tag);
+                $response[] = ['id' => $tag->page->id, 'title' => $tag->page->title, 'paths' => $this->Pages->getPaths($tag->page->id)];
             }
         }
         echo json_encode($response);
