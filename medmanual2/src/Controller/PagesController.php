@@ -246,8 +246,9 @@ class PagesController extends AppController {
         //            'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
         //            'fields' => array('title', 'id')))->limit(10)->all();
         if (count($pages) < 1) {
-            $pages = $this->Pages->find('all', array(
-                        'contain' => ['Tags'],
+            $this->loadModel('Tags');
+            $pages = $this->Tags->find('all', array(
+                        'contain' => ['Pages'],
                         'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                         ))->limit(10)->all();
         }
