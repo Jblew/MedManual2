@@ -141,6 +141,7 @@ class PagesController extends AppController {
         Configure::write('debug', 0);
                     $this->autoRender = false;
                     $this->viewBuilder()->layout('ajax');
+	//echo "jsonSave";
                     
         $page = null;
         if ($id > 0) {
@@ -156,14 +157,19 @@ class PagesController extends AppController {
         }
 
         if ($this->request->is(['post', 'put'])) {
-            $jsonData = $this->request->input('json_decode');
+            $jsonData = (array)$this->request->input('json_decode');
+	    //var_dump($this->request);
+	    //echo("Raw input: ".$this->request->input()."\n");
+	    //echo "Json: \n";
+	    //var_dump($jsonData);
+	    //return;
             $page = $this->_preparePageData($page, $jsonData);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
                 $pageReloaded = $this->Pages->get($id, [
                     'contain' => ['Parents', 'Children', 'Tags']
                 ]);
-                echo json_encode(array("flatTree" => $this->Pages->getFlatTreePages(), "pages" => array($pageReloaded)));
+                echo json_encode(array("flatTree" => $this->Pages->getFlatTreePages(), "pages" => array($pageReloaded), "requestData" => $jsonData));
             } else {
                 echo json_encode(array("error" => "Unable to update page"));
             }
@@ -180,13 +186,17 @@ class PagesController extends AppController {
     
     private function _preparePageData($page, $requestData) {
         $this->loadModel('Tags');
+	$log = "";
+	if(isset($requestData['parentsids'])) {
+        	$newParents = array_filter(explode(",", $requestData['parentsids']), function($v) {
+        	    return $v != null && trim($v) != '' && $v !== "null";
+        	});
+	
+	        $requestData['parents'] = ['_ids' => $newParents];
+		$log .= "Parents loaded";
+	}
 
-        $newParents = array_filter(explode(",", $requestData['parentsids']), function($v) {
-            return $v != null && trim($v) != '' && $v !== "null";
-        });
-
-        $requestData['parents'] = ['_ids' => $newParents];
-
+	if(isset($requestData['tagsnames'])) {
         $requestData['tags'] = [];
         $tagsNames = array_filter(explode(",", $requestData['tagsnames']), function($v) {
             return $v != null && trim($v) != '' && $v !== "null";
@@ -205,10 +215,16 @@ class PagesController extends AppController {
             }
         }
         $requestData['tags'] = $tags;
-
+	$log .= "tags loaded; ";
+	}
+	
         //echo("<pre>");
         //var_dump($requestData);
-        $this->Pages->patchEntity($page, $requestData, ['associated' => ['Parents', 'Tags']]);
+        if(isset($requestData['parentsids']) && isset($requestData['tagsnames'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents', 'Tags'])]);
+	else if(isset($requestData['parentsids'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Parents'])]);
+	else if(isset($requestData['tagsnames'])) $this->Pages->patchEntity($page, $requestData, ['associated' => (['Tags'])]);
+	else $this->Pages->patchEntity($page, $requestData, []);
+
         $page->body = str_replace("[newline]", "\n", $page->body);
         if (substr($page->body, -1) === "\n") {
             $page->body = substr($page->body, 0, strlen($page->body) - 1);
