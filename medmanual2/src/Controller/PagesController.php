@@ -243,7 +243,7 @@ class PagesController extends AppController {
         $query = $_GET['term'];
         $pages = $this->Pages->find('all', array(
                     'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
-                    'fields' => array('title', 'id')))->all();
+                    'fields' => array('title', 'id')))->limit(10)->all();
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
                         'contain' => ['Tags'],
@@ -255,7 +255,7 @@ class PagesController extends AppController {
             $pages = $this->Pages->find('all', array(
                         'contain' => ['Tags'],
                         'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
-                        'fields' => array('Tags.tag', 'Pages.title', 'Pages.id'),
+                        'fields' => array('Tags.tag', 'Tags.page_id', 'Pages.title', 'Pages.id'),
                         'limit' => 10))->all();
         }
         if (count($pages) < 1) {
