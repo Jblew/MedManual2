@@ -96,7 +96,7 @@ if (Configure::read('debug')) {
     Configure::write('Cache._cake_model_.duration', '+2 minutes');
     Configure::write('Cache._cake_core_.duration', '+2 minutes');
 }
-
+//Cache::disable();
 /*
  * Set server timezone to UTC. You can change it to another timezone of your
  * choice but using UTC makes time calculations / conversions easier.
@@ -220,5 +220,7 @@ Type::build('timestamp')
  * Debug Kit should not be installed on a production system
  */
 if (Configure::read('debug')) {
-//    Plugin::load('DebugKit', ['bootstrap' => true]);
+    Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+//Plugin::load('DebugKit');

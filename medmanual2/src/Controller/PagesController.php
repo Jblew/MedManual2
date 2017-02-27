@@ -16,10 +16,13 @@
 
 namespace App\Controller;
 
+use Cake\Log\Log;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
+use Cake\Datasource\ConnectionManager;
+
 
 /**
  * Static content controller
@@ -238,13 +241,15 @@ class PagesController extends AppController {
 
     public function ajaxFindPage() {
         Configure::write('debug', 0);
+	$conn = ConnectionManager::get('default');
+
         $this->autoRender = false;
-        $this->layout = 'ajax';
+	$this->viewBuilder()->layout('ajax');
         //var_dump($this->request);
-        $query = $this->request->query['term'];
+        $query = base64_decode($this->request->query['term']);
         $pages = $this->Pages->find('all', array(
-                    'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
-                    'fields' => array('title', 'id')))->limit(10)->all();
+                    'conditions' => array('Pages.title COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+                    'fields' => array('title', 'id')))->limit(10)->toArray();
         $tags = array();
         if (count($pages) < 1) {
             $this->loadModel('Tags');
@@ -254,7 +259,7 @@ class PagesController extends AppController {
 			'fields' => array('Tags.id', 'Tags.tag', 'Tags.page_id', 'Pages.id', 'Pages.title')
                         ))->limit(10)->all();
         }
-        if (count($tags) < 1) {
+        if (count($pages) < 1 && count($tags) < 1) {
             $pages = $this->Pages->find('all', array(
                         'conditions' => array('Pages.body COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                         'fields' => array('title', 'id'))
@@ -264,16 +269,17 @@ class PagesController extends AppController {
         if(count($pages) > 0) {
             foreach ($pages as $page) {
                 //var_dump($page);
-                $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
+                $response[] = ['id' => $page->id, 'title' => $page->title];
             }
         }
         else {
             foreach ($tags as $tag) {
                 //var_dump($tag);
-                $response[] = ['id' => $tag->page->id, 'title' => $tag->page->title, 'paths' => $this->Pages->getPaths($tag->page->id)];
+                $response[] = ['id' => $tag->page->id, 'title' => $tag->page->title];
             }
         }
         echo json_encode($response);
+	$conn->logQueries(false);
     }
 
     public function match($findStr = '') {
