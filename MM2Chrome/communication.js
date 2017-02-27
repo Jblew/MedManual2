@@ -2,10 +2,10 @@ var _username = "jblew_plugin";
 var _apiKeyPlain = "1697807fd26ab9c5deeea4cfd2b02741df016b95";
 
 function mmRequestPost(url, method, dataIn, callback) {
-    console.log("Request "+url);
+    console.log("Request " + url);
     console.log(dataIn);
     $.ajax({
-        url: 'http://medmanual2.jblew.pl/'+ url + '?ajax&basicAuth',
+        url: 'http://medmanual2.jblew.pl/' + url + '?ajax&basicAuth',
         type: method,
         data: dataIn,
         cache: false,
@@ -38,10 +38,10 @@ function mmRequestPost(url, method, dataIn, callback) {
 }
 
 function mmRequestJson(url, data, callback) {
-    console.log("Request "+url);
+    console.log("Request " + url);
     console.log(data);
     $.ajax({
-        url: 'http://medmanual2.jblew.pl/'+ url + '?ajax&basicAuth',
+        url: 'http://medmanual2.jblew.pl/' + url + '?ajax&basicAuth',
         type: 'POST',
         data: JSON.stringify(data),
         cache: false,
@@ -60,9 +60,9 @@ function mmRequestJson(url, data, callback) {
                 callback(data, true, null);
             } else
             {
-                console.log('ERRORS: ' + data.error);
+                console.log('ERRORS: ' + data.error + ", " + data.code + ", " + data.message);
                 console.log(data);
-                callback(data, false, data.error);
+                callback(data, false, data.error + ", " + data.code + ", " + data.message);
             }
         },
         error: function (jqXHR, textStatus, errorThrown)

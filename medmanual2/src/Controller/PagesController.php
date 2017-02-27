@@ -143,7 +143,7 @@ class PagesController extends AppController {
         $this->viewBuilder()->layout('ajax');
         //var_dump($id);
         $page = null;
-        if ($id+"" !== "0") {
+        if ($id+"" === "0") {
             $page = $this->Pages->newEntity();
         }
         else {
