@@ -145,8 +145,7 @@ class PagesController extends AppController {
         $page = null;
         if ($id == "new") {
             $page = $this->Pages->newEntity();
-        }
-        else {
+        } else {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents', 'Children', 'Tags']
             ]);
@@ -243,8 +242,28 @@ class PagesController extends AppController {
         $this->layout = 'ajax';
         $query = $_GET['term'];
         $pages = $this->Pages->find('all', array(
-                    'conditions' => array('Pages.title LIKE' => '%' . $query . '%'),
+                    'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                     'fields' => array('title', 'id')))->all();
+        if (count($pages) < 1) {
+            $pages = $this->Pages->find('all', array(
+                        'contain' => ['Tags'],
+                        'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+                        'fields' => array('Tags.tag' => 'title', 'Pages.id' => 'id'),
+                        'limit' => 10))->all();
+        }
+        if (count($pages) < 1) {
+            $pages = $this->Pages->find('all', array(
+                        'contain' => ['Tags'],
+                        'conditions' => array('Tags.tag COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+                        'fields' => array('Tags.tag' => 'title', 'Pages.id' => 'id'),
+                        'limit' => 10))->all();
+        }
+        if (count($pages) < 1) {
+            $pages = $this->Pages->find('all', array(
+                        'conditions' => array('Pages.body COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+                        'fields' => array('title', 'id'),
+                        'limit' => 10))->all();
+        }
         $response = array();
         foreach ($pages as $page) {
             $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];

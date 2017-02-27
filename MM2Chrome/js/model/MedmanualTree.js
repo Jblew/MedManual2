@@ -135,7 +135,7 @@ MedmanualTree.prototype._loadFlatTreePages = function (flatTreePages, childrenOf
 MedmanualTree.prototype._buildTreeFromFlatTree = function (flatTreePages, childrenOfParents, parentsOfChildren, page) {    
     var pageAjaxData = null;
     for(var i = 0;i < flatTreePages.length;i++) {
-        if(flatTreePages[i].id !== null && flatTreePages[i].id === page.id) {
+        if(flatTreePages[i].id !== null && parseInt(flatTreePages[i].id) === parseInt(page.id)) {
             pageAjaxData = flatTreePages[i];
         }
     }
@@ -193,14 +193,12 @@ MedmanualTree.prototype.savePage = function (page, callback) {
 };
 
 MedmanualTree.prototype.saveNewPage = function (page, callback) {
-    var saveData = page.getSaveObject();
-
     var that = this;
-    mmRequestJson('pages/jsonSave/new', saveData, function (data, isSuccess, errorData) {
+    mmRequestJson('pages/jsonSave/new', page.getSaveObject(), function (data, isSuccess, errorData) {
         if (isSuccess) {
             console.log(data);
-            that.parseAndLoadData(data);
-            var newPage = this.getPageById(data.pages[0].id);
+            that.parseAndLoadData(data, null);
+            var newPage = that.getPageById(data.pages[0].id);
             callback(true, newPage);
         } else {
             callback(false, 'Could not save new page. Error: ' + errorData);
