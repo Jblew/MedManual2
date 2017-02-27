@@ -164,7 +164,7 @@ class PagesController extends AppController {
             $page = $this->_preparePageData($page, $jsonData);
 
             if ($this->Pages->save($page, ['associated' => ['Parents', 'Tags']])) {
-                $pageReloaded = $this->Pages->get($id, [
+                $pageReloaded = $this->Pages->get($page->id, [
                     'contain' => ['Parents', 'Children', 'Tags']
                 ]);
                 echo json_encode(array("flatTree" => $this->Pages->getFlatTreePages(), "pages" => array($pageReloaded), "requestData" => $jsonData));
