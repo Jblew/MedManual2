@@ -240,8 +240,8 @@ class PagesController extends AppController {
         Configure::write('debug', 0);
         $this->autoRender = false;
         $this->layout = 'ajax';
-        var_dump($this->request);
-        $query = $this->request->getParam('term');
+        //var_dump($this->request);
+        $query = $this->request->query['term'];
         $pages = $this->Pages->find('all', array(
                     'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                     'fields' => array('title', 'id')))->limit(10)->all();
