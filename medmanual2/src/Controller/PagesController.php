@@ -242,20 +242,20 @@ class PagesController extends AppController {
         $this->layout = 'ajax';
         //var_dump($this->request);
         $query = $this->request->query['term'];
-        $pages = $this->Pages->find('all', array(
-                    'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
-                    'fields' => array('title', 'id')))->limit(10)->all();
+        //$pages = $this->Pages->find('all', array(
+        //            'conditions' => array('Pages.title  COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
+        //            'fields' => array('title', 'id')))->limit(10)->all();
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
                         'contain' => ['Tags']
                         ))->limit(10)->all();
         }
-        if (count($pages) < 1) {
+        /*if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
                         'conditions' => array('Pages.body COLLATE utf8_general_ci LIKE' => '%' . $query . '%'),
                         'fields' => array('title', 'id'))
                     )->limit(10)->all();
-        }
+        }*/
         $response = array();
         foreach ($pages as $page) {
             $response[] = ['id' => $page->id, 'title' => $page->title, 'paths' => $this->Pages->getPaths($page->id)];
