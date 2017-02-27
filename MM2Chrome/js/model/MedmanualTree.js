@@ -186,7 +186,7 @@ MedmanualTree.prototype.savePage = function (page, callback) {
             that.parseAndLoadData(data, page);
             callback(true);
         } else {
-            throw 'Could not get tree. Error: ' + errorData;
+            throw 'Could not save page. Error: ' + errorData;
             callback(false);
         }
     });
@@ -203,7 +203,7 @@ MedmanualTree.prototype.saveNewPage = function (page, callback) {
             var newPage = this.getPageById(data.pages[0].id);
             callback(true, newPage);
         } else {
-            callback(false, 'Could not get tree. Error: ' + errorData);
+            callback(false, 'Could not save new page. Error: ' + errorData);
         }
     });
 };

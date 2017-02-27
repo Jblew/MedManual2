@@ -143,7 +143,7 @@ class PagesController extends AppController {
         $this->viewBuilder()->layout('ajax');
 
         $page = null;
-        if ($id > 0) {
+        if (intval($id) > 0) {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents', 'Children', 'Tags']
             ]);
