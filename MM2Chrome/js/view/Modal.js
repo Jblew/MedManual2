@@ -9,6 +9,8 @@ function Modal(title) {
     this.buttonsHtml = "";
     this.id = "modal-" + modalUid;
     modalUid++;
+    
+    modalOpened = true;
 }
 
 Modal.prototype.withContent = function (html) {
@@ -52,9 +54,5 @@ Modal.prototype.show = function () {
 Modal.prototype.close = function () {
     if (modalOpened) {
         $("#" + this.id).modal('hide');
-        $("#" + this.id).on('hidden.bs.modal', function (e) {
-            modalOpened = false;
-            $("#" + this.id).remove();
-        });
     }
 };

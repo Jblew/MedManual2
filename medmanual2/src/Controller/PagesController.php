@@ -155,7 +155,7 @@ class PagesController extends AppController {
                 $pageReloaded = $this->Pages->get($id, [
                     'contain' => ['Parents', 'Children', 'Tags']
                 ]);
-                echo json_encode(array("error" => $this->Pages->buildTree(), "pages" => array($pageReloaded)));
+                echo json_encode(array("tree" => $this->Pages->buildTree(), "pages" => array($pageReloaded)));
             } else {
                 echo json_encode(array("error" => "Unable to update page"));
             }

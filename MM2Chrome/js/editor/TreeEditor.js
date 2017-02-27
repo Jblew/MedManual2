@@ -1,15 +1,19 @@
 /* global PageEditor, ErrorLogger, Link, Page, MedmanualTree */
 
-function TreeEditor(mmTree_) {
+function TreeEditor(mmTree_, containerSelector_) {
     this.mmTree = mmTree_;
+    this.containerSelector = containerSelector_;
 }
 
-TreeEditor.prototype.init = function (containerSelector) {
+TreeEditor.prototype.init = function () {
+    
+};
+TreeEditor.prototype.updateTree = function () {
     var links = [];
     var treeHtml = "<ul>";
     treeHtml += this._getNodeHtml(this.mmTree.getTreeRoot(), links, null);
     treeHtml += "</ul>";
-    $(containerSelector).html(treeHtml);
+    $(this.containerSelector).html(treeHtml);
     for (var i = 0; i < links.length; i++)
         links[i].initCallback();
 };
@@ -87,6 +91,7 @@ TreeEditor.prototype.showRemoveFromParentDialog = function (page, parent) {
 
     var unlinkButton = new Link("Unlink parent").withCallback(function () {
         that.mmTree.unlinkPageFromParent(page, parent, function () {
+            console.log("Unlinked");
             modal.close();
         });
         modal.close();

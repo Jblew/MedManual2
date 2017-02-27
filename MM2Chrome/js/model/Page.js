@@ -91,8 +91,10 @@ Page.prototype.update_clearParents = function () {
 };
 
 Page.prototype.update_addParent = function (page) {
-    if (!this.hasParentOfId(page.id))
+    if (!this.hasParentOfId(page.id)) {
         this.parents.push(page);
+        this.parentsLoaded = true;
+    }
 };
 
 //editing functions
@@ -127,7 +129,7 @@ Page.prototype.changeParents = function (newParents) {
 
 Page.prototype.removeParent = function (parent) {
     if (!(this.parentsLoaded && this.childrenLoaded))
-        throw "Page must have parents and children loaded before structure modifications";
+        throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
     for (var i = 0; i < this.parents.length; i++) {
         if (this.parents[i].id === parent.id)
             this.parents.splice(i, 1);

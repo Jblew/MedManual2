@@ -1,8 +1,9 @@
-function MedmanualTree(errorLogger_) {
+function MedmanualTree(errorLogger_, onTreeChangeCallback_) {
     this.upToDate = false;
     this.treeRoot = null;
     this.flatPages = new Object();
     this.errorLogger = errorLogger_;
+    this.onTreeChangeCallback = onTreeChangeCallback_;
 }
 
 MedmanualTree.prototype.isUpToDate = function () {
@@ -40,6 +41,8 @@ MedmanualTree.prototype.load = function (callback) {
             that.parseAndLoadData(data, null);
             that.upToDate = true;
             callback(that.treeRoot);
+            
+            if(that.onTreeChangeCallback !== null) that.onTreeChangeCallback();
         } else {
             this.errorLogger.error('Could not get tree. Error: ' + errorData);
         }
@@ -97,23 +100,34 @@ MedmanualTree.prototype._buildTree = function (pageAjaxData) {
 
 //editing
 MedmanualTree.prototype.unlinkPageFromParent = function(page, parent, callback) {
-    if(page.hasParentOfId()) {
-        page.removeParent();
+    console.log("Page: ");
+    console.log(page);
+    console.log("Parent: ");
+    console.log(parent);
+    
+    if(page.hasParentOfId(parent.id)) {
+        console.log("Removing parent "+parent.id);
+        page.removeParent(parent);
         this.savePage(page, callback);
     }
-    else callback(true);
+    else {
+        console.log("Page does not belong to this parent");
+        callback(true);
+    }
 };
 
 MedmanualTree.prototype.savePage = function(page, callback) {
     var saveData = page.getSaveObject();
     
     var that = this;
-    mmRequestPost('pages/jsonSave', 'post', saveData, function (data, isSuccess, errorData) {
+    mmRequestPost('pages/jsonSave/'+page.id, 'post', saveData, function (data, isSuccess, errorData) {
         if (isSuccess) {
+            console.log("Got response from jsonSave");
+            console.log(data);
             that.parseAndLoadData(data, page);
             callback(true);
         } else {
-            this.errorLogger.error('Could not get tree. Error: ' + errorData);
+            console.log('Could not get tree. Error: ' + errorData);
             callback(false);
         }
     });
