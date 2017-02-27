@@ -247,7 +247,7 @@ class PagesController extends AppController {
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
                         'contain' => ['Tags']
-                        )->limit(10)->all();
+                        ))->limit(10)->all();
         }
         if (count($pages) < 1) {
             $pages = $this->Pages->find('all', array(
