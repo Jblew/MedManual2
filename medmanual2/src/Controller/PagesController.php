@@ -266,6 +266,7 @@ class PagesController extends AppController {
             }
         }
         else {
+            var_dump($tags);
             foreach ($tags as $tag) {
                 $response[] = ['id' => $tag->Pages->id, 'title' => $tag->Pages->title, 'paths' => $this->Pages->getPaths($tag->Pages->id)];
             }
