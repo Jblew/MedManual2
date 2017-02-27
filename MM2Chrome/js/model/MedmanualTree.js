@@ -196,7 +196,7 @@ MedmanualTree.prototype.saveNewPage = function (page, callback) {
     var saveData = page.getSaveObject();
 
     var that = this;
-    mmRequestJson('pages/jsonSave/0', saveData, function (data, isSuccess, errorData) {
+    mmRequestJson('pages/jsonSave/new', saveData, function (data, isSuccess, errorData) {
         if (isSuccess) {
             console.log(data);
             that.parseAndLoadData(data);

@@ -67,9 +67,9 @@ function mmRequestJson(url, data, callback) {
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
-            console.log('ERRORS: ' + textStatus);
+            console.log('ERRORS: ' + textStatus+", "+jqXHR.statusText);
             console.log(jqXHR);
-            callback(null, false, textStatus);
+            callback(null, false, textStatus+", "+jqXHR.statusText);
         }
     });
 }
