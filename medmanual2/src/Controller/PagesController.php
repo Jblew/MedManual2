@@ -111,7 +111,7 @@ class PagesController extends AppController {
                 }
             } else {
                 if ($isAjax) {
-                    Configure::write('debug', 1);
+                    Configure::write('debug', 0);
                     $this->autoRender = false;
                     $this->viewBuilder()->layout('ajax');
                     echo json_encode(array("error" => "Unable to update page"));
@@ -121,7 +121,7 @@ class PagesController extends AppController {
         }
 
         if ($isAjax) {
-            Configure::write('debug', 1);
+            Configure::write('debug', 0);
             $this->autoRender = false;
             $this->viewBuilder()->layout('ajax');
             echo json_encode($page);
@@ -162,7 +162,7 @@ class PagesController extends AppController {
         }
 
         if ($isAjax) {
-            Configure::write('debug', 1);
+            Configure::write('debug', 0);
             $this->autoRender = false;
             $this->viewBuilder()->layout('ajax');
             echo json_encode($page);
@@ -235,7 +235,7 @@ class PagesController extends AppController {
     }
 
     public function match($findStr = '') {
-        Configure::write('debug', 1);
+        Configure::write('debug', 0);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
         $this->loadModel('Tags');
@@ -258,7 +258,7 @@ class PagesController extends AppController {
     }
 
     public function saveFile() {
-        Configure::write('debug', 1);
+        Configure::write('debug', 0);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
         $this->request->allowMethod(['post']);

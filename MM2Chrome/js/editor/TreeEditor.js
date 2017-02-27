@@ -94,7 +94,6 @@ TreeEditor.prototype.showRemoveFromParentDialog = function (page, parent) {
             console.log("Unlinked");
             modal.close();
         });
-        modal.close();
     });
 
     modal.addButton(cancelButton.getButtonHtml('default'));

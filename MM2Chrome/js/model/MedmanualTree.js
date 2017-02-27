@@ -41,8 +41,6 @@ MedmanualTree.prototype.load = function (callback) {
             that.parseAndLoadData(data, null);
             that.upToDate = true;
             callback(that.treeRoot);
-            
-            if(that.onTreeChangeCallback !== null) that.onTreeChangeCallback();
         } else {
             this.errorLogger.error('Could not get tree. Error: ' + errorData);
         }
@@ -72,6 +70,7 @@ MedmanualTree.prototype.parseAndLoadData = function (data, editedPage) {
         this.treeRoot = updatedTree;
         this.upToDate = true;
         console.log("Loaded treeRoot");
+        if(this.onTreeChangeCallback !== null) this.onTreeChangeCallback();
     }
 };
 

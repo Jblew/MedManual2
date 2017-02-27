@@ -4,10 +4,12 @@ $(document).ready(function () {
     var treeEditor = null;
     var errorLogger = new ErrorLogger();
     var mmTree = new MedmanualTree(errorLogger, function() {
-        if(treeEditor !== null) treeEditor.updateTree();
+        console.log("Tree changed");
+        if(treeEditor !== null) {
+            treeEditor.updateTree();
+        }
     });
+    treeEditor = new TreeEditor(mmTree, "#tree-container");
     mmTree.getOrLoadTree(function (treeRoot) {
-        treeEditor = new TreeEditor(mmTree, "#tree-container");
-        treeEditor.init();
     });
 });
