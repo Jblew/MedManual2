@@ -141,9 +141,12 @@ class PagesController extends AppController {
         Configure::write('debug', 0);
         $this->autoRender = false;
         $this->viewBuilder()->layout('ajax');
-        var_dump($id);
+        //var_dump($id);
         $page = null;
-        if (intval($id) > 0) {
+        if ($id+"" !== "0") {
+            $page = $this->Pages->newEntity();
+        }
+        else {
             $page = $this->Pages->get($id, [
                 'contain' => ['Parents', 'Children', 'Tags']
             ]);
@@ -153,7 +156,7 @@ class PagesController extends AppController {
         }
 
         if ($page === null) {
-            $page = $this->Pages->newEntity();
+            throw new NotFoundException();
         }
 
         if ($this->request->is(['post', 'put'])) {
