@@ -90,6 +90,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </footer>
     <!-- <?php
         echo round(microtime(true) - TIME_START, 3);
-    ?> ms -->
+    ?> s -->
 </body>
 </html>

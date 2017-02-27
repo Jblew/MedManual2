@@ -31,7 +31,10 @@ use Cake\View\Exception\MissingTemplateException;
 class PagesController extends AppController {
 
     public function index() {
+	$sTime = microtime(true);
         $tree = $this->Pages->buildTree();
+	$time_elapsed_secs = microtime(true) - $sTime;
+	echo("<!-- buildTree time: ".$time_elapsed_secs."s -->");
 
         $isAjax = isset($_GET['ajax']);
 
@@ -42,6 +45,14 @@ class PagesController extends AppController {
             echo json_encode(array("tree" => $tree));
         } else
             $this->set('tree', $tree);
+    }
+
+    public function ajaxFlatTree() {
+	$flatTree = $this->Pages->getFlatTreePages();
+	Configure::write('debug', 0);
+        $this->autoRender = false;
+        $this->viewBuilder()->layout('ajax');
+        echo json_encode(array("flatTree" => $flatTree));
     }
 
     public function view($id, $base64 = null) {

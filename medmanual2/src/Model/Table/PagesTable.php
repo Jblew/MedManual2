@@ -53,13 +53,31 @@ class PagesTable extends Table {
         return $paths;
     }
 
+    public function getFlatTreePages() {
+	$conn = ConnectionManager::get('default');
+
+        $stmt = $conn->execute("SELECT pages.id as page_id, pages.title as page_title, pages_parents.parent_id as parent_id from pages LEFT JOIN pages_parents ON pages.id = pages_parents.page_id;");
+        $rows = $stmt->fetchAll('assoc');
+
+	$flatTree = array();
+
+	foreach($rows as $row) {
+		$flatTree[] = array("id" => $row['page_id'], "title" => $row['page_title'], "parent_id" => $row['parent_id']);
+	}
+	
+	return $flatTree;
+    }
+
     public function buildTree() {
         $pages = $this->find('all', ['fields' => ['Pages.id', 'Pages.title', 'Pages.user_id'], 'order' => ['Pages.id' => 'ASC']])->toArray();
-        //print_r($pages);
+
         $conn = ConnectionManager::get('default');
 
         $stmt = $conn->execute("SELECT pages.id as page_id, pages_parents.parent_id as parent_id from pages LEFT JOIN pages_parents ON pages.id = pages_parents.page_id;");
         $rows = $stmt->fetchAll('assoc');
+
+
+
         $parentsOfPages = array();
         $childrenOfPages = array();
 
@@ -81,7 +99,6 @@ class PagesTable extends Table {
             $childrenOfPages[$parentId][] = $pageId;
         
         }
-
         //var_dump($pagesWithoutParents);
 
         $tree = $pages[0];
