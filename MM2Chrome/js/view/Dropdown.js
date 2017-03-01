@@ -1,6 +1,10 @@
+var dropdownUid = 0;
+
 function Dropdown(label_) {
     this.label = label_;
     this.menuLinks = [];
+    this.id = "dropdown-"+dropdownUid;
+    dropdownUid++;
 }
 
 Dropdown.prototype.addItem = function(html) {
@@ -23,8 +27,12 @@ Dropdown.prototype.addSeparator = function() {
     return this;
 };
 
+Dropdown.prototype.get$ = function() {
+    return $("#"+this.id);
+};
+
 Dropdown.prototype.getHtml = function () {
-    var out = '<div class="dropdown">'
+    var out = '<div class="dropdown" id="'+this.id+'">'
             + ' <span class="dropdown-toggle" data-toggle="dropdown">'
             + '     ' + this.label + '<span class="caret"></span>'
             + ' </span>'

@@ -18,6 +18,8 @@ function Page(id_) {
 
     this.structureModified = false;
     this.contentModified = false;
+    
+    this.domId = "page-"+this.id;
 }
 
 Page.prototype.isFullyLoaded = function () {
@@ -28,12 +30,24 @@ Page.prototype.isModified = function () {
     return this.structureModified || this.contentModified;
 };
 
+Page.prototype.isNewPage = function () {
+    return (typeof this.id === 'undefined') || (this.id === null);
+};
+
 Page.prototype.isStructureModified = function () {
     return this.structureModified;
 };
 
 Page.prototype.isContentModified = function () {
     return this.contentModified;
+};
+
+Page.prototype.getDomId = function () {
+    return this.domId;
+};
+
+Page.prototype.get$ = function () {
+    return $("#"+this.getDomId());
 };
 
 //loading & updating functions
@@ -232,24 +246,24 @@ Page.prototype.markSaved = function (saveData) {
 
 //parents paths
 Page.prototype.getParentPaths = function () {
-    var paths = [];
-    this._getPaths(this, [], paths);
-    return paths;
+    var paths_ = [];
+    this._getPaths(this, [], paths_);
+    return paths_;
 };
 
-Page.prototype._getPaths = function (page, childrenPath_, paths) {
+Page.prototype._getPaths = function (page, childrenPath_, paths_) {
     var childrenPath = childrenPath_.slice();
-
-    if (page.id === 1) {
+    if (parseInt(page.id) === 1) {
         childrenPath.unshift(page);
-        paths.push(childrenPath);
+        paths_.push(childrenPath);
     } else {
         childrenPath.unshift(page);
         for (var i = 0; i < page.parents.length; i++) {
             var parent = page.parents[i];
-            this._getPaths(parent, childrenPath, paths);
+            this._getPaths(parent, childrenPath, paths_);
         }
     }
+    
     /*childPath_.unshift(page.id);
      
      if(page.id === 1) {

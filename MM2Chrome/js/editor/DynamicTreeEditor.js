@@ -15,7 +15,6 @@ function TreeEditor(containerSelector_) {
 TreeEditor.prototype.init = function () {
 
 };
-
 TreeEditor.prototype.updateTree = function () {
     var links = [];
     var treeHtml = "<ul>";

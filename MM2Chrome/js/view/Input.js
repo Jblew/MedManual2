@@ -2,6 +2,7 @@ var inputUid = 0;
 
 function Input() {
     this.type_ = "text";
+    this.placeholder_ = "";
     this.name_ = "";
     this.value_ = "";
     this.class_ = "";
@@ -11,6 +12,11 @@ function Input() {
 
 Input.prototype.type = function(v) {
     this.type_ = v;
+    return this;
+};
+
+Input.prototype.placeholder = function(v) {
+    this.placeholder_ = v;
     return this;
 };
 
@@ -43,5 +49,5 @@ Input.prototype.getValue = function() {
 
 Input.prototype.getHtml = function() {
     return '<input id="'+this.id+'" class="'+this.class_+'" name='+this.name_+'"""\n\
-        +" type="'+this.type_+'" value="'+this.value_+'" />';
+        +" type="'+this.type_+'" value="'+this.value_+'" placeholder="'+this.placeholder_+'" />';
 };

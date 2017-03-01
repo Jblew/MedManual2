@@ -2,7 +2,7 @@ var editMode = false;
 $(document).ready(function () {
     $("#top-search-box").easyAutocomplete({
         url: function (phrase) {
-            return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + phrase;
+            return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + base64_encode(phrase);
         },
         getValue: "title",
         requestDelay: 50,

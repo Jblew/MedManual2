@@ -1,14 +1,21 @@
-function MedmanualTree(errorLogger_, onTreeChangeCallback_) {
+/* global mm */
+
+function MedmanualTree() {
     this.upToDate = false;
+    this.treeLoaded = false;
     this.treeRoot = null;
     this.flatPages = new Object();
-    this.errorLogger = errorLogger_;
-    this.onTreeChangeCallback = onTreeChangeCallback_;
+    this.onTreeChangeCallbacks = [];
 }
 
 MedmanualTree.prototype.isUpToDate = function () {
     return this.upToDate;
 };
+
+MedmanualTree.prototype.isTreeLoaded = function () {
+    return this.treeLoaded;
+};
+
 
 MedmanualTree.prototype.getTreeRoot = function () {
     return this.treeRoot;
@@ -24,7 +31,7 @@ MedmanualTree.prototype.getPageById = function (id) {
 
 MedmanualTree.prototype.getOrLoadTree = function (callback_) {
     var callback = callback_;
-    if (!this.isUpToDate()) {
+    if (!this.isTreeLoaded()) {
         this.load(function (treeData) {
             callback(treeData);
         });
@@ -32,22 +39,27 @@ MedmanualTree.prototype.getOrLoadTree = function (callback_) {
         callback(this.treeRoot);
 };
 
+
+
 MedmanualTree.prototype.load = function (callback) {
     var that = this;
 
     mmRequestPost('pages/ajaxFlatTree', 'get', {}, function (data, isSuccess, errorData) {
         if (isSuccess) {
             that.parseAndLoadData(data, null);
+            console.log("Tree reloaded!");
             that.upToDate = true;
+            that.treeLoaded = true;
             callback(that.treeRoot);
         } else {
-            this.errorLogger.error('Could not get tree. Error: ' + errorData);
+            mm().getErrorLogger().error('Could not get tree. Error: ' + errorData);
         }
     });
 };
 
 MedmanualTree.prototype.parseAndLoadData = function (data, editedPage) {
-    if(editedPage !== null) console.log("Parse and load data editedPage="+editedPage.id);
+    if (editedPage !== null)
+        console.log("Parse and load data editedPage=" + editedPage.id);
     if (data.hasOwnProperty("pages")) {
         for (var i = 0; i < data.pages.length; i++) {
             var pageAjaxData = data.pages[i];
@@ -70,19 +82,19 @@ MedmanualTree.prototype.parseAndLoadData = function (data, editedPage) {
         var updatedTree = this._buildTree(data.tree);
         this.treeRoot = updatedTree;
         this.upToDate = true;
+        this.treeLoaded = true;
         console.log("Loaded treeRoot");
-        if (this.onTreeChangeCallback !== null)
-            this.onTreeChangeCallback();
+        this._triggerTreeChanged();
     } else if (data.hasOwnProperty("flatTree")) {
         var childrenOfParents = [];
         var parentsOfChildren = [];
         this._loadFlatTreePages(data.flatTree, childrenOfParents, parentsOfChildren);
         var updatedTree = this._buildTreeFromFlatTree(data.flatTree, childrenOfParents, parentsOfChildren, this.getPageById(1));
         this.treeRoot = updatedTree;
+        this.treeLoaded = true;
         this.upToDate = true;
         console.log("Loaded treeRoot");
-        if (this.onTreeChangeCallback !== null)
-            this.onTreeChangeCallback();
+        this._triggerTreeChanged();
     }
 };
 
@@ -117,34 +129,36 @@ MedmanualTree.prototype._loadFlatTreePages = function (flatTreePages, childrenOf
             this.getPageById(pageAjaxData.id).update_clearParents();
             this.getPageById(pageAjaxData.id).update_clearChildren();
         }
-        if(pageAjaxData.parent_id !== null) {
-            if(!childrenOfParents.hasOwnProperty(pageAjaxData.parent_id+"")) {
-                childrenOfParents[pageAjaxData.parent_id+""] = [];
+        if (pageAjaxData.parent_id !== null) {
+            if (!childrenOfParents.hasOwnProperty(pageAjaxData.parent_id + "")) {
+                childrenOfParents[pageAjaxData.parent_id + ""] = [];
             }
-            childrenOfParents[pageAjaxData.parent_id+""].push({id: pageAjaxData.id});
-            
-            if(!parentsOfChildren.hasOwnProperty(pageAjaxData.id+"")) {
-                parentsOfChildren[pageAjaxData.id+""] = [];
+            childrenOfParents[pageAjaxData.parent_id + ""].push({id: pageAjaxData.id});
+
+            if (!parentsOfChildren.hasOwnProperty(pageAjaxData.id + "")) {
+                parentsOfChildren[pageAjaxData.id + ""] = [];
             }
-            parentsOfChildren[pageAjaxData.id+""].push({id: pageAjaxData.parent_id});
+            parentsOfChildren[pageAjaxData.id + ""].push({id: pageAjaxData.parent_id});
         }
     }
     return childrenOfParents;
 };
 
-MedmanualTree.prototype._buildTreeFromFlatTree = function (flatTreePages, childrenOfParents, parentsOfChildren, page) {    
+MedmanualTree.prototype._buildTreeFromFlatTree = function (flatTreePages, childrenOfParents, parentsOfChildren, page) {
     var pageAjaxData = null;
-    for(var i = 0;i < flatTreePages.length;i++) {
-        if(flatTreePages[i].id !== null && parseInt(flatTreePages[i].id) === parseInt(page.id)) {
+    for (var i = 0; i < flatTreePages.length; i++) {
+        if (flatTreePages[i].id !== null && parseInt(flatTreePages[i].id) === parseInt(page.id)) {
             pageAjaxData = flatTreePages[i];
         }
     }
     pageAjaxData.children = [];
     pageAjaxData.parents = [];
-    if(childrenOfParents.hasOwnProperty(pageAjaxData.id+"")) pageAjaxData.children = childrenOfParents[pageAjaxData.id+""];
-    if(parentsOfChildren.hasOwnProperty(pageAjaxData.id+"")) pageAjaxData.parents = parentsOfChildren[pageAjaxData.id+""];
-    
-    
+    if (childrenOfParents.hasOwnProperty(pageAjaxData.id + ""))
+        pageAjaxData.children = childrenOfParents[pageAjaxData.id + ""];
+    if (parentsOfChildren.hasOwnProperty(pageAjaxData.id + ""))
+        pageAjaxData.parents = parentsOfChildren[pageAjaxData.id + ""];
+
+
     page.update(pageAjaxData, this);
     for (var i = 0; i < page.children.length; i++) {
         this._buildTreeFromFlatTree(flatTreePages, childrenOfParents, parentsOfChildren, page.children[i]);
@@ -206,5 +220,16 @@ MedmanualTree.prototype.saveNewPage = function (page, callback) {
     });
 };
 
+
+//events
+MedmanualTree.prototype._triggerTreeChanged = function () {
+    for (var i = 0; i < this.onTreeChangeCallbacks.length; i++) {
+        this.onTreeChangeCallbacks[i]();
+    }
+};
+
+MedmanualTree.prototype.onTreeChange = function (callback) {
+    this.onTreeChangeCallbacks.push(callback);
+};
 
 //mmRequestPost(url, method, dataIn, callback)

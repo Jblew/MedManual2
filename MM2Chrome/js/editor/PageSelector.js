@@ -25,7 +25,7 @@ PageSelector.prototype.getSelectedPage = function () {
 };
 
 PageSelector.prototype.getHtml = function () {
-    return '   <div id="' + this.id + '">'
+    return '   <div id="' + this.id + '" class="pageselector">'
             + this.baseInput.getHtml()
             + '</div>';
 };
@@ -36,7 +36,7 @@ PageSelector.prototype.init = function () {
 
     psElem.easyAutocomplete({
         url: function (phrase) {
-            return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + phrase;
+            return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + base64_encode(phrase);
         },
         getValue: "title",
         requestDelay: 250,

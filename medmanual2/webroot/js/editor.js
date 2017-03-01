@@ -28,7 +28,7 @@ function createNewForm(id, initialTitle, initialId, prePathHtml) {
 
     $("#parents-selector-" + id).easyAutocomplete({
         url: function (phrase) {
-            return "/pages/ajaxFindPage?term=" + phrase;
+            return "/pages/ajaxFindPage?term=" + base64_encode(phrase);
         },
         getValue: "title",
         list: {
