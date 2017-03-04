@@ -202,6 +202,20 @@ ul.title-area {
     margin-left: 2rem;
 }
 
+#tree-container > ul {
+    margin-left: 0;
+    border: 0;
+    list-style: none;
+}
+
+#tree-container > ul > li > div {
+    margin-left: 0 !important;
+}
+
+#tree-container > ul > li > ul {
+    margin-left: 0.75rem;
+}
+
 #tree-container li .dropdown {
     display: inline;
     margin-left: -15px;
