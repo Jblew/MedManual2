@@ -106,6 +106,7 @@ and open the template in the editor.
     border: 1px dotted #ddd;
     background: white;
     padding: 5px;
+    margin-bottom: 1rem;
 }
 
 .parents-field {

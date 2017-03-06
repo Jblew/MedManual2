@@ -16,8 +16,9 @@ function MarkdownEditor() {
         this.italicApplier = rangy.createClassApplier("italic");
         this.linkApplier = rangy.createClassApplier("link", {
             onElementCreate: function (element, applier) {
-                //$(element).on('click', onLinkClick);
-                console.log("Link: " + element);
+                //$(element).on('DOMSubtreeModified', function() {
+
+                //});
             }
         });
     }
@@ -37,7 +38,7 @@ MarkdownEditor.prototype.onContentChange = function (callback) {
 };
 
 MarkdownEditor.prototype.setContent = function (content_) {
-    if(content_.charCodeAt(0) === 13) {
+    if (content_.charCodeAt(0) === 13) {
         content_ = content_.substring(2);
     }
     $('#' + this.id + '-contenteditable').html("<div>" + content_ + "</div>");
@@ -131,7 +132,8 @@ MarkdownEditor.prototype._processLine = function (elem$) {
             var res = re.exec(text);
             if (res !== null && res.length > 1) {
                 var url = res[1];
-                if(!url.startsWith("http")) url = "http://medmanual2.jblew.pl/"+url;
+                if (!url.startsWith("http"))
+                    url = "http://medmanual2.jblew.pl/" + url;
                 elem$.addClass('img');
                 elem$.css('background', '#dddddd url(' + url + ')');
                 var img = new Image();
@@ -167,8 +169,8 @@ MarkdownEditor.prototype._processLine = function (elem$) {
 
 MarkdownEditor.prototype._inRest = function () {
     this._highlight();
-    if(this.isModified()) {
-        for(var k in this.callbacks) {
+    if (this.isModified()) {
+        for (var k in this.callbacks) {
             this.callbacks[k]();
         }
     }
@@ -182,6 +184,15 @@ MarkdownEditor.prototype._highlight = function () {
     this.__highlight(/(\*\*.*\*\*)/g, this.boldApplier, elem);
     this.__highlight(/(_.*_)/g, this.italicApplier, elem);
     this.__highlight(/[^!]\[(.*)\]/g, this.linkApplier, elem);
+
+    $(".link:not(.pagelink)").each(function (i, element) {
+        var linkText = $(element).text().trim();
+        if (linkText.length > 0) {
+            var pageLink = new PageLink(linkText.substr(1, linkText.length - 2), null);
+            pageLink.initOnElement($(element));
+        }
+    });
+
 
     rangy.getSelection().restoreCharacterRanges(elem, savedSel);
 };
