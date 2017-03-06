@@ -104,6 +104,8 @@ and open the template in the editor.
 .children-field {
     color: #666;
     border: 1px dotted #ddd;
+    background: white;
+    padding: 5px;
 }
 
 .parents-field {

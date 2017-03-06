@@ -46,10 +46,12 @@ PageEditor.prototype.getHtml = function () {
             + '     <div id="'+this.id+'-collapser" class="editor-details-collapser"></div>'
             + '     <div id="'+this.id+'-details" class="collapse in">'
             + '         ' + this.parentsForm.getHtml()
+            + '         <div class="children-field '+this.id+'-children-field"></div>'
             + '         ' + this.tagsInput.getHtml()
             + '     </div>'
             + '     '
             + '     ' + this.markdownEditor.getHtml()
+            + '     <div class="children-field '+this.id+'-children-field"></div>'
             + '     ' + this.saveButton.getButtonHtml("primary")
             + ' </div>'
             + '</div>';
@@ -78,6 +80,10 @@ PageEditor.prototype.init = function () {
                 this.tagsInput.setValue(this.page.tags.join(", "));
             }
         });
+        
+        this.page.on('childrenChanged', function (page, data) {
+            that._updateChildrenField();
+        });
     }
     
     this._initChangeCallbacks();
@@ -85,6 +91,8 @@ PageEditor.prototype.init = function () {
     $('#'+this.id+'-collapser').on('click', function() {
         $('#'+that.id+'-details').collapse('toggle');
     });
+    
+    this._updateChildrenField();
 };
 
 PageEditor.prototype.save = function () {
@@ -119,6 +127,7 @@ PageEditor.prototype._initChangeCallbacks = function () {
         for(var k in that.changeCallbacks) {
             that.changeCallbacks[k](true);
         }
+        that._updateChildrenField();
     };
     this.titleInput.onValueChange(commonCallback);
     this.tagsInput.onValueChange(commonCallback);
@@ -142,6 +151,21 @@ PageEditor.prototype.setSaved = function () {
     for(var k in this.changeCallbacks) {
         this.changeCallbacks[k](false);
     }
+};
+
+PageEditor.prototype._updateChildrenField = function () {
+    var childrenField$ = $('.'+this.id+'-children-field');
+    
+    var html = "Children: ";
+    
+    if(this.page !== null) {
+        for(var k in this.page.children) {
+            var child = this.page.children[k];
+            html += child.title+", ";
+        }
+    }
+    
+    childrenField$.html(html);
 };
 
 /**

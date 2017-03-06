@@ -130,6 +130,7 @@ Page.prototype._addParent = function (page) {
             page.children.sort(function (a, b) {
                 return a.title.localeCompare(b.title);
             });
+            page.trigger('childrenChanged', {});
         }
     }
 };
@@ -187,6 +188,7 @@ Page.prototype.changeParents = function (newParents, mmTree) {
             parent.children.sort(function (a, b) {
                 return a.title.localeCompare(b.title);
             });
+            parent.trigger('childrenChanged', {});
         }
     }
 
@@ -197,6 +199,7 @@ Page.prototype.changeParents = function (newParents, mmTree) {
                 if (parent.children[i].id === this.id)
                     parent.children.splice(i, 1);
             }
+            parent.trigger('childrenChanged', {});
         }
     }
 
