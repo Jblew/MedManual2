@@ -17,6 +17,9 @@
         <script src="lib/lockr.min.js"></script>
         <script src="lib/bootstrap/bootstrap.min.js"></script> 
         <script src="lib/jquery.easy-autocomplete.min.js"></script>
+        <script src="lib/rangy/rangy-core.js"></script>
+        <script src="lib/rangy/rangy-classapplier.js"></script>
+        <script src="lib/rangy/rangy-textrange.js"></script>
         <script src="scripts.js"></script>
         <script src="communication.js"></script> 
         <script src="navigation.js"></script>
@@ -27,16 +30,20 @@
         <script src="js/util/ArrayUtil.js"></script>
         <script src="js/util/ErrorLogger.js"></script>
         <script src="js/util/WindowManager.js"></script>
+        <script src="js/util/CountdownTimer.js"></script>
         <script src="js/view/Link.js"></script>
         <script src="js/view/Dropdown.js"></script>
         <script src="js/view/Modal.js"></script>
+        <script src="js/view/Backdrop.js"></script>
         <script src="js/view/Input.js"></script>
         <script src="js/model/Page.js"></script>
         <script src="js/model/MedmanualTree.js"></script>
         <script src="js/editor/PageEditor.js"></script>
+        <script src="js/editor/ImageDropUploader.js"></script>
         <script src="js/editor/TreeEditor.js"></script>
         <script src="js/editor/ParentsForm.js"></script>
         <script src="js/editor/PageSelector.js"></script>
+        <script src="js/editor/MarkdownEditor.js"></script>
         <script src="tree.js"></script> 
 
     </head>
@@ -58,11 +65,12 @@
         </nav>
         <div class="message" id="msg-bar"></div>
         <div class="container clearfix">
-            <div id="tree-container">
+            <div id="editor-container">
                 <div class="loading-placeholder">Loading...</div>
             </div>
         </div>
         <footer>
         </footer>
+        <div class="status-bar">Unsaved: <span class="unsaved-pages-counter">...</span></div>
     </body>
 </html>

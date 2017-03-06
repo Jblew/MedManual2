@@ -13,6 +13,8 @@ function PageSelector(mmTree, page) {
     if (page !== null) {
         this.baseInput.value(this.selectedPage.title);
     }
+    
+    this.savedValue = this.selectedPage;
 }
 
 PageSelector.prototype.onPageChange = function (callback) {
@@ -45,12 +47,19 @@ PageSelector.prototype.init = function () {
                 var selData = psElem.getSelectedItemData();
                 if (that.selectedPage === null || parseInt(selData.id) !== parseInt(that.selectedPage.id)) {
                     that.selectedPage = that.mmTree.getPageById(selData.id);
-                    console.log("Child selected "+that.selectedPage.id);
                     for (var i = 0; i < that.callbacks.length; i++) {
-                        that.callbacks[i](that.selectedPage);
+                        if(that.isModified()) that.callbacks[i](that.selectedPage);
                     }
                 }
             }
         }
     });
+};
+
+PageSelector.prototype.setSaved = function () {
+    this.savedValue = this.selectedPage;
+};
+
+PageSelector.prototype.isModified = function () {
+    return this.savedValue !== this.selectedPage;
 };

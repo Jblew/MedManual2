@@ -6,7 +6,6 @@ var parentsArr = [];
 function updateParentsField() {
     $("#parents-base").val(parentsArr.join(","));
     setSaved(false, false);
-    //console.log(parentsArr);
 }
 
 function createNewForm(id, initialTitle, initialId, prePathHtml) {

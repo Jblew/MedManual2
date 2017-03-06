@@ -8,10 +8,6 @@ and open the template in the editor.
     Author     : teofil
 */
 
-.container {
-    padding: 10px;
-}
-
 .search-container .easy-autocomplete {
     width: auto;
     position: absolute;
@@ -34,6 +30,13 @@ and open the template in the editor.
     font-size: 3em;
     height: 1.2em;
     border: 1px dotted #ddd;
+}
+
+.page-editor-main .page-title {
+    font-size: 3em;
+    height: 1.2em;
+    border: 1px dotted #ddd;
+    min-height: 1px;
 }
 
 #edit-form .parents-table {
@@ -111,30 +114,46 @@ and open the template in the editor.
     color: #5fc3cd;
 }
 
-#md-editor {
+.md-editor {
     border: 2px dotted green;
+    background: white;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
-#md-editor .searchResult {
+.md-editor .emptyline {
+    min-height: 1.5em;
+    line-height: 1.5;
+}
+
+.md-editor .searchResult {
     background-color: yellow;
 }
 
-#md-editor .bold {
+.md-editor .bold {
     font-weight: bold;
 }
 
-#md-editor .italic {
+.md-editor .italic {
     font-style: italic;
 }
 
-#md-editor .link {
+.md-editor .link {
     color: #1798A5;
     text-decoration: none;
 }
 
-#md-editor .link:hover {
+.md-editor .link:hover {
     color: #1798A5;
     text-decoration: underline;
+}
+
+.md-editor .img {
+    background-repeat: no-repeat !important;
+    background-position-x: center !important;
+    background-position-y: 22px !important;
+    color: #888;
+    text-align: center;
 }
 
 .is-dragover {
@@ -188,81 +207,71 @@ ul.title-area {
     text-align: center;
 }
 
-.container {
-    padding-bottom: 500px;
-}
-
 .modal-error {
     color: red;
 }
 
-#tree-container ul {
+.tree-container {
+    padding: 10px;
+    padding-bottom: 400px;
+}
+
+.tree-container ul {
     border-left: 1px solid #ddd;
     list-style-position: inside;
     margin-left: 2rem;
 }
 
-#tree-container > ul {
+.tree-container > ul {
     margin-left: 0;
     border: 0;
     list-style: none;
 }
 
-#tree-container > ul > li > div {
+.tree-container > ul > li > div {
     margin-left: 0 !important;
 }
 
-#tree-container > ul > li > ul {
+.tree-container > ul > li > ul {
     margin-left: 0.75rem;
 }
 
-#tree-container li .dropdown {
+.tree-container li .dropdown {
     display: inline;
     margin-left: -15px;
     color: #111;
 }
 
-#tree-container li {
+.tree-container li {
     margin-left: -3px;
     color: #ccc;
 }
 
-#tree-container .dropdown {
+.tree-container .dropdown {
     color: #111;
 }
 
-#tree-container .dropdown ul {
+.tree-container .dropdown ul {
     border: 0;
     margin-left: 1.1rem;
 }
 
-#tree-container .dropdown li {
+.tree-container .dropdown li {
     margin-left: 1.25rem;
     color: #111;
 }
 
-#tree-container .dropdown ul.dropdown-menu {
+.tree-container .dropdown ul.dropdown-menu {
     border: 1px solid #cccccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 4px;
 }
 
-.page-editor-wrapper {
-    display: block !important;
-    width: 100px;
-    height: 670px;
-}
-
 .page-editor-main {
-    display: block !important;
-    position: absolute;
-    left: 0;
-    top: inherit;
     padding: 10px;
-    height: 650px;
     background: #eee;
     width: 100%;
-    margin-left: 0 !important;
+    min-height: 800px;
 }
 
 .parents-table {
@@ -297,4 +306,43 @@ ul.title-area {
 
 .parents-table td .pageselector {
     margin: 0 !important;
+}
+
+.status-bar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 3px;
+    background: #eee;
+    border-left: 1px solid #116d76;
+    border-top: 1px solid #116d76;
+    font-size: 0.75em;
+    color: #777;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.parentsform {
+    background: white;
+    padding: 5px;
+    margin-bottom: 1rem;
+}
+
+.add-form-btn {
+    width: 100%;
+    text-align: center;
+}
+
+.add-form-btn a {
+    margin: 5px;
+}
+
+.parents-table .td-prepath tr:last-child {
+    border: 0 !important;
+}
+
+.editor-details-collapser {
+    height: 15px;
+    width: 100%;
+    background-color: #5cb85c;
 }

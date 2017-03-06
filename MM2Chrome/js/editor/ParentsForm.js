@@ -8,10 +8,19 @@ function ParentsForm(mmTree_, page_, fieldName) {
     parentsUid++;
     this.formIdUid = 0;
     this.pageSelectors = [];
+    this.savedParents = (this.page !== null ? this.page.parents : []);
+
+    this.changeCallbacks = [];
 }
 
+ParentsForm.prototype.onChange = function (callback) {
+    this.changeCallbacks.push(callback);
+};
+
 ParentsForm.prototype.getHtml = function () {
-    return '<div id="' + this.id + '-base"><input type="hidden" name="' + this.fieldName + '" id="' + this.id + '-hidden" /></div>';
+    return '<div id="' + this.id + '-base" class="parentsform"><div id="' + this.id + '-fields">'
+            + '<input type="hidden" name="' + this.fieldName + '" id="' + this.id + '-hidden" />'
+            + '</div></div>';
 };
 
 ParentsForm.prototype.init = function () {
@@ -20,18 +29,46 @@ ParentsForm.prototype.init = function () {
             this.createNewForm(this.page.parents[i]);
         }
     }
-    this.createNewForm(null);
-    this._updateParentsField();
+    //this.createNewForm(null);
+
+    var that = this;
+    var addFieldButton = new Link("Add field").withIcon("plus").withCallback(function () {
+        that.createNewForm(null);
+    });
+    $("#" + this.id + "-base").append("<div class=\"add-form-btn\">" + addFieldButton.getButtonHtml("success") + "</div>");
+
+    this._changedParents();
+    addFieldButton.initCallback();
 };
 
-ParentsForm.prototype._updateParentsField = function () {
+ParentsForm.prototype.getSelectedParents = function () {
+    var selectedParents = [];
+    for (var i = 0; i < this.pageSelectors.length; i++) {
+        var selectedPage = this.pageSelectors[i].getSelectedPage();
+        if (selectedPage !== null)
+            selectedParents.push(selectedPage);
+    }
+    return selectedParents;
+};
+
+ParentsForm.prototype.getParentsIdsStr = function () {
     var parentsIds = [];
     for (var i = 0; i < this.pageSelectors.length; i++) {
         var selectedPage = this.pageSelectors[i].getSelectedPage();
         if (selectedPage !== null)
             parentsIds.push(selectedPage.id);
     }
-    $(this.baseInputSelector).val(parentsIds.join(","));
+    return parentsIds.join(",");
+};
+
+ParentsForm.prototype._changedParents = function () {
+    $(this.baseInputSelector).val(this.getParentsIdsStr());
+
+    if (this.isModified()) {
+        for (var k in this.changeCallbacks) {
+            this.changeCallbacks[k]();
+        }
+    }
 };
 
 ParentsForm.prototype.createNewForm = function (parent) {
@@ -44,11 +81,11 @@ ParentsForm.prototype.createNewForm = function (parent) {
     var deleteLink = new Link("").withIcon("trash").withCallback(function () {
         for (var i = 0; i < that.pageSelectors.length; i++) {
             if (that.pageSelectors[i] === pageSelector)
-                that.pageSelectors.slice(i, 1);
+                that.pageSelectors.splice(i, 1);
         }
 
         $('#' + formId + '-table').remove();
-        that._updateParentsField();
+        that._changedParents();
     });
 
     var elem = '<table class="parents-table" id="' + formId + '-table"><tr>'
@@ -61,15 +98,13 @@ ParentsForm.prototype.createNewForm = function (parent) {
             + '</td>'
             + '</table>';
 
-    $("#" + this.id + "-base").append(elem);
+    $("#" + this.id + "-fields").append(elem);
 
     var pageChanged = function () {
-        that._updateParentsField();
-;
+        that._changedParents();
 
         var page = pageSelector.getSelectedPage();
         if (page !== null) {
-            console.log("Page changed to "+page.title);
             var prepathHtml = "<table style=\"display: inline;\">";
             var paths = page.getParentPaths();
             for (var pathI = 0; pathI < paths.length; pathI++) {
@@ -91,10 +126,14 @@ ParentsForm.prototype.createNewForm = function (parent) {
     this.pageSelectors.push(pageSelector);
 
     deleteLink.initCallback();
-    
+
     pageChanged();
 };
 
-/*ParentsForm.generateBaseHiddenInput = function(name) {
- 
- };*/
+ParentsForm.prototype.setSaved = function () {
+    this.savedParents = this.getSelectedParents();
+};
+
+ParentsForm.prototype.isModified = function () {
+    return !this.savedParents.equals(this.getSelectedParents());
+};

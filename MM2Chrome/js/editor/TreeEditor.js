@@ -2,60 +2,20 @@
 
 var treeEditorUid = 0;
 function TreeEditor(containerSelector_) {
-    this.mmTree = mm().mmTree;
     this.containerSelector = containerSelector_;
     this.id = "tree-editor" + treeEditorUid;
 
-/*
-    for (var i = 1; i < this.mmTree.flatPages.length; i++) {  //skip root (i = 1)
-        this.mmTree.flatPages[i].on('parentsChanged', function (page, data) {
-            if (data.type === 'remove') {
-                $("." + page.getDomId()).each(function () {//we want to remove/
-                    var this$ = $(this);
-                    var parentNode = this$.closest("li");
-                    if (typeof parentNode !== 'undefined' && parentNode !== null) {
-                        var elemParentId = parseInt(parentNode.data("pageid"));
-                        if (elemParentId === parseInt(data.target.id)) {
-                            this$.remove();
-                        }
-                    }
-                });
-            } else if (data.type === 'move') {
-                $("." + page.getDomId()).each(function () {//we want to remove/
-                    var this$ = $(this);
-                    var parentNode = this$.closest("li");
-                    if (typeof parentNode !== 'undefined' && parentNode !== null) {
-                        var elemParentId = parseInt(parentNode.data("pageid"));
-                        if (elemParentId === parseInt(data.target.id)) {
-                            this$.detach();
-                        }
-                    }
-                });
-                $("." + data.targetPatenr.getDomId()).each(function () {
-                    $(this.append);
-                });
-            } else if (data.type === 'add') {
-                $("." + page.getDomId()).each(function () {//we want to remove/
-                    var this$ = $(this);
-                    var parentNode = this$.closest("li");
-                    if (typeof parentNode !== 'undefined' && parentNode !== null) {
-                        var elemParentId = parseInt(parentNode.data("pageid"));
-                        if (elemParentId === parseInt(data.target.id)) {
-                            this$.remove();
-                        }
-                    }
-                });
-            }
-        });
-    }
-*/
-    this.updateTree();
-var that = this;
-this.mmTree.onTreeChange(function() {
-    that.updateTree();
-});
+    this.mmTree = mm().mmTree;
+    if (this.mmTree.treeRoot !== null)
+        this.updateTree();
 
-//    $(document.body).append("<div id=\"detached-pages\" style=\"display:hidden;\"></div>");
+    var that = this;
+    this.mmTree.onTreeChange(function () {
+        if (that.mmTree.treeRoot !== null)
+            that.updateTree();
+    });
+    
+    $(this.containerSelector).addClass("tree-container");
 }
 
 TreeEditor.prototype.init = function () {
@@ -63,27 +23,29 @@ TreeEditor.prototype.init = function () {
 };
 
 TreeEditor.prototype.updateTree = function () {
-    var links = [];
-    var treeHtml = "<ul>";
-    treeHtml += this._getNodeHtml(this.mmTree.getTreeRoot(), links, null);
-    treeHtml += "</ul>";
-    $(this.containerSelector).html(treeHtml);
-    for (var i = 0; i < links.length; i++)
-        links[i].initCallback();
+    if (this.mmTree.treeRoot !== null) {
+        var links = [];
+        var treeHtml = "<ul>";
+        treeHtml += this._getNodeHtml(this.mmTree.getTreeRoot(), links, null);
+        treeHtml += "</ul>";
+        $(this.containerSelector).html(treeHtml);
+        for (var i = 0; i < links.length; i++)
+            links[i].initCallback();
+    }
 };
 
-TreeEditor.prototype._getNodeHtml = function (page, links, callingParent) {    
+TreeEditor.prototype._getNodeHtml = function (page, links, callingParent) {
     var dropdown;
     var that = this;
     var editPageLink = new Link("Edit page").withIcon("edit").withCallback(function () {
         PageEditor.openInNewWindow(page);
     });
-    var inlineEditLink = new Link("Inline edit").withIcon("edit").withCallback(function () {
+    /*var inlineEditLink = new Link("Inline edit").withIcon("edit").withCallback(function () {
 
         var inlineEditor = new PageEditor(page);
         dropdown.get$().after(inlineEditor.getHtml());
         inlineEditor.init();
-    });
+    });*/
     var editParentsLink = new Link("Edit parents").withIcon("home").withCallback(function () {
         that.showEditParentsDialog(page);
     });
@@ -99,11 +61,11 @@ TreeEditor.prototype._getNodeHtml = function (page, links, callingParent) {
     links.push(editParentsLink);
     links.push(addChildLink);
     links.push(removeFromParentLink);
-    links.push(inlineEditLink);
+    //links.push(inlineEditLink);
 
     dropdown = new Dropdown(page.title)
             .addItem(editPageLink.getHtml())
-            .addItem(inlineEditLink.getHtml())
+            //.addItem(inlineEditLink.getHtml())
             .addItem(editParentsLink.getHtml())
             .addItem(addChildLink.getHtml())
             .addItem(removeFromParentLink.getHtml())
@@ -136,17 +98,21 @@ TreeEditor.prototype._getNodeHtml = function (page, links, callingParent) {
 TreeEditor.prototype.showEditParentsDialog = function (page) {
     var that = this;
     var modal = new Modal("Edit parents of \"" + page.title + "\" (#" + page.id + ")");
-    modal.withContent("");
+
+    var parentsForm = new ParentsForm(this.mmTree, page, "parentsids");
+    modal.withContent(parentsForm.getHtml());
 
     var cancelButton = new Link("Cancel").withCallback(function () {
         modal.close();
     });
 
     var saveButton = new Link("Save").withCallback(function () {
-        that.mmTree.unlinkPageFromParent(page, parent, function () {
-            console.log("Unlinked");
+        try {
+            page.changeParents(parentsForm.getSelectedParents(), that.mmTree);
             modal.close();
-        });
+        } catch (msg) {
+            modal.displayError("Error: " + msg);
+        }
     });
 
     modal.addButton(cancelButton.getButtonHtml('default'));
@@ -155,6 +121,7 @@ TreeEditor.prototype.showEditParentsDialog = function (page) {
 
     cancelButton.initCallback();
     saveButton.initCallback();
+    parentsForm.init();
 };
 
 TreeEditor.prototype.showAddChildDialog = function (page) {
@@ -179,20 +146,10 @@ TreeEditor.prototype.showAddChildDialog = function (page) {
     var addChild = function (callback) {
         try {
             if (pageSelector.getSelectedPage() !== null) {
-                var newChild = pageSelector.getSelectedPage();
-                that.mmTree.addChildToPage(page, newChild, function (success) {
-                    if (success) {
-                        callback(newChild);
-                    } else {
-                        modal.displayError("Error: could not save");
-                    }
-                });
+                var child = pageSelector.getSelectedPage();
+                child.addParent(page, that.mmTree);
+                callback(child);
             } else if (newInput.getValue().trim() !== "") {
-                //var newPage = new Page(null);
-                //newPage.parents.push(page);
-                //newPage.parentsLoaded = true;
-                //newPage.title = newInput.getValue();
-                //newPage.titleLoaded = true;
                 var pageData = {title: newInput.getValue(), parentsids: page.id};
                 that.mmTree.saveNewPage(pageData, function (success, createdPage) {
                     if (success) {
@@ -253,10 +210,12 @@ TreeEditor.prototype.showRemoveFromParentDialog = function (page, parent) {
     });
 
     var unlinkButton = new Link("Unlink parent").withCallback(function () {
-        that.mmTree.unlinkPageFromParent(page, parent, function () {
-            console.log("Unlinked");
+        try {
+            page.removeParent(parent, that.mmTree);
             modal.close();
-        });
+        } catch (msg) {
+            modal.displayError("Error: " + msg);
+        }
     });
 
     modal.addButton(cancelButton.getButtonHtml('default'));

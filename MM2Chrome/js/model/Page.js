@@ -1,9 +1,11 @@
 /* global mm, Lockr */
 
 function Page(id_, mmTree) {
-    if(typeof id_ === 'undefined' || id_ === null || id_ < 1) throw "Page must be loaded with id. Id must be greater than 0.";
-    if(typeof mmTree === 'undefined' || mmTree === null) mmTree = mm().mmTree;
-    
+    if (typeof id_ === 'undefined' || id_ === null || id_ < 1)
+        throw "Page must be loaded with id. Id must be greater than 0.";
+    if (typeof mmTree === 'undefined' || mmTree === null)
+        mmTree = mm().mmTree;
+
     this.id = id_;
 
     this.title = "";
@@ -16,33 +18,32 @@ function Page(id_, mmTree) {
     this.tagsLoaded = false;
 
     this.children = [];
-    this.childrenLoaded = false;
 
     this.parents = [];
     this.parentsLoaded = false;
 
     this.structureModified = false;
     this.contentModified = false;
-    
+
     this.callbacks = [];
-    
-    var potentialLocalMe = Lockr.get("page_"+this.id, null);
-    if(potentialLocalMe !== null) {
+
+    var potentialLocalMe = Lockr.get("page_" + this.id, null);
+    if (potentialLocalMe !== null) {
         this.update(potentialLocalMe, mmTree);
         //console.log("Page loaded from localStorage #"+this.id);
-    }
-    else {
-        console.log('Key "page_'+this.id+'" does not exist in local storage');
+    } else {
+        console.log('Key "page_' + this.id + '" does not exist in local storage');
     }
     //console.log("Page creation");
-    
-    this.callbacks.push(function(eventType, me, data) {
-        this.safeSave(false);
+
+    var that = this;
+    this.callbacks.push(function (eventType, me, data) {
+        that.safeSave(false);
     });
 }
 
 Page.prototype.isFullyLoaded = function () {
-    return this.titleLoaded && this.bodyLoaded && this.tagsLoaded && this.childrenLoaded && this.parentsLoaded;
+    return this.titleLoaded && this.bodyLoaded && this.tagsLoaded && this.parentsLoaded;
 };
 
 Page.prototype.isModified = function () {
@@ -54,15 +55,16 @@ Page.prototype.isNewPage = function () {
 };
 
 Page.prototype.getDomId = function () {
-    return "page-"+this.id;
+    return "page-" + this.id;
 };
 
 //loading & updating functions
 Page.prototype.update = function (pageAjaxData, mmTree) {
-    if(typeof mmTree === 'undefined' || mmTree === null) mmTree = mm().mmTree;
-    
+    if (typeof mmTree === 'undefined' || mmTree === null)
+        mmTree = mm().mmTree;
+
     if (this.isModified())
-        throw "Cannot update page. It was modified. Save changes before updating";
+        throw "Cannot update page. It was modified (structureModified="+this.structureModified+", contentModified="+this.contentModified+"). Save changes before updating";
     if (pageAjaxData.hasOwnProperty("title")) {
         this.title = pageAjaxData.title;
         this.titleLoaded = true;
@@ -72,17 +74,24 @@ Page.prototype.update = function (pageAjaxData, mmTree) {
         this.bodyLoaded = true;
     }
     if (pageAjaxData.hasOwnProperty("tags")) {
-        this.tags = pageAjaxData.tags;
+        this.tags = [];
+        if(pageAjaxData.tags.length > 0) {
+            if(typeof pageAjaxData.tags[0] === 'object') {
+                for(var i = 0;i < pageAjaxData.tags.length;i++) {
+                    this.tags.push(pageAjaxData.tags[i].tag);
+                }
+            }
+            else this.tags = pageAjaxData.tags;
+        }
+        
         this.tagsLoaded = true;
     }
-    
-    /*if (pageAjaxData.hasOwnProperty("children")) {
-        this.children = [];
-        for (var i = 0; i < pageAjaxData.children.length; i++) {
-            if(!this.hasChildOfId(pageAjaxData.children[i].id)) this.children[i] = mm().mmTree.getPageById(pageAjaxData.children[i].id);
-        }
-        this.childrenLoaded = true;
-    }*/
+    if (pageAjaxData.hasOwnProperty("structureModified")) {
+        this.structureModified = pageAjaxData.structureModified;
+    }
+    if (pageAjaxData.hasOwnProperty("contentModified")) {
+        this.contentModified = pageAjaxData.contentModified;
+    }
 
     if (pageAjaxData.hasOwnProperty("parents")) {
         this.parents = [];
@@ -92,11 +101,12 @@ Page.prototype.update = function (pageAjaxData, mmTree) {
         this.parentsLoaded = true;
     }
     this.safeSave(true);
+    this.trigger('update', {});
 };
 
 Page.prototype.hasChildOfId = function (id_) {
     for (var i = 0; i < this.children.length; i++) {
-        if (this.children[i].id+"" === id_+"")
+        if (this.children[i].id + "" === id_ + "")
             return true;
     }
     return false;
@@ -104,33 +114,22 @@ Page.prototype.hasChildOfId = function (id_) {
 
 Page.prototype.hasParentOfId = function (id_) {
     for (var i = 0; i < this.parents.length; i++) {
-        if (this.parents[i].id+"" === id_+"")
+        if (this.parents[i].id + "" === id_ + "")
             return true;
     }
     return false;
 };
 
-/*Page.prototype.update_clearParents = function () {
-    this.parents = [];
-    this.parentsLoaded = true;
-};
-
-Page.prototype.update_clearChildren = function () {
-    this.children = [];
-    this.childrenLoaded = true;
-};*/
-
 Page.prototype._addParent = function (page) {
     if (!this.hasParentOfId(page.id)) {
         this.parents.push(page);
         this.parentsLoaded = true;
-        
-        if(!page.hasChildOfId(this.id)) {
+
+        if (!page.hasChildOfId(this.id)) {
             page.children.push(this);
-            page.children.sort(function(a, b) {
+            page.children.sort(function (a, b) {
                 return a.title.localeCompare(b.title);
             });
-            page.childrenLoaded = true;
         }
     }
 };
@@ -139,176 +138,189 @@ Page.prototype._addParent = function (page) {
 Page.prototype.changeTitle = function (newTitle) {
     if (!this.isFullyLoaded())
         throw "Page must be fully loaded before modifications";
-    var previousTitle = this.title+"";
+    var previousTitle = this.title + "";
     this.title = newTitle;
     this.contentModified = true;
-    this.trigger('titleChanged', {previous: previousTitle, current: this.title+""});
+    this.safeSave(false);
+    this.trigger('titleChanged', {previous: previousTitle, current: this.title + ""});
 };
 
 Page.prototype.changeBody = function (newBody) {
     if (!this.isFullyLoaded())
         throw "Page must be fully loaded before modifications";
-    var previousBody = this.body+"";
+    var previousBody = this.body + "";
     this.body = newBody;
     this.contentModified = true;
-    this.trigger('bodyChanged', {previous: previousBody, current: this.body+""});
+    this.safeSave(false);
+    this.trigger('bodyChanged', {previous: previousBody, current: this.body + ""});
 
 };
 
 Page.prototype.changeTags = function (newTags) {
     if (!this.isFullyLoaded())
         throw "Page must be fully loaded before modifications";
-    var previousTags = this.tags.splice();
+    var previousTags = this.tags.slice();
     this.tags = newTags;
     this.contentModified = true;
-    this.trigger('tagsChanged', {previous: previousTags, current: this.tags.splice()});
+    this.safeSave(false);
+    this.trigger('tagsChanged', {previous: previousTags, current: this.tags.slice()});
 };
 
-/*Page.prototype.changeParents = function (newParents) {
-    if (!(this.parentsLoaded && this.childrenLoaded))
+Page.prototype.changeParents = function (newParents, mmTree) {
+    if (!(this.parentsLoaded))
         throw "Page must have parents and children loaded before structure modifications";
-    var previousParents = this.parents.splice();
-    this.parents = [];
-    this.parents = newParents;
-    this.structureModified = true;
-    this.trigger('parentsChanged', {previous: previousParents, current: this.parents.splice()})
-};*/
-/*
-Page.prototype.removeParent = function (parent) {
-    if (!(this.parentsLoaded && this.childrenLoaded))
-        throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
-    console.log("Remove parent "+parent.id);
-    var previousParents = this.parents.splice();
-    for (var i = 0; i < this.parents.length; i++) {
-        if (this.parents[i].id === parent.id)
-            this.parents.splice(i, 1);
-    }
-    parent.removeChild(this.id);
-    this.structureModified = true;
-    this.trigger('parentsChanged', {type: 'remove', target: parent, previous: previousParents, current: this.parents.splice()})
-};
+    var previousParents = this.parents.slice();
 
-Page.prototype.moveBetweenParents = function (sourceParent, targetParent) {
-    if (!(this.parentsLoaded && this.childrenLoaded))
-        throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
-    console.log("Move page from parent "+sourceParent.id+" to parent "+targetParent.id);
-    var previousParents = this.parents.splice();
-    for (var i = 0; i < this.parents.length; i++) {
-        if (this.parents[i].id === sourceParent.id)
-            this.parents.splice(i, 1);
-    }
-    sourceParent.removeChild(this.id);
-    this.parents.push(targetParent);
-    this.structureModified = true;
-    this.trigger('parentsChanged', {type: 'move', source: sourceParent, target: targetParent, previous: previousParents, current: this.parents.splice()})
-};
+    this.parents = newParents.slice();
 
-Page.prototype.addParent = function (parent) {
-    if (!(this.parentsLoaded && this.childrenLoaded))
-        throw "Page must have parents ("+this.parentsLoaded+") and children ("+this.childrenLoaded+") loaded before structure modifications";
-    console.log("Add parent "+parent.id);
-    if(!this.hasParentOfId(parseInt(parent.id))) {
-        var previousParents = this.parents.splice();
-        this.parents.push(parent);
-        this.trigger('parentsChanged', {type: 'add', target: parent, previous: previousParents, current: this.parents.splice()})
-    }
-    parent.addChild(this.id);
-    this.structureModified = true;
-};
+    var addedParents = newParents.filter(function (el) {
+        return previousParents.indexOf(el) < 0;
+    });
+    var removedParents = previousParents.filter(function (el) {
+        return newParents.indexOf(el) < 0;
+    });
 
-//changing children is only for tree reorganisation. Normally children are changed by changing their parents.
-Page.prototype.addChild = function (page) {
-    if (!this.hasChildOfId(page.id)) {
-        this.children.push(page);
+    for (var k in addedParents) { //add children to added parents
+        var parent = addedParents[k];
+        if (!parent.hasChildOfId(this.id)) {
+            parent.children.push(this);
+            parent.children.sort(function (a, b) {
+                return a.title.localeCompare(b.title);
+            });
+        }
     }
-};
 
-Page.prototype.removeChild = function (page) {
-    if (this.hasChildOfId(page.id)) {
-        for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].id === page.id) {
-                this.children.splice(i, 1);
+    for (var k in removedParents) {//remove child from removed parents
+        var parent = removedParents[k];
+        if (parent.hasChildOfId(this.id)) {
+            for (var i = 0; i < parent.children.length; i++) {
+                if (parent.children[i].id === this.id)
+                    parent.children.splice(i, 1);
             }
         }
     }
+
+    this.structureModified = true;
+    this.safeSave(false);
+    mmTree.triggerTreeStructureChanged();
+    this.trigger('parentsChanged', {type: 'change', previous: previousParents, current: this.parents.slice()});
+
 };
-*/
+
+Page.prototype.addParent = function (parent, mmTree) {
+    var newParents = this.parents.slice();
+    newParents.push(parent);
+    //console.log("");
+    this.changeParents(newParents, mmTree);
+};
+
+Page.prototype.removeParent = function (parent, mmTree) {
+    var newParents = this.parents.slice();
+    for (var i = 0; i < newParents.length; i++) {
+        if (newParents[i].id === parent.id)
+            newParents.splice(i, 1);
+    }
+    this.changeParents(newParents, mmTree);
+};
+
+Page.prototype.moveBetweenParents = function (previousParent, newParent, mmTree) {
+    var newParents = this.parents.slice();
+    for (var i = 0; i < newParents.length; i++) {
+        if (newParents[i].id === previousParent.id)
+            newParents.splice(i, 1);
+    }
+    newParents.push(newParent);
+    this.changeParents(newParents, mmTree);
+};
+
+
 //saving editions
 Page.prototype.getSaveObject = function (isLocal) {
-    if(typeof isLocal === 'undefined' || isLocal === null) isLocal = false;
-    
+    if (typeof isLocal === 'undefined' || isLocal === null)
+        isLocal = false;
+
     var save = new Object();
-    
+
     if (this.titleLoaded) {
         save.title = this.title;
     }
     if (this.bodyLoaded) {
-        save.body = (isLocal? this.body : this.body.replace("\n", "[newline]"));
+        save.body = (isLocal ? this.body : this.body.replace("\n", "[newline]"));
     }
     if (this.tagsLoaded) {
-        if(isLocal) save.tags = this.tags;
-        else save.tagsnames = this.tags.join(",");
+        if (isLocal)
+            save.tags = this.tags;
+        else
+            save.tagsnames = this.tags.join(",");
     }
 
     if (this.parentsLoaded) {
-        if(isLocal) {
+        if (isLocal) {
             save.parents = [];
             for (var i = 0; i < this.parents.length; i++)
-            save.parents.push({id: this.parents[i].id});
+                save.parents.push({id: this.parents[i].id});
+        } else {
+            save.parentsids = "";
+            for (var i = 0; i < this.parents.length; i++)
+                save.parentsids += this.parents[i].id + ",";
         }
-        else {
-        save.parentsids = "";
-        for (var i = 0; i < this.parents.length; i++)
-            save.parentsids += this.parents[i].id + ",";
-        }
+    }
+
+    if (isLocal) {
+        save.structureModified = this.structureModified;
+        save.contentModified = this.contentModified;
     }
 
     return save;
 };
 
 Page.prototype.safeSave = function (isOnlyLocal) {
-    if(isOnlyLocal) {
-        var saveObj = this.getSaveObject(true);
-        Lockr.set("page_"+this.id, saveObj);
+    var saveObj = this.getSaveObject(true);
+    Lockr.set("page_" + this.id, saveObj);
+
+    if (!isOnlyLocal) {
+        //modified pages are saved in mmTree object with cyclic worker
     }
 };
 
 Page.prototype.markSaved = function (saveData) {
-    var markSavedLog = "MK_SAVED:";
     if (this.structureModified) {
-        markSavedLog+= " structure:{";
         if (saveData.hasOwnProperty("parents")) {
             if (saveData.parents.length === this.parents.length) {
-                markSavedLog += "length_ok, ";
                 var saveCorrect = true;
                 for (var i = 0; i < saveData.parents.length; i++) {
-                    console.log("Checking parent "+parseInt(saveData.parents[i].id));
                     if (!this.hasParentOfId(parseInt(saveData.parents[i].id))) {
                         saveCorrect = false;
-                        console.log("The page "+this.id+" has not "+parseInt(saveData.parents[i].id)+" in parents: ");
                     }
                 }
                 if (saveCorrect) {
-                    markSavedLog += "parents_identical";
                     this.structureModified = false;
+                    this.safeSave(true);
                 }
             }
         }
-        markSavedLog+= "}";
-    } else if (this.contentModified) {
-        markSavedLog+= " content:{";
-        if (saveData.hasOwnProperty("title") && this.title === saveData.title
-                && saveData.hasOwnProperty("body") && this.body === saveData.body
-                && saveData.hasOwnProperty("tags") && this.tags === saveData.tags) {
-            this.contentModified = false;
-            markSavedLog+= "correct";
-        }
-        else markSavedLog+= "incorrect";
-        markSavedLog+= "}";
-    } else {
-        throw "Trying to markSaved unmodified page!";
     }
-    console.log(markSavedLog);
+    if (this.contentModified) {
+        var _body = this.body;
+        if(_body.endsWith("\n")) _body = _body.substr(0, _body.length-1);
+        saveData.tags = saveData.tags.map(function(v) {
+            if(typeof v === 'object') return v.tag;
+            else return v;
+        });
+        
+        if (saveData.hasOwnProperty("title") && this.title === saveData.title
+                && saveData.hasOwnProperty("body") && _body === saveData.body
+                && saveData.hasOwnProperty("tags") && this.tags.join(",") === saveData.tags.join(",")) {
+            this.contentModified = false;
+            this.safeSave(true);
+        }
+        else {
+            throw "Content structure improper: "
+            +(this.title !== saveData.title? "title("+this.title+"="+saveData.title+"), " : "")
+            +(_body !== saveData.body? "body("+_body+"="+saveData.body+"), " : "")
+            +(this.tags !== saveData.tags? "tags("+this.tags+"="+saveData.tags+"), " : "");
+        }
+    }
 };
 
 //parents paths
@@ -330,15 +342,6 @@ Page.prototype._getPaths = function (page, childrenPath_, paths_) {
             this._getPaths(parent, childrenPath, paths_);
         }
     }
-    
-    /*childPath_.unshift(page.id);
-     
-     if(page.id === 1) {
-     return childPath_
-     }
-     else {
-     
-     }*/
 };
 
 //events
@@ -347,47 +350,15 @@ Page.prototype.onChange = function (callback) {
 };
 
 Page.prototype.on = function (desiredEventType, callback) {
-    this.callbacks.push(function(eventType, page, data) {
-        if(eventType === desiredEventType) {
+    this.callbacks.push(function (eventType, page, data) {
+        if (eventType === desiredEventType) {
             callback(page, data);
         }
     });
 };
 
 Page.prototype.trigger = function (eventType, data) {
-    for(var i = 0;i < this.callbacks.length;i++) {
+    for (var i = 0; i < this.callbacks.length; i++) {
         this.callbacks[i](eventType, this, data);
     }
 };
-
-/*
- CREATE PROCEDURE get_paths_procedure(
- IN current_page_id INT,
- IN children_path VARCHAR (253)
- )
- BEGIN
- DECLARE my_parent_id INT;
- DECLARE bDone INT;
- DECLARE curs CURSOR FOR SELECT parent_id FROM pages_parents WHERE page_id=current_page_id;
- DECLARE CONTINUE HANDLER FOR NOT FOUND SET bDone = 1;
- 
- 
- IF current_page_id = 1 THEN
- INSERT INTO paths VALUES (CONCAT((SELECT title FROM pages WHERE id=current_page_id), '$$$', children_path));
- ELSE
- OPEN curs;
- SET bDone = 0;
- read_loop: LOOP
- FETCH curs INTO my_parent_id;
- IF bDone THEN
- LEAVE read_loop;
- END IF;
- #            INSERT INTO paths VALUES (my_parent_id);
- #            INSERT INTO paths VALUES (CONCAT((SELECT title FROM pages WHERE id=parent_id), '$$$', children_path));
- CALL get_paths_procedure(my_parent_id, CONCAT((SELECT title FROM pages WHERE id=current_page_id), '$$$', children_path));
- END LOOP;
- CLOSE curs;
- END IF;
- END$$
- * 
- */

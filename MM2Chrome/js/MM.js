@@ -4,6 +4,8 @@ function MM() {
     this.initWindow();
     this.mmTree = new MedmanualTree();
     this.mmTree.init();    
+    
+    this.windowManager = new WindowManager();
 };
 
 function mm() {
@@ -12,7 +14,6 @@ function mm() {
     }
     else if(window.opener !== null && typeof window.opener.mm_ !== 'undefined') {
         window.mm_ = window.opener.mm_;
-        console.log("mm obtained from parent window");
         window.mm_.initWindow();
         return window.mm_;
     }
@@ -23,6 +24,11 @@ function mm() {
     }
 };
 
+MM.prototype.initWindow = function() {
+    this.getErrorLogger();
+    Lockr.prefix = "mm";
+};
+
 MM.prototype.getErrorLogger = function() {
     if(typeof window.mmErrorLogger_ === 'undefined') {
         window.mmErrorLogger_ = new ErrorLogger();
@@ -30,7 +36,6 @@ MM.prototype.getErrorLogger = function() {
     return window.mmErrorLogger_;
 };
 
-MM.prototype.initWindow = function() {
-    this.getErrorLogger();
-    Lockr.prefix = "mm";
+MM.prototype.getWindowManager = function() {
+    return this.windowManager;
 };
