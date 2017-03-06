@@ -91,8 +91,6 @@ MedmanualTree.prototype.load = function (callback, isFull) {
 };
 
 MedmanualTree.prototype.parseAndLoadData = function (data, editedPage) {
-    if (editedPage !== null)
-
     if (data.hasOwnProperty("pages")) {
         for (var i = 0; i < data.pages.length; i++) {
             var pageAjaxData = data.pages[i];

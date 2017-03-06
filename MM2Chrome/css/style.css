@@ -11,9 +11,13 @@ and open the template in the editor.
 .search-container .easy-autocomplete {
     width: auto;
     position: absolute;
-    top: 8px;
+    top: 5px;
     right: 8px;
     z-index: 1;
+}
+
+.search-container .easy-autocomplete li {
+    text-align: left;
 }
 
 .search-container {
@@ -260,7 +264,7 @@ ul.title-area {
 }
 
 .tree-container .dropdown li {
-    margin-left: 1.25rem;
+    margin-left: 0;
     color: #111;
 }
 

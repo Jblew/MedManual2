@@ -106,6 +106,7 @@ PageEditor.prototype.init = function () {
 
 PageEditor.prototype.save = function () {
     if (this.page === null) {
+        console.log("Saving new page!");
         var saveData = {title: this.titleInput.getValue(), body: this.markdownEditor.getMarkdown(), tagsnames: this.tagsInput.getValue(), parentsids: this.parentsForm.getParentsIdsStr()};
 
         var that = this;
@@ -113,6 +114,9 @@ PageEditor.prototype.save = function () {
             if (isSuccess) {
                 that.page = page_;
                 that.setSaved();
+            }
+            else {
+                alert("Cannot save page: "+page_);
             }
         });
     } else {
@@ -192,6 +196,6 @@ PageEditor.prototype._updateChildrenField = function () {
  */
 
 PageEditor.openInNewWindow = function (page) {
-    mm().getWindowManager().open('tree.html?editor=true&pageId=' + page.id, 600, 800);
+    mm().getWindowManager().open('tree.html?editor=true&pageId=' + (page !== null? page.id : 0), 600, 800);
 };
 

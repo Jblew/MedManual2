@@ -1,6 +1,16 @@
-var editMode = false;
+/* global PageEditor, mm */
+
 $(document).ready(function () {
-    $("#top-search-box").easyAutocomplete({
+    var pageSelector = new PageSelector(mm().mmTree, null);
+    $("#top-search-container").html(pageSelector.getHtml());
+    pageSelector.init();
+    pageSelector.onPageChange(function() {
+        if(pageSelector.getSelectedPage() !== null) {
+            PageEditor.openInNewWindow(pageSelector.getSelectedPage());
+        }
+    });
+   $("#"+pageSelector.id+" > .easy-autocomplete").css("width", "200px");
+    /*$("#top-search-box").easyAutocomplete({
         url: function (phrase) {
             return "http://medmanual2.jblew.pl/pages/ajaxFindPage?term=" + base64_encode(phrase);
         },
@@ -19,6 +29,6 @@ $(document).ready(function () {
                 }
             }
         }
-    });
+    });*/
 });
 

@@ -43,7 +43,7 @@ PageSelector.prototype.init = function () {
         getValue: "title",
         requestDelay: 250,
         list: {
-            onSelectItemEvent: function () {
+            onChooseEvent: function () {
                 var selData = psElem.getSelectedItemData();
                 if (that.selectedPage === null || parseInt(selData.id) !== parseInt(that.selectedPage.id)) {
                     that.selectedPage = that.mmTree.getPageById(selData.id);
@@ -54,6 +54,8 @@ PageSelector.prototype.init = function () {
             }
         }
     });
+    
+    $("#"+this.id+" > .easy-autocomplete").css("width", "100%");
 };
 
 PageSelector.prototype.setSaved = function () {

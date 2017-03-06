@@ -47,17 +47,17 @@ Input.prototype.get$ = function () {
 };
 
 Input.prototype.getValue = function () {
-    if (this.type_ === "multiline-adapt")
-        return this.get$().text();
-    else
-        return this.get$().val();
+    //if (this.type_ === "multiline-adapt")
+    //    return this.get$().text();
+    //else
+    return this.get$().val(); //textarea also has value
 };
 
 Input.prototype.setValue = function (v) {
-    if (this.type_ === "multiline-adapt")
-        this.get$().text(v);
-    else
-        this.get$().val(v);
+    //if (this.type_ === "multiline-adapt")
+    //    this.get$().text(v);
+    //else
+    this.get$().val(v);
     this.setSaved();
 };
 
